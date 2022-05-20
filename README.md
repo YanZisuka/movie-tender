@@ -6,8 +6,8 @@
 
 |                         yeonggyeong                          |                          YanZisuka                           |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <a href="https://github.com/yeonggyeong" style="width: 15rem;"><img src="README.assets/75614212.png" alt="Avatar" style="zoom:33%;" /></a> | <a href="https://github.com/YanZisuka" style="width: 15rem;"><img src="README.assets/83825572.jpeg" alt="img" style="zoom:33%;" /></a> |
-|     <a href="https://github.com/yeonggyeong">공영경</a>      |      <a href="https://github.com/YanZisuka">한승재</a>       |
+| <a href="https://github.com/yeonggyeong"><img style="width: 10rem;" src="README.assets/75614212.png" alt="Avatar"  /></a> | <a href="https://github.com/YanZisuka"><img style="width: 10rem;" src="README.assets/83825572.jpeg" alt="img"  /></a> |
+|                            공영경                            |                            한승재                            |
 
 <br>
 

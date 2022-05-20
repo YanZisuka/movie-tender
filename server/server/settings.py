@@ -31,6 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'accounts',
+    'movies',
+    'community',
 
     'django_extensions',
     'rest_framework',
@@ -76,6 +79,8 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+AUTH_USER_MODEL = 'accounts.User'
 
 DATABASES = {
     'default': {

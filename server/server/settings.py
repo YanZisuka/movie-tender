@@ -79,12 +79,12 @@ WSGI_APPLICATION = 'server.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'project',
-        'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'movie_tender',
+        'USER': 'movie_tender',
+        'PASSWORD': 'qwer`123',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

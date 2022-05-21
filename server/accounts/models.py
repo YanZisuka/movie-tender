@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
@@ -7,6 +8,8 @@ class User(AbstractUser):
     
     followers = models.ManyToManyField('self', related_name='followings', symmetrical=False)
 
+    nickname = models.CharField(max_length=20, default='')
+    birth = models.DateField(default=datetime.now)
     survey = ArrayField(models.CharField(max_length=100), blank=True, default=list)
 
     def add_survey(self, kwrd: str):

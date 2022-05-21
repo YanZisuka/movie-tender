@@ -20,6 +20,24 @@ class Movie(models.Model):
     vote_average = models.FloatField()
     keywords = ArrayField(models.CharField(max_length=100), blank=True)
 
+    def has_genre(self, genre: str):
+        return genre in self.genres
+
+    def add_genre(self, genre: str):
+        if self.has_genre(genre): return
+        self.genres.append(genre)
+        self.save(update_fields=['genres'])
+        return self.genres
+
+    def has_keyword(self, kwrd: str):
+        return kwrd in self.keywords
+
+    def add_keyword(self, kwrd: str):
+        if self.has_keyword(kwrd): return
+        self.keywords.append(kwrd)
+        self.save(update_fields=['keywords'])
+        return self.keywords
+
     def __str__(self):
         return f'Movie {self.pk}: {self.title}'
 

@@ -4,6 +4,10 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class Movie(models.Model):
+    """title (`str`), overview (`str`), poster_path (`str`), video_path (`str`), adult (`boolean`), release_date (`str`),
+    runtime (`number`), genres (`list['str']`), genre_group (`str`), vote_count (`number`), vote_average (`number`),
+    keywords (`list['str']`)
+    """
 
     grade_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='watch_movies', through='Grade')
 
@@ -12,7 +16,7 @@ class Movie(models.Model):
     poster_path = models.CharField(max_length=100)
     video_path = models.CharField(max_length=100)
     adult = models.BooleanField()
-    release_date = models.IntegerField()
+    release_date = models.CharField(max_length=30)
     runtime = models.IntegerField()
     genres = ArrayField(models.CharField(max_length=20), blank=True)
     genre_group = models.CharField(max_length=20)
@@ -38,11 +42,19 @@ class Movie(models.Model):
         self.save(update_fields=['keywords'])
         return self.keywords
 
+    def get_release_date(self):
+        return f"{self.release_date.replace('-', '/')} (KR)"
+
+    def get_runtime(self):
+        return f'{self.runtime // 60}시간 {self.runtime % 60}분'
+
     def __str__(self):
         return f'Movie {self.pk}: {self.title}'
 
 
 class Staff(models.Model):
+    """name (`str`), profile_path: (`str`), character: (`str`), role: (`str`), films: (class `Movie`)
+    """
 
     films = models.ManyToManyField(Movie, related_name='credits')
 
@@ -56,6 +68,8 @@ class Staff(models.Model):
 
 
 class Grade(models.Model):
+    """grade (`number`), user (class `User`), movie (class `Movie`)
+    """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
@@ -67,6 +81,8 @@ class Grade(models.Model):
 
 
 class Keyword(models.Model):
+    """keyword (`str`), genre_group (`str`)
+    """
 
     keyword = models.CharField(max_length=100)
     genre_group = models.CharField(max_length=20)

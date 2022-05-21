@@ -6,6 +6,8 @@ from movies.models import Movie
 
 
 class Review(models.Model):
+    """content (`str`), created_at (`date`), updated_at(`date`), user (class `User`), movie (class `Movie`)
+    """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
@@ -20,6 +22,8 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
+    """content (`str`), created_at (`date`), updated_at(`date`), user (class `User`), review (class `Review`)
+    """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     review = models.ForeignKey(Review, on_delete=models.CASCADE)

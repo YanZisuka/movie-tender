@@ -25,17 +25,23 @@ def index(request):
 
 @api_view(['GET', 'POST'])
 def movie(request, movie_pk):
-    
-    def get_movie_detail(request):
-        pass
 
-    def set_grade(request):
-        pass
+    movie_obj = get_object_or_404(Movie, pk=movie_pk)
+    
+    def get_movie_detail():
+        serializer = MovieSerializer(movie_obj)
+        return Response(serializer.data)
+
+    def set_rating():
+        serializer = RatingSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'GET':
         return get_movie_detail()
     elif request.method == 'POST':
-        return set_grade()
+        return set_rating()
 
 
 @api_view(['GET'])

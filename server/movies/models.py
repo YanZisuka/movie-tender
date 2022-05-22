@@ -9,7 +9,7 @@ class Movie(models.Model):
     vote_average (`number`), country (`str`), keywords (`list['str']`), providers (`list['str']`)
     """
 
-    grade_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='watch_movies', through='Grade')
+    rating_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='watch_movies', through='Rating')
 
     title = models.CharField(max_length=100)
     overview = models.TextField()
@@ -90,7 +90,7 @@ class Rating(models.Model):
     rating = models.FloatField()
 
     def __str__(self):
-        return f"{self.user} gives {self.grade} for {self.movie}"
+        return f"{self.user} gives {self.rating} for {self.movie}"
 
 
 class Keyword(models.Model):

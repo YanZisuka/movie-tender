@@ -35,3 +35,12 @@ class StaffSerializer(serializers.ModelSerializer):
         fields = (
             'name', 'profile_path',
         )
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Rating
+        fields = (
+            'user', 'movie', 'rating',
+        )

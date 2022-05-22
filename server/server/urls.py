@@ -23,4 +23,5 @@ urlpatterns = [
     path(VER_1 + 'accounts/', include('accounts.urls')),
     path(VER_1 + 'movies/', include('movies.urls')),
     path(VER_1 + 'reviews/', include('community.urls')),
+    path('dj-rest-auth/', include('dj_rest_auth.urls')),
 ]

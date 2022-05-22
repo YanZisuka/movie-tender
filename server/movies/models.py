@@ -4,15 +4,16 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class Movie(models.Model):
-    """title (`str`), overview (`str`), poster_path (`str`), video_path (`str`), adult (`boolean`), release_date (`str`),
-    runtime (`number`), genres (`list['str']`), genre_group (`str`), vote_count (`number`), vote_average (`number`),
-    keywords (`list['str']`)
+    """title (`str`), overview (`str`), tmdb_id (`number`), poster_path (`str`), video_path (`str`), adult (`boolean`),
+    release_date (`str`), runtime (`number`), genres (`list['str']`), genre_group (`str`), vote_count (`number`),
+    vote_average (`number`), country (`str`), keywords (`list['str']`), providers (`list['str']`)
     """
 
     grade_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='watch_movies', through='Grade')
 
     title = models.CharField(max_length=100)
     overview = models.TextField()
+    tmdb_id = models.IntegerField()
     poster_path = models.CharField(max_length=100)
     video_path = models.CharField(max_length=100)
     adult = models.BooleanField()
@@ -22,7 +23,9 @@ class Movie(models.Model):
     genre_group = models.CharField(max_length=20)
     vote_count = models.IntegerField()
     vote_average = models.FloatField()
+    country = models.CharField(max_length=100)
     keywords = ArrayField(models.CharField(max_length=100), blank=True)
+    providers = ArrayField(models.CharField(max_length=30), blank=True, default=list)
 
     def has_genre(self, genre: str):
         return genre in self.genres
@@ -42,6 +45,15 @@ class Movie(models.Model):
         self.save(update_fields=['keywords'])
         return self.keywords
 
+    def has_provider(self, provider: str):
+        return provider in self.providers
+
+    def add_provider(self, provider: str):
+        if self.has_provider(provider): return
+        self.providers.append(provider)
+        self.save(update_fields=['providers'])
+        return self.providers
+
     def get_release_date(self):
         return f"{self.release_date.replace('-', '/')} (KR)"
 
@@ -59,6 +71,7 @@ class Staff(models.Model):
     films = models.ManyToManyField(Movie, related_name='credits')
 
     name = models.CharField(max_length=100)
+    tmdb_id = models.IntegerField()
     profile_path = models.CharField(max_length=100)
     character = models.CharField(max_length=100)
     role = models.CharField(max_length=20)
@@ -67,14 +80,14 @@ class Staff(models.Model):
         return f'Staff {self.pk}: {self.name}'
 
 
-class Grade(models.Model):
-    """grade (`number`), user (class `User`), movie (class `Movie`)
+class Rating(models.Model):
+    """rating (`number`), user (class `User`), movie (class `Movie`)
     """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
-    grade = models.FloatField()
+    rating = models.FloatField()
 
     def __str__(self):
         return f"{self.user} gives {self.grade} for {self.movie}"
@@ -85,6 +98,7 @@ class Keyword(models.Model):
     """
 
     keyword = models.CharField(max_length=100)
+    tmdb_id = models.IntegerField()
     genre_group = models.CharField(max_length=20)
 
     def __str__(self):

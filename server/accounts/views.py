@@ -1,47 +1,60 @@
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import User
 from .serializers import *
 
 
-@api_view(['POST'])
-def index(request):
-
-    def signup():
-        pass
-    
-    if request.method == 'POST':
-        return signup()
-
-
-@api_view(['POST'])
-def login(request):
-    pass
-
-
-@api_view(['POST'])
-def logout(request):
-    pass
-
+User = get_user_model()
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def profile(request, username):
+
+    user = get_object_or_404(User, username=username)
     
     def get_profile():
-        pass
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
     
     def follow_user():
-        pass
+        if request.user != user:
+            if user.followers.filter(pk=request.user.pk).exists():
+                user.followers.remove(request.user)
+                return Response({
+                    'is_following': False,
+                    'followers_count': user.followers.count(),
+                    'followings_count': user.followings.count()
+                })
+            else:
+                user.followers.add(request.user)
+                return Response({
+                    'is_following': True,
+                    'followers_count': user.followers.count(),
+                    'followings_count': user.followings.count()
+                })
+        else: return Response({'detail': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def update_user():
-        pass
+        if request.user == user:
+            serializer = UserSerializer(instance=user, data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+                return Response(serializer.data)
+        else: return Response({'detail': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
 
     def delete_user():
-        pass
+        if request.user == user:
+            res = {
+                'id': user.id,
+                'username': user.username,
+                'detail': 'Successfully deleted.'
+            }
+            user.delete()
+            return Response(res, status=status.HTTP_204_NO_CONTENT)
+        else: return Response({'detail': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == 'GET':
         return get_profile()

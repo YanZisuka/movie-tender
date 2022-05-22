@@ -20,8 +20,9 @@ VER_1 = 'api/v1/'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(VER_1 + 'accounts/', include('dj_rest_auth.urls')),
+    path(VER_1 + 'accounts/signup/', include('dj_rest_auth.registration.urls')),
     path(VER_1 + 'accounts/', include('accounts.urls')),
     path(VER_1 + 'movies/', include('movies.urls')),
     path(VER_1 + 'reviews/', include('community.urls')),
-    path('dj-rest-auth/', include('dj_rest_auth.urls')),
 ]

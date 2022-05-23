@@ -48,6 +48,8 @@ def movie(request, movie_pk):
     def set_rating():
         serializer = RatingSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
+            if Rating.objects.filter(user=request.user, movie=movie_obj).exists():
+                Rating.objects.filter(user=request.user, movie=movie_obj).delete()
             serializer.save(user=request.user, movie=movie_obj)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 

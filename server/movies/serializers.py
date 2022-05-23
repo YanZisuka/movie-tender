@@ -8,14 +8,14 @@ class MovieSerializer(serializers.ModelSerializer):
 
         class Meta:
             model = Staff
-            fields = ('name', 'character', 'role',)
+            fields = ('id', 'tmdb_id', 'name', 'character', 'role',)
 
     class Meta:
         model = Movie
         fields = (
-            'title', 'adult', 'release_date', 'genres',
+            'id', 'tmdb_id', 'title', 'adult', 'release_date', 'genres',
             'runtime', 'overview', 'vote_average', 'credits',
-            'rating', 'poster_path', 'video_path', 'providers',
+            'rating_users', 'poster_path', 'video_path', 'providers',
             )
 
 
@@ -24,7 +24,7 @@ class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = (
-            'title', 'vote_average', 'overview', 'poster_path',
+            'id', 'title', 'vote_average', 'overview', 'poster_path',
         )
 
 
@@ -33,7 +33,7 @@ class StaffSerializer(serializers.ModelSerializer):
     class Meta:
         model = Staff
         fields = (
-            'name', 'profile_path',
+            'id', 'tmdb_id', 'name', 'profile_path',
         )
 
 
@@ -42,5 +42,6 @@ class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
         fields = (
-            'user', 'movie', 'rating',
+            'id', 'user', 'movie', 'rating',
         )
+        read_only_fields = ('id', 'user', 'movie',)

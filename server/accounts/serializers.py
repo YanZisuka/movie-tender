@@ -15,3 +15,13 @@ class UserSerializer(serializers.ModelSerializer):
             'review_set', 'watch_movies', 'email',
         )
         read_only_fields = ('id', 'username', 'review_set', 'watch_movies',)
+
+
+class SurveySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id', 'username', 'survey',
+        )
+        read_only_fields = ('id', 'username',)

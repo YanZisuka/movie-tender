@@ -1,4 +1,13 @@
 from .models import Movie, Keyword, Staff
+"""
+from  movies.functions import set_staff_database
+import pandas as pd
+data = pd.read_csv('../staff.csv')
+
+for i in range(data.shape[0]):
+    row = data.iloc[i, :]
+    set_staff_database(row)
+"""
 
 def set_database(row):
     movie = Movie()

@@ -25,7 +25,7 @@ class Movie(models.Model):
     vote_average = models.FloatField()
     country = models.CharField(max_length=100)
     keywords = ArrayField(models.CharField(max_length=100), blank=True)
-    providers = ArrayField(models.CharField(max_length=30), blank=True, default=list)
+    providers = ArrayField(models.CharField(max_length=150), blank=True, default=list)
 
     def has_genre(self, genre: str):
         return genre in self.genres

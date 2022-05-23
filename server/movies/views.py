@@ -60,14 +60,21 @@ def movie(request, movie_pk):
 
 
 @api_view(['GET'])
-def genre(request, genre_group):
+def get_staff(request):
+    staffs = random.sample(list(Staff.objects.filter(role='Actor')), 2)
+    serializer = StaffSerializer(staffs, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['GET'])
+def get_genre(request, genre_group):
     movie = random.choice(Movie.objects.filter(genre_group=genre_group))
     serializer = MovieListSerializer(movie)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def keyword(request, keyword_pk):
+def get_keyword(request, keyword_pk):
     kwrd = Keyword.objects.get(pk=keyword_pk)
     movie = random.choice(Movie.objects.filter(keywords__contains=[kwrd.keyword]))
     serializer = MovieListSerializer(movie)

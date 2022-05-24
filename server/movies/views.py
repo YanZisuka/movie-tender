@@ -76,6 +76,7 @@ def get_genre(request, genre_group):
 @api_view(['GET'])
 def get_keyword(request, keyword_pk):
     kwrd = Keyword.objects.get(pk=keyword_pk)
+    print(kwrd)
     movie = random.choice(Movie.objects.filter(keywords__contains=[kwrd.keyword]))
     serializer = MovieListSerializer(movie)
     return Response(serializer.data)

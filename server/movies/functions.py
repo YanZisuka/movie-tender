@@ -1,17 +1,11 @@
-from .models import Movie, Keyword, Staff
-"""
-from  movies.functions import set_staff_database
+from .models import Movie, Keyword, Staff, Credit
 import pandas as pd
-data = pd.read_csv('../staff.csv')
-
-for i in range(data.shape[0]):
-    row = data.iloc[i, :]
-    set_staff_database(row)
+"""
+shell_plus > from movies.functions import *
 """
 
-def set_database(row):
+def set_movies_movie(row):
     movie = Movie()
-    movie.id = row[0]
     movie.title = row[1]
     movie.overview = row[2]
     movie.tmdb_id = row[3]
@@ -20,39 +14,56 @@ def set_database(row):
     movie.adult = row[6]
     movie.release_date = row[7]
     movie.runtime = row[8]
-    genre = row[9].replace("[", "").replace("]", "").split(', ')
+    genre = list(map(lambda x: x.strip("'") if x else None, row[9].replace('[', '').replace(']', '').split(', ')))
     movie.genres = genre
     movie.genre_group = row[10]
     movie.vote_count = row[11]
     movie.vote_average = row[12]
     movie.country = row[13]
-    keywords = row[14].replace("[", "").replace("]", "").split(', ')
-    movie.keywords = keywords
-    movie.providers = [row[15]]
+    keywords = list(map(lambda x: x.strip("'") if x else None, row[14].replace('[', '').replace(']', '').split(', ')))
+    if not keywords[0]: return
+    movie.keywords = keywords if keywords else []
+    movie.providers = [row[15]] if row[15] != 'no' else []
     
     if Movie.objects.filter(tmdb_id=movie.tmdb_id).exists(): return
     movie.save()
 
-def set_keyword_database(row):
-    keywords = Keyword()
-    keywords.id = row[0]
-    keywords.keyword = row[1]
-    keywords.tmdb_id = row[2]
-    keywords.genre_group = row[3]
 
-    if Keyword.objects.filter(tmdb_id=keywords.tmdb_id).exists(): return
-    keywords.save()
+def set_movies_keyword(row):
+    keyword = Keyword()
+    keyword.keyword = row[1]
+    keyword.tmdb_id = row[2]
+    keyword.genre_group = row[3]
 
-def set_staff_database(row):
+    if Keyword.objects.filter(tmdb_id=keyword.tmdb_id).exists(): return
+    keyword.save()
+
+
+def set_movies_staff(row):
     staff = Staff()
-    staff.id = row[0]
     staff.name = row[1]
     staff.tmdb_id = row[2]
     staff.profile_path = row[3]
-    staff.character = row[4]
     staff.role = row[5]
 
+    if not Movie.objects.filter(tmdb_id=row[6]).exists(): return
+    if not Staff.objects.filter(tmdb_id=staff.tmdb_id).exists(): staff.save()
     movie = Movie.objects.get(tmdb_id=row[6])
-    staff.save()
-    staff = Staff.objects.get(id=row[0])
-    staff.films.add(movie)
+    staff = Staff.objects.get(tmdb_id=row[2])
+    Credit.objects.create(movie=movie, staff=staff, character=row[4])
+
+
+data = pd.read_csv('../SetDatabase/movie.csv')
+for i in range(data.shape[0]):
+    row = data.iloc[i, :]
+    set_movies_movie(row)
+
+data = pd.read_csv('../SetDatabase/keyword.csv')
+for i in range(data.shape[0]):
+    row = data.iloc[i, :]
+    set_movies_keyword(row)
+
+data = pd.read_csv('../SetDatabase/staff.csv')
+for i in range(data.shape[0]):
+    row = data.iloc[i, :]
+    set_movies_staff(row)

@@ -68,16 +68,28 @@ class Staff(models.Model):
     """name (`str`), profile_path: (`str`), character: (`str`), role: (`str`), films: (class `Movie`)
     """
 
-    films = models.ManyToManyField(Movie, related_name='credits')
+    films = models.ManyToManyField(Movie, related_name='credits', through='Credit')
 
     name = models.CharField(max_length=100)
     tmdb_id = models.IntegerField()
     profile_path = models.CharField(max_length=100)
-    character = models.CharField(max_length=100)
     role = models.CharField(max_length=20)
 
     def __str__(self):
         return f'Staff {self.pk}: {self.name}'
+
+
+class Credit(models.Model):
+    """character (`str`), staff (class `Staff`), movie (class `Movie`)
+    """
+
+    staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+    character = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.staff}'s character is {self.character} in {self.movie}"
 
 
 class Rating(models.Model):

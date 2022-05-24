@@ -47,17 +47,17 @@ const routes = [
     component:  MovieIndexView,
   },
   {
-    path: '/movies/:movie_pk',
+    path: '/movies/:moviePk',
     name: 'movie',
     component:  MovieDetailView,
   },
   {
-    path: '/movies/:genre_group',
+    path: '/movies/:genreGroup',
     name: 'movieGenre',
     component:  MovieSelectGenreView,
   },
   {
-    path: '/movies/:keyword',
+    path: '/movies/:keywordPk',
     name: 'movieKeyword',
     component: MovieSelectKeywordView,
   },
@@ -67,22 +67,22 @@ const routes = [
     component:  MovieOmakaseView,
   },
   {
-    path: '/community',
+    path: '/reviews',
     name: 'reviews',
     component:  ReviewListView,
   },
   {
-    path: '/community/new',
+    path: '/reviews/new',
     name: 'reviewNew',
     component:  ReviewNewView,
   },
   {
-    path: '/community/:review_pk',
-    name: 'review',
+    path: '/reviews/:reviewPk',
+    name: 'reviewDetail',
     component:  ReviewDetailView,
   },
   {
-    path: '/community/:review_pk/edit',
+    path: '/reviews/:reviewPk/edit',
     name: 'reviewEdit',
     component:  ReviewEditView,
   },

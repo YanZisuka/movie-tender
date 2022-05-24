@@ -2,7 +2,7 @@ const HOST = 'http://localhost:8000/api/v1/'
 
 const ACCOUNTS = 'accounts/'
 const MOVIES = 'movies/'
-const COMMUNITIES = 'reviews/'
+const COMMUNITY = 'reviews/'
 const COMMENTS = 'comments/'
 
 export default {
@@ -11,19 +11,20 @@ export default {
     logout: () => HOST + ACCOUNTS + 'logout/',
     signup: () => HOST + ACCOUNTS + 'signup/',
     currentUserInfo: () => HOST + ACCOUNTS + 'user/',
-    profile: username => HOST + ACCOUNTS + username,
+    profile: username => HOST + ACCOUNTS + `profile/${username}/`,
   },
   movies: {
-    movies : () => HOST + MOVIES,
-    movie : moviePk => HOST + MOVIES + `${moviePk}/`,
-    movieOmakase : () => HOST + MOVIES + 'omakase/'
+    movies: () => HOST + MOVIES,
+    movie: moviePk => HOST + MOVIES + `${moviePk}/`,
+    movieStaff: () => HOST + MOVIES + 'staffs/',
+    movieGenres: genreGroup => HOST + MOVIES + `genres/${genreGroup}/`,
+    movieKeywords: keywordPk => HOST + MOVIES + `keywords/${keywordPk}/`
   },
-  community : {
-    communities : () => HOST + COMMUNITIES,
-    review : reviewPk => HOST + COMMUNITIES + `${reviewPk}`,
-    likeReview: reviewPk => HOST + COMMUNITIES + `${reviewPk}/` + 'like/',
-    comments: reviewPk => HOST + COMMUNITIES + `${reviewPk}/` + COMMENTS,
+  community: {
+    reviews: () => HOST + COMMUNITY,
+    review: reviewPk => HOST + COMMUNITY + `${reviewPk}/`,
+    createComment: reviewPk => HOST + COMMUNITY + `${reviewPk}/` + COMMENTS,
     comment: (reviewPk, commentPk) =>
-      HOST + COMMUNITIES + `${reviewPk}/` + COMMENTS + `${commentPk}/`,
+      HOST + COMMUNITY + `${reviewPk}/` + COMMENTS + `${commentPk}/`,
   }
 }

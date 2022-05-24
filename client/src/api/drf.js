@@ -2,7 +2,7 @@ const HOST = 'http://localhost:8000/api/v1/'
 
 const ACCOUNTS = 'accounts/'
 const MOVIES = 'movies/'
-const COMMUNITIES = 'community/'
+const COMMUNITIES = 'reviews/'
 const COMMENTS = 'comments/'
 
 export default {
@@ -11,7 +11,7 @@ export default {
     logout: () => HOST + ACCOUNTS + 'logout/',
     signup: () => HOST + ACCOUNTS + 'signup/',
     currentUserInfo: () => HOST + ACCOUNTS + 'user/',
-    profile: username => HOST + ACCOUNTS + 'profile/' + username,
+    profile: username => HOST + ACCOUNTS + username,
   },
   movies: {
     movies : () => HOST + MOVIES,

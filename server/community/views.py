@@ -57,18 +57,18 @@ def review(request, review_pk):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
+        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete_review():
         if request.user == review_obj.user:
             res = {
                 'id': review_obj.id,
-                'author': review_obj.user,
+                'author': review_obj.user.username,
                 'detail': 'Successfully deleted.'
             }
             review_obj.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
+        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'GET':
         return get_review_detail()
@@ -84,9 +84,9 @@ def review(request, review_pk):
 def create_comment(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
 
-    serializer = CommentSerializer(request.data)
+    serializer = CommentSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
-        serializer.save(review=review)
+        serializer.save(user=request.user, review=review)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -102,18 +102,18 @@ def comment(request, review_pk, comment_pk):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
+        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete_comment():
         if request.user == comment_obj.user:
             res = {
                 'id': comment_obj.id,
-                'author': comment_obj.user,
+                'author': comment_obj.user.username,
                 'detail': 'Successfully deleted.'
             }
             comment_obj.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'Unauthorized user.'}, status=status.HTTP_401_UNAUTHORIZED)
+        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     if request.method == 'PUT':
         return update_comment()

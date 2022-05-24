@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import IndexView from '@/views/IndexView.vue'
+
 import MovieIndexView from '@/views/MovieIndexView.vue'
 import MovieDetailView from '@/views/MovieDetailView.vue'
 import MovieSelectGenreView from '@/views/MovieSelectGenreView'
@@ -21,6 +23,11 @@ import NotFound404 from '../views/NotFound404.vue'
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '',
+    name: 'index',
+    component: IndexView
+  },
   {
     path: '/login',
     name: 'login',

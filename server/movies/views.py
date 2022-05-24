@@ -1,6 +1,7 @@
 import random
 
 from django.shortcuts import get_object_or_404
+from django.db.models import Sum
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -16,7 +17,7 @@ def index(request):
 
     def get_recommendations():
         if request.user.survey:
-            movies = Movie.objects.filter(keywords__contains=[])
+            movies = Movie.objects.filter(keywords__overlap=[kwrd for kwrd in request.user.survey])
             serializer = MovieListSerializer(movies, many=True)
             return Response(serializer.data)
         else: return Response({
@@ -49,8 +50,19 @@ def movie(request, movie_pk):
         serializer = RatingSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             if Rating.objects.filter(user=request.user, movie=movie_obj).exists():
+
+                movie_obj.vote_average = ((movie_obj.vote_average * movie_obj.vote_count) - Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(Sum('rating'))['rating__sum']) / (movie_obj.vote_count - Rating.objects.filter(user=request.user, movie=movie_obj).count())
+                movie_obj.vote_count -= Rating.objects.filter(user=request.user, movie=movie_obj).count()
+
                 Rating.objects.filter(user=request.user, movie=movie_obj).delete()
             serializer.save(user=request.user, movie=movie_obj)
+
+            # 영화 평점 재계산
+            new_rating = ((movie_obj.vote_average * movie_obj.vote_count) + Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(Sum('rating'))['rating__sum']) / (movie_obj.vote_count + 1)
+            movie_obj.vote_average = round(new_rating, 1)
+            movie_obj.vote_count += 1
+            movie_obj.save(update_fields=['vote_count', 'vote_average'])
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     if request.method == 'GET':

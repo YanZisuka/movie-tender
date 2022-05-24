@@ -8,7 +8,8 @@ shell_plus > from movies.factories import *
 def set_movies_movie(row):
     movie = Movie()
     movie.title = row[1]
-    movie.overview = row[2] if row[2] != 'false' else ''
+    if row[2] == 'false': return
+    movie.overview = row[2]
     movie.tmdb_id = row[3]
     movie.poster_path = row[4]
     movie.video_path = row[5]
@@ -30,6 +31,10 @@ def set_movies_movie(row):
     
     if Movie.objects.filter(tmdb_id=movie.tmdb_id).exists(): return
     movie.save()
+    movie = Movie.objects.get(tmdb_id=movie.tmdb_id)
+    if movie.video_path == 'nan':
+        movie.video_path = ''
+        movie.save(update_fields=['video_path'])
 
 
 def set_movies_keyword(row):

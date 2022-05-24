@@ -65,7 +65,7 @@ class Movie(models.Model):
 
 
 class Staff(models.Model):
-    """name (`str`), profile_path: (`str`), character: (`str`), role: (`str`), films: (class `Movie`)
+    """name (`str`), profile_path: (`str`), role: (`str`), films: (class `Movie`)
     """
 
     films = models.ManyToManyField(Movie, related_name='credits', through='Credit')

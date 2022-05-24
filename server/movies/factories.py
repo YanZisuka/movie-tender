@@ -1,22 +1,25 @@
-from .models import Movie, Keyword, Staff, Credit
 import pandas as pd
+
+from .models import Movie, Keyword, Staff, Credit
 """
-shell_plus > from movies.functions import *
+shell_plus > from movies.factories import *
 """
 
 def set_movies_movie(row):
     movie = Movie()
     movie.title = row[1]
-    movie.overview = row[2]
+    movie.overview = row[2] if row[2] != 'false' else ''
     movie.tmdb_id = row[3]
     movie.poster_path = row[4]
     movie.video_path = row[5]
     movie.adult = row[6]
+    if row[7] == 'false': return
     movie.release_date = row[7]
     movie.runtime = row[8]
     genre = list(map(lambda x: x.strip("'") if x else None, row[9].replace('[', '').replace(']', '').split(', ')))
     movie.genres = genre
     movie.genre_group = row[10]
+    if row[11] < 200: return
     movie.vote_count = row[11]
     movie.vote_average = row[12]
     movie.country = row[13]
@@ -41,8 +44,10 @@ def set_movies_keyword(row):
 
 def set_movies_staff(row):
     staff = Staff()
+    if row[1] == 'Unknown': return
     staff.name = row[1]
     staff.tmdb_id = row[2]
+    if row[3][-7:] == 'Unknown': return
     staff.profile_path = row[3]
     staff.role = row[5]
 

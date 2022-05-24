@@ -16,13 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-VER_1 = 'api/v1/'
+VER = 'api/v1/'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(VER_1 + 'accounts/', include('dj_rest_auth.urls')),
-    path(VER_1 + 'accounts/signup/', include('dj_rest_auth.registration.urls')),
-    path(VER_1 + 'accounts/', include('accounts.urls')),
-    path(VER_1 + 'movies/', include('movies.urls')),
-    path(VER_1 + 'reviews/', include('community.urls')),
+    path(VER + 'accounts/', include('dj_rest_auth.urls')),
+    path(VER + 'accounts/signup/', include('dj_rest_auth.registration.urls')),
+    path(VER + 'accounts/', include('accounts.urls')),
+    path(VER + 'movies/', include('movies.urls')),
+    path(VER + 'reviews/', include('community.urls')),
 ]

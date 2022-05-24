@@ -2,7 +2,7 @@
   <div>
     <h1>Login</h1>
 
-    <!-- <account-error-list v-if="authError"></account-error-list>
+    <account-error-list v-if="authError"></account-error-list>
 
 
     <form @submit.prevent="login(credentials)">
@@ -17,13 +17,33 @@
       </div>
 
       <button>Login</button>
-    </form> -->
+    </form>
   </div>
 </template>
 
 <script>
-export default {
+import { mapActions, mapGetters } from 'vuex'
+import AccountErrorList from '@/components/AccountErrorList.vue'
 
+export default {
+  components : {
+    AccountErrorList
+    },
+  name : 'LoginView',
+  data() {
+    return {
+      credentials : {
+        username : '',
+        password : ''
+      }
+    }
+  },
+  computed : {
+    ...mapGetters(['authError'])
+  },
+  methods : {
+    ...mapActions(['login'])
+  },
 }
 </script>
 

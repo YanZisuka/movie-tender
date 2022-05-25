@@ -1,14 +1,21 @@
 <template>
   <div v-if="isMovie" class="row justify-content-center align-items-center p-5">
+
     <div class="col-6 text-start">
-      <h1>{{ movie.title }}</h1>
-      <h2>{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
-      <button v-if="movie.providers[0]">{{ movie.providers[0] }}</button>
+      <h1 class="movie-title">{{ movie.title }}</h1>
+      <h2 class="movie-subtitle">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
+      <button class="provider-btn d-flex justify-content-start align-items-center mt-3" v-if="movie.providers[0]">
+        <img v-if="movie.providers[0] === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
+        <span>
+          {{ movie.providers[0] }}
+        </span>
+      </button>
     </div>
 
     <div class="col-6">
       <movie-info :movieDetail="movie"></movie-info>
     </div>
+
   </div>
 </template>
 
@@ -24,7 +31,9 @@ export default {
   },
 
   data() {
-    return {}
+    return {
+      netflixLogo: 'https://image.tmdb.org/t/p/original/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg',
+    }
   },
 
   computed: {
@@ -59,5 +68,31 @@ export default {
 </script>
 
 <style>
+.movie-title {
+  font-size: 4.5rem;
+  font-weight: 600;
+}
 
+.movie-subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.provider-btn {
+  background-color: #000;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 500;
+  width: 13rem;
+  height: 4rem;
+  border-radius: 0.5rem;
+}
+
+.provider-btn > img {
+  width: 3rem;
+}
+
+.provider-btn > span {
+  width: 100%;
+}
 </style>

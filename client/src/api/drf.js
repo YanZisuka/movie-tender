@@ -18,7 +18,7 @@ export default {
     movie: moviePk => HOST + MOVIES + `${moviePk}/`,
     movieStaff: () => HOST + MOVIES + 'staffs/',
     movieGenres: genreGroup => HOST + MOVIES + `genres/${genreGroup}/`,
-    moviesWithKeyword: pick_num => HOST + MOVIES + `keywords/${pick_num}/`
+    moviesWithKeyword: pickNum => HOST + MOVIES + `keywords/${pickNum}/`
   },
   community: {
     reviews: () => HOST + COMMUNITY,

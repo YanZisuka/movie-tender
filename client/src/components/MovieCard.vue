@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex flex-column align-items-center card-frame">
-    <img class="movie-card" :src="movieCard.poster_path" alt="movie-card">
+    <img class="movie-card-img" :src="movieCard.poster_path" alt="movie-card">
     <img class="card-shadow mt-5" :src="movieCard.poster_path" alt="card-shadow">
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .card-frame {
   position: relative;
   left: 10%;
@@ -43,7 +43,7 @@ export default {
   overflow: hidden;
 }
 
-.movie-card {
+.movie-card-img {
   width: 45vh;
 }
 

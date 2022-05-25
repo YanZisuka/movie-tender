@@ -74,9 +74,9 @@ export default {
         })
     },
 
-    fetchMovieCards({ getters, commit }, pick_num) {
+    fetchMovieCards({ getters, commit }, pickNum) {
       axios({
-        url: drf.movies.moviesWithKeyword(pick_num),
+        url: drf.movies.moviesWithKeyword(pickNum),
         method: 'GET',
         headers: getters.authHeader,
       })

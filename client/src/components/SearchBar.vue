@@ -5,7 +5,6 @@
       @keydown.enter="fetchKeywordReview(inputKeyword)"
       type="text"
       placeholder="Search Movie..."
-      autofocus
     />
   </div>
 </template>

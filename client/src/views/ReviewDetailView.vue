@@ -1,8 +1,13 @@
 <template>
   <div>
     <h2>reviewDetail</h2>
+    <div class="card">
+      <div class="card-body">
+        <img :src="posterPath" class="card-img-top h-100" alt="POSTER" align="left">
+        <h4>{{ review.user.username }}</h4>
+        <h2>{{ review.movie.title }}</h2>
+        <h3>{{ review.content }}</h3>
 
-    <h3>content : {{review.content}}</h3>
     <div v-if="isAuthor">
       <router-link :to="{ name : 'reviewEdit', params : {reviewPk} }">
       <button>Edit</button>
@@ -10,14 +15,12 @@
 
       <button @click="deleteReview(reviewPk)">Delete</button>
     </div>
-    <div>
-      Likeit:
-      <button @click="likeReview(reviewPk)">
+      <!-- <button @click="likeReview(reviewPk)">
         {{ likeCount }}
-      </button>
-    </div>
-    <!-- <comment-list></comment-list> -->
+      </button> -->
     <comment-list :comments="review.comment_set"></comment-list>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,7 +30,7 @@
 
   export default {
     components : { CommentList }, 
-    name : 'ReviewDetail',
+    name : 'ReviewDetailView',
     data(){
       return {
         reviewPk : this.$route.params.reviewPk,
@@ -35,20 +38,23 @@
     },
     computed: {
         ...mapGetters(['isAuthor', 'review', 'likeCount']),
+      posterPath(){
+        return this.review.movie.poster_path
+    },
       // likeCount(){
-      //   return this.likeCount?.like_users_count 
+      //   return this.likeCount? this.likeCount: 0
       // },
     },
     methods: {
       ...mapActions([
         'fetchReview',
-        'likeReview',
+        // 'likeReview',
         'deleteReview',
       ])
     },
     created() {
       this.fetchReview(this.reviewPk)
-    },
+},
 }
 </script>
 

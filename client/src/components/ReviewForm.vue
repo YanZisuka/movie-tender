@@ -28,7 +28,7 @@ export default {
   data() {
     return {
       newReview: {
-        movie : this.review.movie,
+        movie : this.review.movie.id,
         content: this.review.content,
       }
     }

@@ -1,16 +1,21 @@
 <template>
   <div>
-    <div class="card">
-      <div class="card-body">
-        <img :src="posterPath" class="card-img-top h-50" alt="POSTER" align="left">
-        <router-link :to="{ name: 'reviewDetail', params: { reviewPk} }" class="text-deco" >
-          <h4>{{ review.user.username }}</h4>
-          <h2>{{ review.movie.title }}</h2>
-          <!-- <span>{{ likeCount }}</span> -->
-          <h5>{{ review.content }}</h5>
-        </router-link>
+    <router-link class="text-decoration-none" :to="{ name: 'reviewDetail', params: { reviewPk: review.id } }">
+      <div class="review-item d-flex flex-row align-items-center my-5">
+        <div>
+          <img class="review-item-poster" :src="posterPath" :alt="`${review.movie.title}'s poster`">
+        </div>
+        <div class="text-start text-black ms-5">
+          <h2 class="review-item-author">{{ review.user.nickname }}</h2>
+          <h1 class="review-item-title">{{ review.movie.title }}</h1>
+          <div class="like-meter d-flex justify-content-evenly align-items-center">
+            <i class="text-white me-3 fa-solid fa-heart"></i>
+            <span>{{ review.like_users.length }}</span>
+          </div>
+          <p class="review-item-text ellipsis pe-5">{{ review.content }}</p>
+        </div>
       </div>
-    </div>
+    </router-link>
   </div>
 </template>
 <script>
@@ -18,37 +23,86 @@ import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: "ReviewCard",
+
   props: {
     review : Object,
   },
-  data(){
+
+  data() {
     return {
       reviewPk : this.review.id,
       }
-    },
-  computed : {
+  },
+
+  computed: {
     posterPath(){
       return this.review.movie.poster_path
     },
     ...mapGetters(['isAuthor', 'isReview'])
   },
-  methods : {
+
+  methods: {
     ...mapActions(['fetchReview'])
   },
-  created(){
-    this.fetchReview(this.reviewPk)
+
+  created() {
   }
 }
 </script>
 
 <style>
-.card-img-top {
-    width: 10%;
-    height: 15vw;
-    object-fit: cover;
+.review-item {
+  background-color: #fbfbfb;
+  border-radius: 0.5rem;
+  box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 100%;
 }
-.text-deco {
-  text-decoration: none;
-  color: black;
+
+.like-meter {
+  border: 1px solid #cf1224;
+  background: linear-gradient(90deg, #cf1224 50%, #fff 50%);
+  border-radius: 0.25rem;
+  color: #cf1224;
+  width: 5rem;
+  height: 2rem;
+  margin-bottom: 1rem;
+}
+
+.like-meter span {
+  font-weight: 800;
+}
+
+.review-item:hover {
+  background-color: #eee;
+}
+
+.review-item-poster {
+  width: 12rem;
+  border-radius: 0.5rem;
+}
+
+.review-item-text {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 26px;
+}
+
+.review-item-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.review-item-author {
+  font-size: 22px;
+  font-weight: 700;
+  color: #c4c4c4;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
 }
 </style>

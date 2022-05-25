@@ -1,10 +1,8 @@
 <template>
   <nav v-if="isCurrentUser" class="d-flex justify-content-between sticky-top p-3">
-    <div>
-      <router-link :to="{ name: 'index' }" class="navbar-brand mx-3">
-        <img class="logo" src="@/assets/logo.png" alt="logo">
-      </router-link>
-    </div>
+    <router-link :to="{ name: 'index' }" class="navbar-brand mx-3">
+      <div class="navbar-logo">movietender</div>
+    </router-link>
     <div class="d-flex align-items-center">
       <router-link :to="{ name: 'movies' }" class="text-decoration-none mx-5">OMAKASE</router-link>
       <router-link :to="{ name: 'reviews' }" class="text-decoration-none mx-5">COMMUNITY</router-link>
@@ -42,8 +40,9 @@ export default {
 </script>
 
 <style>
-.logo {
-  width: 3rem;
+.navbar-logo {
+  font-family: 'Lobster', cursive;
+  font-size: 2rem;
 }
 
 .profile-img {

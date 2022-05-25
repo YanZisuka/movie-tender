@@ -1,9 +1,9 @@
 <template>
   <div class="frame">
+    <p class="omakase-text mt-5">{{ profile.nickname }}님이 좋아하실 영화들이에요!</p>
     <router-link :to="{ name: 'movieSurvey' }">
       <button>다시하기</button>
     </router-link>
-    <p class="mt-5">{{ profile.nickname }}님이 좋아하실 영화들이에요!</p>
 
     <omakase-item
     v-for="movie in movies"
@@ -44,7 +44,14 @@ export default {
 </script>
 
 <style>
+.omakase-text {
+  font-size: 4rem;
+  font-weight: 700;
+  line-height: 77px;
+  color: #333;
+}
+
 .frame {
-  margin: 5rem;
+  margin: 3rem 5rem;
 }
 </style>

@@ -12,9 +12,9 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'username', 'first_name', 'last_name',
             'nickname', 'followers_count', 'followings_count',
-            'review_set', 'watch_movies', 'email',
+            'review_set', 'watch_movies', 'email', 'survey',
         )
-        read_only_fields = ('id', 'username', 'review_set', 'watch_movies',)
+        read_only_fields = ('id', 'username', 'review_set', 'watch_movies', 'survey',)
 
 
 class SurveySerializer(serializers.ModelSerializer):

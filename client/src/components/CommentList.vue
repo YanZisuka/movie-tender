@@ -1,13 +1,29 @@
 <template>
-  <div></div>
+  <div>
+    
+    <ul>
+      <comment-list-item 
+        v-for="comment in comments" 
+        :comment="comment" 
+        :key="comment.id">
+      </comment-list-item>        
+    </ul>
+
+    <comment-form></comment-form>
+  </div>
 </template>
 
 <script>
-export default {
+import CommentListItem from '@/components/CommentListItem.vue'
+import CommentForm from '@/components/CommentForm.vue'
 
+
+export default {
+  name: 'CommentList',
+  components: { CommentForm, CommentListItem },
+  props: { comments: Array },
 }
 </script>
 
 <style>
-
 </style>

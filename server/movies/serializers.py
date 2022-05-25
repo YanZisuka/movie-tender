@@ -8,7 +8,9 @@ class MovieSerializer(serializers.ModelSerializer):
 
         class Meta:
             model = Staff
-            fields = ('id', 'tmdb_id', 'name', 'character', 'role',)
+            fields = ('id', 'tmdb_id', 'name', 'role',)
+
+    credits = StaffSerializer(many=True)
 
     class Meta:
         model = Movie

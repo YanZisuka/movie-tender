@@ -17,7 +17,7 @@ def index(request):
         return Response(serializer.data)
 
     def create_review():
-        serializer = ReviewSerializer(data=request.data)
+        serializer = CreateReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
             return Response(serializer.data, status=status.HTTP_201_CREATED)

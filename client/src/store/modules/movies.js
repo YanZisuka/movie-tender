@@ -7,25 +7,22 @@ export default {
   state: {
     movies: [],
     movieDetail: {},
-    movieDisplayCard: {},
-    movieSelectionCard: {},
-    rightMovieCard: {},
+    movieCard: {},
+    movieCards: [],
   },
 
   getters: {
     movies: state => state.movies,
     movieDetail: state => state.movieDetail,
-    movieDisplayCard: state => state.movieDisplayCard,
-    movieSelectionCard: state => state.movieSelectionCard,
-    rightMovieCard: state => state.rightMovieCard,
+    movieCard: state => state.movieCard,
+    movieCards: state => state.movieCards,
   },
 
   mutations: {
     SET_MOVIES: (state, movies) => state.movies = movies,
     SET_MOVIE_DETAIL: (state, movie) => state.movieDetail = movie,
-    SET_MOVIE_DISPLAY_CARD: (state, abstractMovie) => state.movieDisplayCard = abstractMovie,
-    SET_MOVIE_SELECTION_CARD: (state, abstractMovie) => state.movieSelectionCard = abstractMovie,
-    SET_RIGHT_MOVIE_CARD: (state, abstractMovie) => state.rightMovieCard = abstractMovie,
+    SET_MOVIE_CARD: (state, movie) => state.movieCard = movie,
+    SET_MOVIE_CARDS: (state, movies) => state.movieCards = movies,
   },
 
   actions: {
@@ -59,14 +56,14 @@ export default {
         })
     },
 
-    fetchMovieDisplayCard({ getters, commit }, keywordPk) {
+    fetchMovieCard({ getters, commit }) {
       axios({
-        url: drf.movies.movieKeywords(keywordPk),
+        url: drf.movies.moviesWithKeyword(1),
         method: 'GET',
         headers: getters.authHeader,
       })
         .then(res => {
-          commit('SET_MOVIE_DISPLAY_CARD', res.data)
+          commit('SET_MOVIE_CARD', res.data[0])
         })
         .catch(err => {
           if (err.response.status === 404) {
@@ -77,7 +74,36 @@ export default {
         })
     },
 
+    fetchMovieCards({ getters, commit }, pick_num) {
+      axios({
+        url: drf.movies.moviesWithKeyword(pick_num),
+        method: 'GET',
+        headers: getters.authHeader,
+      })
+        .then(res => {
+          commit('SET_MOVIE_CARDS', res.data)
+        })
+        .catch(err => {
+          if (err.response.status === 404) {
+            router.push({ name: 'NotFound404' })
+          } else {
+            console.error(err.response)
+          }
+        })
+    },
 
+    setSurvey({ getters }, selectionResult) {
+      axios({
+        url: drf.movies.movies(),
+        method: 'PUT',
+        data: {
+          'survey': selectionResult
+        },
+        headers: getters.authHeader,
+      })
+        .then(res => console.log(res.data))
+        .catch(err => console.error(err.response))
+    },
   },
 
 }

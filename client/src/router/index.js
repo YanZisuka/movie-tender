@@ -5,9 +5,7 @@ import IndexView from '@/views/IndexView.vue'
 
 import MovieIndexView from '@/views/MovieIndexView.vue'
 import MovieDetailView from '@/views/MovieDetailView.vue'
-import MovieSelectGenreView from '@/views/MovieSelectGenreView'
-import MovieSelectKeywordView from '@/views/MovieSelectKeywordView'
-import MovieOmakaseView from '@/views/MovieOmakaseView'
+import MovieSurveyView from '@/views/MovieSurveyView.vue'
 
 import ReviewListView from '@/views/ReviewListView'
 import ReviewNewView from '@/views/ReviewNewView'
@@ -51,27 +49,17 @@ const routes = [
   {
     path: '/movies',
     name: 'movies',
-    component:  MovieIndexView,
+    component: MovieIndexView,
+  },
+  {
+    path: '/movies/survey',
+    name: 'movieSurvey',
+    component: MovieSurveyView,
   },
   {
     path: '/movies/:moviePk',
     name: 'movie',
     component:  MovieDetailView,
-  },
-  {
-    path: '/movies/:genreGroup',
-    name: 'movieGenre',
-    component:  MovieSelectGenreView,
-  },
-  {
-    path: '/movies/:keywordPk',
-    name: 'movieKeyword',
-    component: MovieSelectKeywordView,
-  },
-  {
-    path: '/movies/omakase',
-    name: 'movieOmakase',
-    component:  MovieOmakaseView,
   },
   {
     path: '/reviews',

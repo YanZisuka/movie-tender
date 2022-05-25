@@ -1,29 +1,41 @@
 <template>
-  <div class="row justify-content-center align-items-center mt-5">
-    <div class="text-start col-6 ps-5">
-      <p class="main-text m-0">무비텐더가 {{ currentUser.username }}님이</p>
-      <p class="main-text m-0">좋아하실만한 영화를</p>
-      <p class="main-text mt-0">추천해드릴게요!</p>
-      <p class="sub-text m-0">두 개의 선택지 중 더 마음에 드는 영화를 골라주시면,</p>
-      <p class="sub-text mt-0">{{ currentUser.username }}님의 취향에 맞는 영화를 추천해드려요.</p>
-      <router-link :to="{ name: 'movieOmakase' }">
-        <button>Start!</button>
-      </router-link>
+  <div v-if="isCurrentUser && isMyProfile">
+
+    <div v-if="!isSurvey" class="row justify-content-center align-items-center mt-5">
+      <div class="text-start col-6 ps-5">
+        <p class="main-text m-0">무비텐더가 {{ profile.nickname }}님이</p>
+        <p class="main-text m-0">좋아하실만한 영화를</p>
+        <p class="main-text mt-0">추천해드릴게요!</p>
+        <p class="sub-text m-0">두 개의 선택지 중 더 마음에 드는 영화를 골라주시면,</p>
+        <p class="sub-text mt-0">{{ profile.nickname }}님의 취향에 맞는 영화를 추천해드려요.</p>
+        <router-link :to="{ name: 'movieSurvey' }">
+          <button>Start!</button>
+        </router-link>
+      </div>
+      <div class="col-6">
+        <movie-card :movieCard="movieCard"></movie-card>
+      </div>
     </div>
-    <movie-card-view :movieDisplayCard="movieDisplayCard"></movie-card-view>
+
+    <div v-if="isSurvey">
+      <movie-omakase></movie-omakase>
+    </div>
+
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
 import { mapGetters, mapActions } from 'vuex'
-import MovieCardView from '@/components/MovieCardView.vue'
+import MovieCard from '@/components/MovieCard.vue'
+import MovieOmakase from '@/components/MovieOmakase.vue'
 
 export default {
   name: 'MovieIndexView',
   
   components: {
-    MovieCardView
+    MovieCard,
+    MovieOmakase
   },
 
   data() {
@@ -33,16 +45,30 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['currentUser', 'movieDisplayCard'])
+    ...mapGetters(['currentUser', 'profile', 'movieCard',]),
+    isCurrentUser() {
+      return !_.isEmpty(this.currentUser)
+    },
+    isMyProfile() {
+      return this.profile.username === this.currentUser.username
+    },
+    isSurvey() {
+      if (this.profile.survey.length === 0) {
+        return false 
+      } else {
+        return true
+      }
+    }
   },
 
   methods: {
-    ...mapActions(['fetchCurrentUser', 'fetchMovieDisplayCard'])
+    ...mapActions(['fetchProfile', 'fetchMovieCard', 'fetchMovieCards',])
   },
 
   created() {
-    this.fetchCurrentUser()
-    this.fetchMovieDisplayCard(_.sample([82, 162]))
+    this.fetchMovieCards(10)
+    this.fetchMovieCard()
+    this.fetchProfile(this.currentUser)
   },
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <nav class="d-flex justify-content-between sticky-top p-3">
+  <nav v-if="isCurrentUser" class="d-flex justify-content-between sticky-top p-3">
     <div>
       <router-link :to="{ name: 'index' }" class="navbar-brand mx-3">
         <img class="logo" src="@/assets/logo.png" alt="logo">
@@ -17,13 +17,17 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'NavBar',
 
   computed: {
-    ...mapGetters(['currentUser'])
+    ...mapGetters(['currentUser']),
+    isCurrentUser() {
+      return !_.isEmpty(this.currentUser)
+    },
   },
 
   methods: {

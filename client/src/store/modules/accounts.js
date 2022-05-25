@@ -6,7 +6,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default{
+export default {
   state: {
     token: localStorage.getItem('token') || '' ,
     currentUser: {},
@@ -19,8 +19,8 @@ export default{
     currentUser: state => state.currentUser,
     profile: state => state.profile,
     authError: state => state.authError,
-    authHeader: state => ({ Authorization: `Token ${state.token}`})
-    },
+    authHeader: state => ({ Authorization: `Token ${state.token}`}),
+  },
 
   mutations: {
     SET_TOKEN: (state, token) => state.token = token,
@@ -75,6 +75,7 @@ export default{
             commit('SET_AUTH_ERROR', err.response.data)
         })
     },
+
     logout({ getters, dispatch }){
         axios({
             url : drf.accounts.logout(),
@@ -88,6 +89,7 @@ export default{
           })
           .catch(err => console.error(err.response))
     },
+
     fetchCurrentUser({ commit, getters, dispatch }){
       if (getters.isLoggedIn){
         axios({
@@ -105,7 +107,7 @@ export default{
       }
     },
     
-    fetchProfile({ commit, getters}, {username}){
+    fetchProfile({ commit, getters }, { username }){
       axios({
         url : drf.accounts.profile(username),
         method : 'get',
@@ -114,7 +116,6 @@ export default{
           .then(res => {
               commit('SET_PROFILE', res.data)
           })
-    }
+    },
   },
-
 }

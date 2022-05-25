@@ -2,6 +2,7 @@ import drf from '@/api/drf'
 import router from '@/router'
 import axios from 'axios'
 import _ from 'lodash'
+
 export default {
 
   state: {

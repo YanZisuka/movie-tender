@@ -1,6 +1,7 @@
 <template>
   <div>
     
+    <comment-form></comment-form>
     <ul>
       <comment-list-item 
         v-for="comment in comments" 
@@ -9,7 +10,6 @@
       </comment-list-item>        
     </ul>
 
-    <comment-form></comment-form>
   </div>
 </template>
 

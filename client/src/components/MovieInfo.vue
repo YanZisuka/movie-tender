@@ -2,6 +2,7 @@
   <div class="movie-info">
     
     <iframe
+      v-if="videoPath"
       class="movie-info-video"
       :src="videoPath"
       frameborder="0"
@@ -50,7 +51,9 @@ export default {
   computed: {
     videoPath() {
       const key = this.movieDetail.video_path.split('=')
-      return `https://www.youtube.com/embed/${key[key.length - 1]}`
+      if (key[key.length - 1]) {
+        return `https://www.youtube.com/embed/${key[key.length - 1]}`
+      } else { return '' }
     },
     credits() {
       return this.movieDetail.credits.filter(actor => {

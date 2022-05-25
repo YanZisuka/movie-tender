@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p class="m-0">지금,</p>
-    <p class="m-0">어떤 영화를 볼지 고민된다면?</p>
+    <p class="index-text m-0">지금,</p>
+    <p class="index-text m-0">어떤 영화를 볼지 고민된다면?</p>
   </div>
 </template>
 
@@ -10,16 +10,14 @@
 export default {
   name: 'IndexView',
 
-  methods: {
-  },
+  methods: {},
 
-  created() {
-  }
+  created() {},
 }
 </script>
 
 <style>
-p {
+.index-text {
   font-size: 4rem;
   font-weight: 700;
   line-height: 77px;

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>{{profile.nickname}}'s Profile</h1>
+    <h1>{{profile.username}}'s Profile</h1>
     <button>Follow</button>
-    <h4>{{profile.username}}</h4>
+    <!-- <h4>{{profile.username}}</h4> -->
     <p>follower {{profile.followers_count}} following {{profile.followings_count}}</p>
 
 

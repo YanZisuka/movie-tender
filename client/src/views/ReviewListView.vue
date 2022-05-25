@@ -4,16 +4,8 @@
     <search-bar></search-bar>
     <h4>Latest Reviews</h4>
     <ul>
-      <review-card v-for="review in reviews" :key="review.id" :review="review"></review-card>
-      <!-- <li v-for="review in reviews" :key="review.id">
-        <router-link 
-          :to="{ name: 'reviewDetail', params: { reviewPk: review.id} }">
-        {{ review.user }}
-          {{ review.like_users.length}}
-          {{ review.movie}}
-          {{ review.content }}
-        </router-link>
-      </li> -->
+      <review-card v-for="review in reviews" :key="review.id" :review="review">
+      </review-card>
     </ul>
   </div>
 </template>
@@ -28,7 +20,7 @@ export default {
   name : 'ReviewList',
   components : { SearchBar, ReviewCard },
   computed : {
-    ...mapGetters(['reviews'])
+    ...mapGetters(['reviews',])
   },
   methods : {
     ...mapActions(['fetchReviews'])

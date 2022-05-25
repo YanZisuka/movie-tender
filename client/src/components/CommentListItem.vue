@@ -1,7 +1,7 @@
 <template>
-  <li>
-     <router-link :to="{ name: 'profile', params: { username: comment.user } }">
-      {{ comment.user }}
+  <ul>
+     <router-link :to="{ name: 'profile', params: { username: comment.user.username } }">
+      {{ comment.user.username }}
     </router-link>: 
     
     <span v-if="!isEditing">{{ payload.content }}</span>
@@ -13,12 +13,11 @@
       <button @click="switchIsEditing">Cancle</button>
     </span>
 
-    <span v-if="currentUser.pk === comment.user && !isEditing">
+    <span v-if="currentUser.pk === comment.user.id && !isEditing">
       <button @click="switchIsEditing">Edit</button> |
       <button @click="deleteComment(payload)">Delete</button>
     </span>
-    <hr>
-  </li>
+  </ul>
 </template>
 
 <script>

@@ -8,17 +8,21 @@ export default {
   state: {
     reviews : [],
     review : {},
-    likeCount : 0,
+    // likeCount : {},
+    movie : {},
   },
 
   getters: {
     reviews : state => state.reviews,
     review : state => state.review,
     isAuthor : (state, getters) => {
-      return state.review.user === getters.currentUser.pk
+      return state.review.user.id === getters.currentUser.pk
     },
     isReview: state => !_.isEmpty(state.review),
-    likeCount : state => state.likeCount,
+    // likeCount : state => state.likeCount.like_users_count,
+    // isLike : state => state.likeCount.is_like,
+    movie : state => state.movie,
+
   },
 
   mutations: {
@@ -26,6 +30,8 @@ export default {
     SET_REVIEW : (state, review) => state.review = review,
     SET_LIKECOUNT : (state, likeCount) => state.likeCount = likeCount,
     SET_REVIEW_COMMENTS: (state, comments) => (state.review.comments = comments),
+    SET_MOVIE : (state, movie) => ( state.movie = movie),
+
   },
 
   actions: {
@@ -51,16 +57,17 @@ export default {
             router.push({ name : 'NotFound404'})
           }})
     },
-    likeReview({ commit, getters }, reviewPk){
-      axios({
-        url : drf.community.review(reviewPk),
-        method : 'post',
-        headers : getters.authHeader,
-      })
-        .then(res=> {
-          commit('SET_LIKECOUNT', res.data.like_users_count)})
-        .catch(err => console.error(err.response))
-    },
+    // likeReview({ commit, getters }, reviewPk){
+    //   axios({
+    //     url : drf.community.review(reviewPk),
+    //     method : 'post',
+    //     headers : getters.authHeader,
+    //   })
+    //     .then(res=> {
+    //       console.log(res.data)
+    //       commit('SET_LIKECOUNT', res.data)})
+    //     .catch(err => console.error(err.response))
+    // },
     createReview({ commit, getters }, review) {
       axios({
         url: drf.community.reviews(),
@@ -142,19 +149,15 @@ export default {
             .catch(err => console.error(err.response))
         }
       },
-
-    // fetchMovie({commit, getters }, moviePk){
-    //   console.log(moviePk)
-    //   axios({
-    //     url : drf.movies.movie(moviePk),
-    //     method : 'get',
-    //     headers : getters.authHeader,
-    //   })
-    //     .then(res => {
-    //       commit('SET_MOVIE', res.data)
-    //       console.log(moviePk)})
-    //     .catch(err => console.error(err.response))
-    // },
-
+    fetchMovie({commit, getters }, moviePk){
+      axios({
+        url : drf.movies.movie(moviePk),
+        method : 'get',
+        headers : getters.authHeader,
+      })
+        .then(res => {
+          commit('SET_MOVIE', res.data)})
+        .catch(err => console.error(err.response))
+    },
   },
 }

@@ -43,6 +43,7 @@ def set_movies_keyword(row):
     keyword.tmdb_id = row[2]
     keyword.genre_group = row[3]
 
+    if Movie.objects.filter(keywords__contains=[keyword.keyword]).count() < 3: return
     if Keyword.objects.filter(tmdb_id=keyword.tmdb_id).exists(): return
     keyword.save()
 

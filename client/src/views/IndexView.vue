@@ -6,8 +6,15 @@
 </template>
 
 <script>
+
 export default {
   name: 'IndexView',
+
+  methods: {
+  },
+
+  created() {
+  }
 }
 </script>
 

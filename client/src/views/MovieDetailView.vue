@@ -1,10 +1,30 @@
 <template>
-  <div></div>
+  <div>
+
+  </div>
 </template>
 
 <script>
-export default {
+import { mapGetters, mapActions } from 'vuex'
 
+export default {
+  name: 'MovieDetailView',
+
+  data() {
+    return {}
+  },
+
+  computed: {
+    ...mapGetters(['currentUser', 'movieDisplayCard'])
+  },
+
+  methods: {
+    ...mapActions(['fetchCurrentUser', 'fetchMovieDisplayCard'])
+  },
+
+  created() {
+    this.fetchCurrentUser()
+  },
 }
 </script>
 

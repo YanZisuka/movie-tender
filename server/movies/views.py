@@ -26,7 +26,11 @@ def index(request):
             })
 
     def set_survey():
-        serializer = SurveySerializer(instance=request.user, data=request.data)
+        validation = {'survey': []}
+        for kwrd in request.data['survey']:
+            if Keyword.objects.filter(keyword=kwrd).exists(): validation['survey'].append(kwrd)
+
+        serializer = SurveySerializer(instance=request.user, data=validation)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data)
@@ -86,8 +90,9 @@ def get_genre(request, genre_group):
 
 
 @api_view(['GET'])
-def get_keyword(request, keyword_pk):
-    kwrd = Keyword.objects.get(pk=keyword_pk)
-    movie = random.choice(Movie.objects.filter(keywords__contains=[kwrd.keyword]))
-    serializer = MovieListSerializer(movie)
+def get_movies_with_keyword(request, pick_num):
+    kwrds = ['anime', 'superhero', 'military', 'musical', 'school', 'romance', 'army', 'space', 'future', 'mafia', 'action', 'jazz',]
+    # kwrds = Keyword.objects.all().values('keyword')
+    movies = random.sample(list(Movie.objects.filter(keywords__overlap=[kwrd for kwrd in kwrds])), pick_num)
+    serializer = MovieListSerializer(movies, many=True)
     return Response(serializer.data)

@@ -1,31 +1,33 @@
 <template>
-  <form @submit.prevent="onSubmit" class="comment-list-form">
-    <label for="comment">comment: </label>
-    <input type="text" id="comment" v-model="content" required>
-    <button>Comment</button>
+  <form
+    @submit.prevent="onSubmit"
+    class="comment-list-form">
+    <input type="text" id="comment" v-model="content" placeholder="Type comment..." required autofocus>
+    <button class="btn"><i class="fa-solid fa-paper-plane"></i></button>
   </form>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'CommentForm',
+
   data() {
     return {
       content: ''
     }
   },
-  computed: {
-    ...mapGetters(['review']),
-  },
+
+  props: {},
+
+  computed: {},
+
   methods: {
-    ...mapActions(['createComment']),
     onSubmit() {
-      this.createComment({ reviewPk: this.review.id, content: this.content, })
+      this.$emit('create-comment', this.content)
       this.content = ''
-    }
-  }
+    },
+  },
 }
 </script>
 

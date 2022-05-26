@@ -1,7 +1,7 @@
 <template>
-  <ul>
-     <router-link :to="{ name: 'profile', params: { username: comment.user.username } }">
-      {{ comment.user.username }}
+  <li class="comment-list">
+    <router-link class="" :to="{ name: 'profile', params: { username: comment.user.username } }">
+      {{ comment.user.nickname }}
     </router-link>: 
     
     <span v-if="!isEditing">{{ payload.content }}</span>
@@ -9,23 +9,27 @@
       <p>
       <input type="text" v-model="payload.content">
       </p>
-      <button @click="onUpdate">Update</button> |
-      <button @click="switchIsEditing">Cancle</button>
+      <button class="btn" @click="onUpdate"><i class="fa-solid fa-pen"></i></button> |
+      <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-arrow-left-long"></i></button>
     </span>
 
     <span v-if="currentUser.pk === comment.user.id && !isEditing">
-      <button @click="switchIsEditing">Edit</button> |
-      <button @click="deleteComment(payload)">Delete</button>
+      <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button> |
+      <button class="btn" @click="onDelete"><i class="fa-solid fa-xmark"></i></button>
     </span>
-  </ul>
+  </li>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'CommentListItem',
-  props: { comment: Object },
+
+  props: {
+    comment: Object,
+  },
+
   data() {
     return {
       isEditing: false,
@@ -36,23 +40,39 @@ export default {
       },
     }
   },
+
   computed: {
     ...mapGetters(['currentUser']),
   },
+
   methods: {
-    ...mapActions(['updateComment', 'deleteComment']),
     switchIsEditing() {
       this.isEditing = !this.isEditing
     },
+
     onUpdate() {
-      this.updateComment(this.payload)
+      this.$emit('update-comment', this.payload)
       this.isEditing = false
+    },
+
+    onDelete() {
+      this.$emit('delete-comment', this.payload)
     }
   },
-
 }
 </script>
 
 <style>
+.comment-list {
+  list-style: none;
+}
 
+.comment-list > a {
+  text-decoration: none;
+  color: #000;
+}
+
+.comment-list > a:hover {
+  color: #c4c4c4;
+}
 </style>

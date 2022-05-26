@@ -2,7 +2,7 @@
   <div class="frame">
     <p class="omakase-text mt-5">{{ profile.nickname }}님이 좋아하실 영화들이에요!</p>
     <router-link :to="{ name: 'movieSurvey' }">
-      <button>다시하기</button>
+      <button class="default-btn">다시하기</button>
     </router-link>
 
     <omakase-item

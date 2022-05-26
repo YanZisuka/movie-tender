@@ -89,7 +89,15 @@ class ReviewListSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
 
+    class UserSerializer(serializers.ModelSerializer):
+
+        class Meta:
+            model = get_user_model()
+            fields = ('id', 'username', 'nickname',)
+
+    user = UserSerializer(read_only=True)
+
     class Meta:
         model = Comment
-        fields = ('id', 'user', 'content', 'created_at', 'updated_at',)
-        read_only_fields = ('id', 'user',)
+        fields = ('id', 'user', 'review', 'content', 'created_at', 'updated_at',)
+        read_only_fields = ('id', 'user', 'review',)

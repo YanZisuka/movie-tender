@@ -1,15 +1,18 @@
 <template>
   <div>
     <!-- <router-link class="text-decoration-none" :to="{ name: 'reviewDetail', params: { reviewPk: review.id } }"> -->
-    <div @click="showModal = true" class="review-item d-flex flex-row align-items-center my-5">
+    <div @click="showModal = true" class="review-item d-flex flex-row align-items-center mb-5">
       <div>
         <img class="review-item-poster" :src="posterPath" :alt="`${review.movie.title}'s poster`">
       </div>
       <div class="text-start text-black ms-5">
         <h2 class="review-item-author">{{ review.user.nickname }}</h2>
         <h1 class="review-item-title">{{ review.movie.title }}</h1>
-        <button class="like-meter d-flex justify-content-evenly align-items-center">
-          <i class="text-white me-3 fa-solid fa-heart"></i>
+        <button @click="likeReview(review.id)" class="like-btn d-flex justify-content-between align-items-center px-3">
+          <div class="d-flex flex-row align-items-center">
+            <i class="ms-0 me-2 fa-solid fa-heart"></i>
+            <p class="m-0">Like</p>
+          </div>
           <span>{{ likeCount }}</span>
         </button>
         <p class="review-item-text ellipsis pe-5">{{ review.content }}</p>
@@ -25,25 +28,35 @@
       <div slot="body" class="d-flex text-start">
 
         <img class="modal-poster" :src="posterPath" alt="">
-        <div class="modal-body ms-5">
-          <h2 class="mt-3">
-            <router-link class="modal-author text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
-              {{ review.user.nickname }}
-            </router-link>
-          </h2>
-          <h1 class="modal-title">
-            {{ review.movie.title }}
-          </h1>
-          <button @click="likeReview(review.id)" class="like-meter d-flex justify-content-evenly align-items-center">
-            <i class="text-white me-3 fa-solid fa-heart"></i>
-            <span>{{ likeCount }}</span>
-          </button>
-          <div class="mt-3">
-            {{ review.content }}
+        <div class="d-flex flex-column justify-content-between modal-body ms-5">
+          <div>
+            <h2 class="mt-3">
+              <router-link class="modal-author text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
+                {{ review.user.nickname }}
+              </router-link>
+            </h2>
+            <h1 class="modal-title">
+              {{ review.movie.title }}
+            </h1>
+            <button @click="likeReview(review.id)" class="like-btn d-flex justify-content-between align-items-center px-3">
+              <div class="d-flex flex-row align-items-center">
+                <i class="ms-0 me-2 fa-solid fa-heart"></i>
+                <p class="m-0">Like</p>
+              </div>
+              <span>{{ likeCount }}</span>
+            </button>
+            <div class="mt-3">
+              {{ review.content }}
+            </div>
           </div>
 
+          <hr>
+
           <div class="">
-            <comment-list :comments="review.comment_set"></comment-list>
+            <comment-list
+              :comments="review.comment_set"
+              :review="review"
+              ></comment-list>
           </div>
 
         </div>
@@ -97,7 +110,6 @@ export default {
         headers : this.authHeader,
       })
         .then(res=> {
-          console.log(res.data)
           this.likeCount = res.data.like_users_count
         })
         .catch(err => console.error(err.response))
@@ -117,22 +129,31 @@ export default {
   width: 100%;
 }
 
-.like-meter {
+.like-btn {
   border: 1px solid #db2828;
-  background: linear-gradient(90deg, #db2828 50%, #fff 50%);
+  background: linear-gradient(90deg, #db2828 60%, #fff 40%);
   border-radius: 0.25rem;
   color: #db2828;
-  width: 5rem;
-  height: 2rem;
+  width: 8rem;
+  height: 2.2rem;
   margin-bottom: 1rem;
 }
 
-.like-meter:hover {
+.like-btn:hover {
   cursor: pointer;
 }
 
-.like-meter span {
+.like-btn span {
   font-weight: 800;
+}
+
+.like-btn p {
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.like-btn i {
+  color: #ffb2b2;
 }
 
 .review-item:hover {

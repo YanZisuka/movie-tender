@@ -5,10 +5,10 @@
         <div class="modal-container">
 
           <div class="modal-body">
-            <div
-                class="modal-default-button"
+            <button
+                class="btn modal-default-button"
                 @click="$emit('close')"
-              ><i class="fa-solid fa-xmark"></i></div>
+              ><i class="fa-solid fa-xmark"></i></button>
             <slot name="body">default body</slot>
           </div>
 

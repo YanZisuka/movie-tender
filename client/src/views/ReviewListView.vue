@@ -5,7 +5,7 @@
       <div class="mb-5">
         <search-bar></search-bar>
       </div>
-      <p class="mb-0">Latest Reviews</p>
+      <p class="mb-2">Latest Reviews</p>
     </div>
 
     <review-card

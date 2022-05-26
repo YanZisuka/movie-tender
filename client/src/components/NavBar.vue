@@ -6,10 +6,19 @@
     <div class="d-flex align-items-center">
       <router-link :to="{ name: 'movies' }" :class="isDark ? 'text-white' : 'text-theme'" class="text-decoration-none mx-5">OMAKASE</router-link>
       <router-link :to="{ name: 'reviews' }" :class="isDark ? 'text-white' : 'text-theme'" class="text-decoration-none mx-5">COMMUNITY</router-link>
-      <router-link :to="{ name: 'profile', params: { username: currentUser.username } }" class="ms-5 me-3" role="button">
-        <img class="profile-img me-2" src="@/assets/logo.png" alt="profile-img">
-        <i :class="isDark ? 'text-white' : 'text-theme'" class="fa-solid fa-angle-down"></i>
-      </router-link>
+      <div class="dropdown">
+        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <img class="profile-img me-2" src="@/assets/logo.png" alt="profile-img">
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <p v-if="isCurrentUser">
+            <router-link :to="{ name: 'profile', params: { username: currentUser.username } }" class="ms-5 me-3" role="button">Profile</router-link> 
+          </p>
+          <p v-if="isCurrentUser">
+            <router-link :to="{ name: 'logout', params: { username: currentUser.username } }" class="ms-5 me-3" role="button">Logout</router-link> 
+          </p>
+        </div>
+      </div>
     </div>
   </nav>
 </template>

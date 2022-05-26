@@ -10,6 +10,10 @@
         <input v-model="credentials.username" type="text" id="username" required/>
       </div>
       <div>
+        <label for="nickname">Nickname : </label>
+        <input v-model="credentials.nickname" type="text" id="nickname" required/>
+      </div>
+      <div>
         <label for="password1">Password : </label>
         <input v-model="credentials.password1" type="password" id="password1" required />
       </div>
@@ -38,7 +42,8 @@ export default {
       credentials : {
         username : '',
         password1 : '',
-        password2 : ''
+        password2 : '',
+        nickname : '',
       }
     }
   },

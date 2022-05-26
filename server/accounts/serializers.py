@@ -1,9 +1,22 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from dj_rest_auth.registration.serializers import RegisterSerializer
+from community.serializers import ReviewSerializer
+
+
+class CustomRegisterSerializer(RegisterSerializer):
+    nickname = serializers.CharField()
+
+    def get_cleaned_data(self):
+        data = super().get_cleaned_data()
+        data['nickname'] = self.validated_data.get('nickname', '')
+
+        return data
 
 
 class UserSerializer(serializers.ModelSerializer):
-
+    
+    review_set = ReviewSerializer(many=True, read_only=True)
     followers_count = serializers.IntegerField(source='followers.count', read_only=True)
     followings_count = serializers.IntegerField(source='followings.count', read_only=True)
 

@@ -48,7 +48,7 @@ export default {
   font-size: 3rem;
   font-weight: 700;
   line-height: 77px;
-  color: #333;
+  color: #fff;
 }
 
 .frame {

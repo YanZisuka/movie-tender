@@ -6,9 +6,9 @@
           <img class="movie-item-poster" :src="movie.poster_path" :alt="`${movie.title}'s poster`">
         </div>
         <div class="text-start text-black ms-5">
-          <h1 class="">{{ movie.title }}</h1>
-          <h2 class=""><i class="fa-solid fa-star"></i> {{ movie.vote_average }}</h2>
-          <p class="movie-item-text ellipsis pe-5">{{ movie.overview }}</p>
+          <h1 class="text-white">{{ movie.title }}</h1>
+          <h2 class="text-white"><i class="fa-solid fa-star"></i> {{ movie.vote_average }}</h2>
+          <p class="movie-item-text text-white ellipsis pe-5">{{ movie.overview }}</p>
         </div>
       </div>
     </router-link>
@@ -34,14 +34,14 @@ export default {
 
 <style scoped>
 .movie-item {
-  background-color: #fbfbfb;
+  background-color: #030303;
   border-radius: 0.5rem;
   box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.25);
   width: 100%;
 }
 
 .movie-item:hover {
-  background-color: #eee;
+  background-color: #222;
 }
 
 .movie-item-poster {

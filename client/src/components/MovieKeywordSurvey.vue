@@ -67,13 +67,16 @@ export default {
 <style>
 .selection-card:hover {
   cursor: pointer;
-  background-color: #eee;
+  background-color: #222;
 }
 
 .versus-text {
   position: absolute;
+  color: #fff;
   width: 20%;
   top: 50%;
   left: 50%;
+  font-size: 3rem;
+  font-weight: 700;
 }
 </style>

@@ -1,10 +1,9 @@
 <template>
-  <div v-if="isMovie" class="row justify-content-center align-items-center p-5">
-
+  <div v-if="isMovie" :style="{'background-image': `url${movie.poster_path}`}" class="row justify-content-center align-items-center p-5">
     <div class="col-6 text-start">
-      <h1 class="movie-title">{{ movie.title }}</h1>
-      <h2 class="movie-subtitle">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
-      <button class="provider-btn d-flex justify-content-start align-items-center mt-3" v-if="movie.providers[0]">
+      <h1 class="movie-title text-white">{{ movie.title }}</h1>
+      <h2 class="movie-subtitle text-white">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
+      <button class="provider-btn d-flex justify-content-start align-items-center text-white mt-3" v-if="movie.providers[0]">
         <img v-if="movie.providers[0] === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
         <span>
           {{ movie.providers[0] }}

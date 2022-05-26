@@ -63,6 +63,10 @@ export default {
   },
 
   methods: {},
+  
+  created() {
+    document.body.setAttribute('style', `background-image: url(${this.movieDetail.poster_path});`)
+  },
 }
 </script>
 

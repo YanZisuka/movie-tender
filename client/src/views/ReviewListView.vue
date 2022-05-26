@@ -44,6 +44,8 @@ export default {
 
   created() {
     this.fetchReviews()
+    this.$emit('light-emit')
+    document.body.setAttribute('style', 'background-color: #fff;')
   }
 }
 </script>

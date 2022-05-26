@@ -9,7 +9,7 @@
         <p class="sub-text m-0">두 개의 선택지 중 더 마음에 드는 영화를 골라주시면,</p>
         <p class="sub-text mt-0">{{ profile.nickname }}님의 취향에 맞는 영화를 추천해드려요.</p>
         <router-link :to="{ name: 'movieSurvey' }">
-          <button>Start!</button>
+          <button class="default-btn">Start!</button>
         </router-link>
       </div>
       <div class="col-6">
@@ -39,9 +39,7 @@ export default {
   },
 
   data() {
-    return {
-      isDark: true
-    }
+    return {}
   },
 
   computed: {
@@ -69,6 +67,8 @@ export default {
     this.fetchMovieCards(10)
     this.fetchMovieCard()
     this.fetchProfile(this.currentUser)
+    this.$emit('dark-emit')
+    document.body.setAttribute('style', 'background-color: #171717;')
   },
 }
 </script>
@@ -78,11 +78,13 @@ export default {
   font-size: 3.75rem;
   font-weight: 700;
   line-height: 73px;
+  color: #fff;
 }
 
 .sub-text {
   font-size: 2rem;
   font-weight: 700;
   line-height: 39px;
+  color: #fff;
 }
 </style>

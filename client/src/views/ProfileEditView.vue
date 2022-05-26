@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Edit Profile</h1>
+    <h1>{{ profile.username }}'s Nickname</h1>
   <user-info-form :profile="profile"> </user-info-form>
   </div>
 </template>
@@ -30,5 +30,4 @@ export default {
 </script>
 
 <style>
-
 </style>

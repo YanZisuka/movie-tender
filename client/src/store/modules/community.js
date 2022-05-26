@@ -65,20 +65,20 @@ export default {
       })
         .then(res => {
           commit('SET_REVIEW', res.data)
-          router.push({name: 'reviewDetail', params: { reviewPk: getters.review.id }})
+          router.push({ name: 'reviews' })
         })
     },
 
-    updateReview({ commit, getters }, {pk, movie, content}){
+    updateReview({ commit, getters }, { reviewPk, movie, content }){
       axios({
-        url : drf.community.review(pk),
+        url : drf.community.review(reviewPk),
         method : 'put',
         data : { movie, content },
         headers : getters.authHeader,
       })
         .then(res => {
           commit('SET_REVIEW', res.data)
-          router.push({ name:'reviewDetail', params : {reviewPk : getters.review.id}})
+          router.push({ name: 'index' })
         })
     },
 
@@ -91,7 +91,7 @@ export default {
         })
           .then(() => {
             commit('SET_REVIEW', {})
-            router.push({ name: 'reviews'})
+            router.push({ name: 'index' })
           })
           .catch(err => console.error(err.response))
       }

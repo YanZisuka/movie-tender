@@ -67,7 +67,7 @@ const routes = [
     component:  ReviewListView,
   },
   {
-    path: '/reviews/new',
+    path: '/movies/:moviePk/new',
     name: 'reviewNew',
     component:  ReviewNewView,
   },

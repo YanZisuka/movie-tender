@@ -1,16 +1,14 @@
 <template>
 
-<form @submit.prevent="onSubmit">
+<form v-if="isReview" @submit.prevent="onSubmit">
   <div>
-      <label for="movie">movie : </label>
-      <input v-model="newReview.movie" type="text" id="movie" />
+    <input
+      v-model="newReview.content"
+      type="text"
+      id="content" />
   </div>
   <div>
-    <label for="content">content : </label>
-    <input v-model="newReview.content" type="text" id="content" />
-  </div>
-  <div>
-    <button>{{ action }}</button>
+    <button class="btn"><i class="fa-solid fa-pen-to-square"></i></button>
   </div>
 </form>
 
@@ -21,32 +19,40 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'ReviewForm',
+
   props: {
-    review : Object,
-    action : String,
+    review: Object,
+    movie: Object,
+    action: String,
   },
-  data() {
-    return {
-      newReview: {
-        movie : this.review.movie.id,
-        content: this.review.content,
-      }
-    }
-  },
-  methods : {
-    ...mapActions(['createReview', 'updateReview']),
-    onSubmit(){
-      if (this.action === 'create'){
-        this.createReview(this.newReview)
-      } else if (this.action === 'update'){
-        const payload = {pk: this.review.id,
-            ...this.newReview,
-          }
-          this.updateReview(payload)
+
+  computed: {
+    isReview() {
+      return this.review.id === this.$route.params.reviewPk
+    },
+    newReview() {
+      return {
+        movie: this.movie?.id || this.review.movie.id,
+        content: this.review.content
       }
     },
   },
 
+  methods : {
+    ...mapActions(['createReview', 'updateReview']),
+
+    onSubmit(){
+      if (this.action === 'create') {
+        this.createReview(this.newReview)
+      } else if (this.action === 'update') {
+        const payload = {
+          reviewPk: this.review.id,
+          ...this.newReview,
+        }
+        this.updateReview(payload)
+      }
+    },
+  },
 }
 </script>
 

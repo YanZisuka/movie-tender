@@ -15,7 +15,7 @@
           </div>
           <span>{{ likeCount }}</span>
         </button>
-        <p class="review-item-text ellipsis pe-5">{{ review.content }}</p>
+        <p class="lead ellipsis pe-5">{{ review.content }}</p>
       </div>
     </div>
     <!-- </router-link> -->
@@ -30,14 +30,23 @@
         <img class="modal-poster" :src="posterPath" alt="">
         <div class="d-flex flex-column justify-content-between modal-body ms-5">
           <div>
-            <h2 class="mt-3">
-              <router-link class="modal-author text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
-                {{ review.user.nickname }}
-              </router-link>
-            </h2>
+            <!-- 작성자 -->
+            <div>
+              <h2 class="mt-3">
+                <router-link class="modal-author text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
+                  {{ review.user.nickname }}
+                </router-link>
+              </h2>
+              <span v-if="review.user.id === currentUser.pk && !isEditing" >
+                <button @click="switchIsEditing" class="btn"><i class="fa-solid fa-pen"></i></button>
+                <button @click="onDelete(review.id)" class="btn"><i class="fa-solid fa-xmark"></i></button>
+              </span>
+            </div>
+            <!-- 영화제목 -->
             <h1 class="modal-title">
               {{ review.movie.title }}
             </h1>
+            <!-- 좋아요 버튼 -->
             <button @click="likeReview(review.id)" class="like-btn d-flex justify-content-between align-items-center px-3">
               <div class="d-flex flex-row align-items-center">
                 <i class="ms-0 me-2 fa-solid fa-heart"></i>
@@ -45,9 +54,20 @@
               </div>
               <span>{{ likeCount }}</span>
             </button>
-            <div class="mt-3">
-              {{ review.content }}
-            </div>
+            <!-- 내용 -->
+            <span v-if="!isEditing">
+              <div class="lead mt-3">
+                {{ review.content }}
+              </div>
+            </span>
+            <span v-if="isEditing">
+              <p>
+              <input type="text" v-model="newReview.content">
+              </p>
+              <button class="btn" @click="onUpdate(newReview)"><i class="fa-solid fa-pen"></i></button> |
+              <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-arrow-left-long"></i></button>
+            </span>
+
           </div>
 
           <hr>
@@ -87,21 +107,31 @@ export default {
 
   data() {
     return {
-      reviewPk : this.review.id,
+      isEditing: false,
+      reviewPk: this.review.id,
       showModal: false,
       likeCount: this.review.like_users.length,
+      newReview: {
+        reviewPk: this.review.id,
+        movie: this.review.movie.id,
+        content: this.review.content
+        },
       }
   },
 
   computed: {
-    ...mapGetters(['isAuthor', 'isReview', 'authHeader']),
+    ...mapGetters(['currentUser', 'isAuthor', 'isReview', 'authHeader']),
     posterPath(){
       return this.review.movie.poster_path
     },
   },
 
   methods: {
-    ...mapActions(['fetchReview']),
+    ...mapActions(['fetchReview', 'updateReview', 'deleteReview']),
+
+    switchIsEditing() {
+      this.isEditing = !this.isEditing
+    },
 
     likeReview(reviewPk) {
       axios({
@@ -114,6 +144,14 @@ export default {
         })
         .catch(err => console.error(err.response))
     },
+
+    onUpdate(review) {
+      this.updateReview(review)
+    },
+
+    onDelete(reviewPk) {
+      this.deleteReview(reviewPk)
+    }
   },
 
   created() {
@@ -164,12 +202,6 @@ export default {
 .review-item-poster {
   width: 12rem;
   border-radius: 0.5rem;
-}
-
-.review-item-text {
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 26px;
 }
 
 .review-item-title {

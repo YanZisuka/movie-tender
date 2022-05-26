@@ -1,23 +1,36 @@
 <template>
-  <div>
+  <div v-if="isMyReview">
     <h1>Edit Review</h1>
-    <review-form v-if="isReview" :review="review" action="update"></review-form>
+    <review-form
+      :review="review"
+      action="update"
+      ></review-form>
   </div>
 </template>
 
 <script>
 import ReviewForm from '@/components/ReviewForm.vue'
+
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name : 'ReviewEditView',
-  components : { ReviewForm, },
+
+  components : {
+    ReviewForm,
+  },
+
   computed : {
-    ...mapGetters(['review', 'isReview'])
+    ...mapGetters(['review', 'movie']),
+    isMyReview() {
+      return this.review.id === this.$route.params.reviewPk
+    }
   },
+
   methods: {
-    ...mapActions(['fetchReview'])
+    ...mapActions(['fetchReview', 'fetchMovie']),
   },
+
   created() {
     this.fetchReview(this.$route.params.reviewPk)
   },

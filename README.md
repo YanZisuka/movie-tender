@@ -52,9 +52,13 @@
 
 ## :wrench: 기능
 
--   `Index`
+-   `인덱스`
+    -   사이트의 기능들을 소개하고, 다른 기능들로 연결합니다.
 -   `커뮤니티`
+    -   사용자가 **추천받고, 시청한 영화에 대해 리뷰를 작성할 수** 있습니다.
+    -   각 리뷰에 **좋아요, 댓글을 작성** 가능합니다.
 -   `영화 추천`
+    -   각 영화를 나타내는 **`keywords` 기반 추천을** 통해 사용자에게 최적의 영화를 추천합니다.
 
 
 
@@ -67,6 +71,30 @@
 <br><br>
 
 ## :office: 프로젝트 구조
+
+```
+📂Movietender
+┣📂client
+┃ ┣📂node_modules
+┃ ┣📂public
+┃ ┣📂src
+┃ ┃ ┣📂api
+┃ ┃ ┣📂assets
+┃ ┃ ┣📂components
+┃ ┃ ┣📂router
+┃ ┃ ┣📂store
+┃ ┃ ┃ ┣📂modules
+┃ ┃ ┣📂views
+┣📂server
+┃ ┣📂accounts
+┃ ┃ ┣📂migrations
+┃ ┣📂community
+┃ ┃ ┣📂migrations
+┃ ┣📂movies
+┃ ┃ ┣📂migrations
+┃ ┣📂server
+
+```
 
 <br><br>
 
@@ -84,6 +112,5 @@
 
 ## :cocktail: 협업
 
--   금요일에 대면 => `Figma`, `ERD` 작성
--   화요일까지 `code` 작성 완료 
+
 

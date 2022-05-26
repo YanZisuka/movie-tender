@@ -20,7 +20,7 @@
           <input class="input-label" v-model="credentials.password2" type="password" id="password2" placeholder=" Password Confirmation" required />
         </div>
         <div>
-          <button class="btn-singup">Singup</button>
+          <button class="btn-singup">Signup</button>
         </div>
       </form>
     </div>

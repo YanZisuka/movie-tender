@@ -9,9 +9,6 @@
     <router-link v-if="!isCurrentUser" :to="{ name: 'login' }">
       <button class="default-btn">Login!</button>
     </router-link>
-    <router-link v-if="isCurrentUser" :to="{ name: 'movies' }">
-      <button class="default-btn">Movie!</button>
-    </router-link>
   </div>
 </template>
 

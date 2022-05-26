@@ -3,22 +3,40 @@
     <h1 class="logo">movietender</h1>
     <p class="index-text mt-3">지금,</p>
     <p class="index-text mb-5">어떤 영화를 볼지 고민된다면?</p>
-    <router-link :to="{ name: 'signup' }">
+    <router-link v-if="!isCurrentUser" :to="{ name: 'signup' }">
       <button class="default-btn">Signup!</button>
+    </router-link>  
+    <router-link v-if="!isCurrentUser" :to="{ name: 'login' }">
+      <button class="default-btn">Login!</button>
+    </router-link>
+    <router-link v-if="isCurrentUser" :to="{ name: 'movies' }">
+      <button class="default-btn">Movie!</button>
     </router-link>
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'IndexView',
 
-  methods: {},
+  computed: {
+    ...mapGetters(['currentUser']),
+    isCurrentUser() {
+      return !_.isEmpty(this.currentUser)
+    },
+  },
+
+  methods: {
+    ...mapActions(['fetchCurrentUser'])
+  },
 
   created() {
     this.$emit('light-emit')
     document.body.setAttribute('style', 'background-color: #fff;')
+    this.fetchCurrentUser()
   },
 }
 </script>
@@ -38,6 +56,7 @@ export default {
 }
 
 .default-btn {
+  margin: 5px;
   background-color: #cf1224;
   border: 0;
   color: #fff;

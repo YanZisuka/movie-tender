@@ -50,7 +50,7 @@ export default {
               const token = res.data.key
               dispatch('saveToken', token)
               dispatch('fetchCurrentUser')
-              router.push({ name : 'movies'})
+              router.push({ name : 'index'})
           })
           .catch(err => {
               console.error(err)
@@ -68,7 +68,7 @@ export default {
             const token = res.data.key
             dispatch('saveToken', token)
             dispatch('fetchCurrentUser')
-            router.push({ name : 'movies'})
+            router.push({ name : 'index'})
         })
         .catch(err => {
             console.error(err)

@@ -1,10 +1,8 @@
 <template>
   <div>
-    <div class="body"></div>
-    <div class="grad"></div>
     <account-error-list v-if="authError"></account-error-list>
     <div class="header">
-      <div>Movie <span>Tender</span></div>
+      <div>movie<span>tender</span></div>
     </div>
     <div class="login">
       <form @submit.prevent="login(credentials)">
@@ -52,37 +50,16 @@ export default {
 </script>
 
 <style scoped>
-.body{
-	position: absolute;
-	top: -20px;
-	left: -20px;
-	right: -40px;
-	bottom: -40px;
-	width: auto;
-	height: auto;
-}
-
-.grad{
-	position: absolute;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0)), color-stop(100%,rgba(0,0,0,0.65)));
-	top: -20px;
-	left: -20px;
-	right: -40px;
-	bottom: -40px;
-	width: auto;
-	height: auto;
-	opacity: 0.7;
-}
 
 .header{
 	position: absolute;
-	top: calc(50% - 50px);
+	top: calc(50% + 200px);
 	left: calc(50% - 400px);
 }
 
 .header div{
 	float: left;
-	color: #fff;
+	color: #0b1b38;
   font-family: 'Lobster', cursive;
 	font-size: 70px;
 	font-weight: 200;
@@ -94,7 +71,7 @@ export default {
 
 .login{
 	position: absolute;
-  top: calc(50% - 100px);
+  top: calc(50% + 160px);
 	left: calc(50% - 5px);
 	height: 150px;
 	width: 350px;
@@ -140,7 +117,7 @@ export default {
 }
 
 ::-webkit-input-placeholder{
-  color: #fff;
+  color: #c4c4c4;
   font-family: 'Exo', sans-serif;
 }
 

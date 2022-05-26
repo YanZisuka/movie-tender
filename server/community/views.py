@@ -12,7 +12,7 @@ from .serializers import *
 def index(request):
 
     def get_reviews():
-        reviews = Review.objects.all()
+        reviews = Review.objects.order_by('-pk')
         serializer = ReviewListSerializer(reviews, many=True)
         return Response(serializer.data)
 

@@ -58,19 +58,33 @@ class ReviewListSerializer(serializers.ModelSerializer):
                 model = get_user_model()
                 fields = ('id', 'username', 'nickname',)
         
-    user = UserSerializer(read_only=True)
-
     class MovieSerializer(serializers.ModelSerializer):
 
         class Meta:
             model = Movie
             fields = ('id', 'title', 'poster_path',)
 
+    class CommentSerializer(serializers.ModelSerializer):
+
+        class UserSerializer(serializers.ModelSerializer):
+
+            class Meta:
+                model = get_user_model()
+                fields = ('id', 'username', 'nickname',)
+
+        user = UserSerializer(read_only=True)
+
+        class Meta:
+            model = Comment
+            fields = '__all__'
+
+    user = UserSerializer(read_only=True)
     movie = MovieSerializer(read_only=True)
+    comment_set = CommentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Review
-        fields = ('id', 'user', 'movie', 'like_users', 'content',)
+        fields = ('id', 'user', 'movie', 'like_users', 'content', 'comment_set',)
 
 
 class CommentSerializer(serializers.ModelSerializer):

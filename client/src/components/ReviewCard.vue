@@ -1,28 +1,72 @@
 <template>
   <div>
-    <router-link class="text-decoration-none" :to="{ name: 'reviewDetail', params: { reviewPk: review.id } }">
-      <div class="review-item d-flex flex-row align-items-center my-5">
-        <div>
-          <img class="review-item-poster" :src="posterPath" :alt="`${review.movie.title}'s poster`">
-        </div>
-        <div class="text-start text-black ms-5">
-          <h2 class="review-item-author">{{ review.user.nickname }}</h2>
-          <h1 class="review-item-title">{{ review.movie.title }}</h1>
-          <div class="like-meter d-flex justify-content-evenly align-items-center">
+    <!-- <router-link class="text-decoration-none" :to="{ name: 'reviewDetail', params: { reviewPk: review.id } }"> -->
+    <div @click="showModal = true" class="review-item d-flex flex-row align-items-center my-5">
+      <div>
+        <img class="review-item-poster" :src="posterPath" :alt="`${review.movie.title}'s poster`">
+      </div>
+      <div class="text-start text-black ms-5">
+        <h2 class="review-item-author">{{ review.user.nickname }}</h2>
+        <h1 class="review-item-title">{{ review.movie.title }}</h1>
+        <button class="like-meter d-flex justify-content-evenly align-items-center">
+          <i class="text-white me-3 fa-solid fa-heart"></i>
+          <span>{{ likeCount }}</span>
+        </button>
+        <p class="review-item-text ellipsis pe-5">{{ review.content }}</p>
+      </div>
+    </div>
+    <!-- </router-link> -->
+
+    <!-- use the modal component, pass in the prop -->
+    <modal-detail
+      :show="showModal"
+      @close="showModal = false"
+      >
+      <div slot="body" class="d-flex text-start">
+
+        <img class="modal-poster" :src="posterPath" alt="">
+        <div class="modal-body ms-5">
+          <h2 class="mt-3">
+            <router-link class="modal-author text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
+              {{ review.user.nickname }}
+            </router-link>
+          </h2>
+          <h1 class="modal-title">
+            {{ review.movie.title }}
+          </h1>
+          <button @click="likeReview(review.id)" class="like-meter d-flex justify-content-evenly align-items-center">
             <i class="text-white me-3 fa-solid fa-heart"></i>
-            <span>{{ review.like_users.length }}</span>
+            <span>{{ likeCount }}</span>
+          </button>
+          <div class="mt-3">
+            {{ review.content }}
           </div>
-          <p class="review-item-text ellipsis pe-5">{{ review.content }}</p>
+
+          <div class="">
+            <comment-list :comments="review.comment_set"></comment-list>
+          </div>
+
         </div>
       </div>
-    </router-link>
+    </modal-detail>
+
   </div>
 </template>
 <script>
+import ModalDetail from '@/components/ModalDetail.vue'
+import CommentList from '@/components/CommentList.vue'
+
+import drf from '@/api/drf'
+import axios from 'axios'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: "ReviewCard",
+
+  components: {
+    ModalDetail,
+    CommentList,
+  },
 
   props: {
     review : Object,
@@ -31,18 +75,33 @@ export default {
   data() {
     return {
       reviewPk : this.review.id,
+      showModal: false,
+      likeCount: this.review.like_users.length,
       }
   },
 
   computed: {
+    ...mapGetters(['isAuthor', 'isReview', 'authHeader']),
     posterPath(){
       return this.review.movie.poster_path
     },
-    ...mapGetters(['isAuthor', 'isReview'])
   },
 
   methods: {
-    ...mapActions(['fetchReview'])
+    ...mapActions(['fetchReview']),
+
+    likeReview(reviewPk) {
+      axios({
+        url : drf.community.review(reviewPk),
+        method : 'post',
+        headers : this.authHeader,
+      })
+        .then(res=> {
+          console.log(res.data)
+          this.likeCount = res.data.like_users_count
+        })
+        .catch(err => console.error(err.response))
+    },
   },
 
   created() {
@@ -59,13 +118,17 @@ export default {
 }
 
 .like-meter {
-  border: 1px solid #cf1224;
-  background: linear-gradient(90deg, #cf1224 50%, #fff 50%);
+  border: 1px solid #db2828;
+  background: linear-gradient(90deg, #db2828 50%, #fff 50%);
   border-radius: 0.25rem;
-  color: #cf1224;
+  color: #db2828;
   width: 5rem;
   height: 2rem;
   margin-bottom: 1rem;
+}
+
+.like-meter:hover {
+  cursor: pointer;
 }
 
 .like-meter span {
@@ -73,6 +136,7 @@ export default {
 }
 
 .review-item:hover {
+  cursor: pointer;
   background-color: #eee;
 }
 
@@ -104,5 +168,29 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
+}
+
+.modal-poster {
+  width: 30rem;
+  border-radius: 8px;
+}
+
+.modal-body {
+  width: 99%;
+}
+
+.modal-title {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.modal-author {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #c4c4c4;
+}
+
+.modal-author:hover {
+  color: #171717;
 }
 </style>

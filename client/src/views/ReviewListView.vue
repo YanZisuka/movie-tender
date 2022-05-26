@@ -28,7 +28,7 @@ export default {
 
   components : {
     SearchBar,
-    ReviewCard
+    ReviewCard,
   },
 
   computed : {

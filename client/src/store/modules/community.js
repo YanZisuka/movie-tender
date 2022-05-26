@@ -8,7 +8,6 @@ export default {
   state: {
     reviews : [],
     review : {},
-    // likeCount : {},
     movie : {},
   },
 
@@ -19,8 +18,6 @@ export default {
       return state.review.user.id === getters.currentUser.pk
     },
     isReview: state => !_.isEmpty(state.review),
-    // likeCount : state => state.likeCount.like_users_count,
-    // isLike : state => state.likeCount.is_like,
     movie : state => state.movie,
 
   },
@@ -44,6 +41,7 @@ export default {
         .then(res => commit('SET_REVIEWS', res.data))
         .catch(err => console.error(err.response))
     },
+
     fetchReview({ commit, getters }, reviewPk){
       axios({
         url : drf.community.review(reviewPk),
@@ -57,17 +55,7 @@ export default {
             router.push({ name : 'NotFound404'})
           }})
     },
-    // likeReview({ commit, getters }, reviewPk){
-    //   axios({
-    //     url : drf.community.review(reviewPk),
-    //     method : 'post',
-    //     headers : getters.authHeader,
-    //   })
-    //     .then(res=> {
-    //       console.log(res.data)
-    //       commit('SET_LIKECOUNT', res.data)})
-    //     .catch(err => console.error(err.response))
-    // },
+
     createReview({ commit, getters }, review) {
       axios({
         url: drf.community.reviews(),
@@ -80,6 +68,7 @@ export default {
           router.push({name: 'reviewDetail', params: { reviewPk: getters.review.id }})
         })
     },
+
     updateReview({ commit, getters }, {pk, movie, content}){
       axios({
         url : drf.community.review(pk),
@@ -92,6 +81,7 @@ export default {
           router.push({ name:'reviewDetail', params : {reviewPk : getters.review.id}})
         })
     },
+
     deleteReview({ commit, getters }, reviewPk) {
       if (confirm('삭제하시겠습니까?')) {
         axios({
@@ -106,6 +96,7 @@ export default {
           .catch(err => console.error(err.response))
       }
     },
+
     createComment({ commit, getters }, { reviewPk, content }) {
       const comment = { content }
       axios({
@@ -119,6 +110,7 @@ export default {
         })
         .catch(err => console.error(err.response))
     },
+
     updateComment({ commit, getters }, { reviewPk, commentPk, content }) {
       const comment = { content }
 
@@ -149,6 +141,7 @@ export default {
             .catch(err => console.error(err.response))
         }
       },
+
     fetchMovie({commit, getters }, moviePk){
       axios({
         url : drf.movies.movie(moviePk),

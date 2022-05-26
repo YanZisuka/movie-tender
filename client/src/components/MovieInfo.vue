@@ -31,7 +31,7 @@
         <div>
           <p class="info-title text-secondary">리뷰쓰기</p>
           <router-link :to="{ name: 'reviewNew' }">
-            <p class="info-content text-white"><i class="fa-solid fa-feather"></i></p>
+            <p class="info-content text-white"><i class="fa-solid fa-feather-pointed"></i></p>
           </router-link>
         </div>
       </div>

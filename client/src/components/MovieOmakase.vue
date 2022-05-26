@@ -45,7 +45,7 @@ export default {
 
 <style>
 .omakase-text {
-  font-size: 4rem;
+  font-size: 3rem;
   font-weight: 700;
   line-height: 77px;
   color: #333;

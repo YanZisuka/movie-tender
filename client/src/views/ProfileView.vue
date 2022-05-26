@@ -85,6 +85,8 @@ export default {
   created() {
     const payload = { username: this.$route.params.username }
     this.fetchProfile(payload)
+    this.$emit('light-emit')
+    document.body.setAttribute('style', 'background-color: #fff;')
   },
 }
 </script>

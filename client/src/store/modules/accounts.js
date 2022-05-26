@@ -26,7 +26,7 @@ export default {
     SET_TOKEN: (state, token) => state.token = token,
     SET_CURRENT_USER: (state, user) => state.currentUser = user,
     SET_PROFILE: (state, profile) => state.profile = profile,
-    SET_AUTH_ERROR: (state, error) => state.authError = error
+    SET_AUTH_ERROR: (state, error) => state.authError = error,
     },
     
   actions: {
@@ -116,6 +116,32 @@ export default {
           .then(res => {
               commit('SET_PROFILE', res.data)
           })
+    },
+    updateUser({ commit, getters }, {username, nickname}){
+      axios({
+        url : drf.accounts.profile(username),
+        method : 'put',
+        data : { nickname },
+        headers : getters.authHeader,
+      })
+        .then(res => {
+          commit('SET_PROFILE', res.data)
+          router.push({ name:'profile', params : { username : getters.profile.username }})
+        })
+    },
+    deleteUser({ commit, getters }, username) {
+      if (confirm('탈퇴하시겠습니까?')) {
+        axios({
+          url: drf.accounts.profile(username),
+          method: 'delete',
+          headers: getters.authHeader,
+        })
+          .then(() => {
+            commit('SET_PROFILE', {})
+            router.push({ name: 'login'})
+          })
+          .catch(err => console.error(err.response))
+      }
     },
   },
 }

@@ -48,7 +48,7 @@ export default {
   width: 80rem;
   margin: 0px auto;
   background-color: #fbfbfb;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
 }

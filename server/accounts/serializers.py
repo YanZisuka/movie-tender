@@ -1,6 +1,8 @@
 from rest_framework import serializers
+
 from django.contrib.auth import get_user_model
 from dj_rest_auth.registration.serializers import RegisterSerializer
+
 from community.serializers import ReviewSerializer
 
 

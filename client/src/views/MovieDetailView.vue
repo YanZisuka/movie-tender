@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isMovie" :style="{'background-image': `url${movie.poster_path}`}" class="row justify-content-center align-items-center p-5">
+  <div v-if="isMovie && isProfile" :style="{'background-image': `url${movie.poster_path}`}" class="row justify-content-center align-items-center p-5">
     <div class="col-6 text-start">
       <h1 class="movie-title text-white">{{ movie.title }}</h1>
       <h2 class="movie-subtitle text-white">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
@@ -12,7 +12,10 @@
     </div>
 
     <div class="col-6">
-      <movie-info :movieDetail="movie"></movie-info>
+      <movie-info
+        :movieDetail="movie"
+        :profile="profile"
+        ></movie-info>
     </div>
 
   </div>
@@ -36,9 +39,12 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['currentUser', 'movie']),
+    ...mapGetters(['currentUser','profile', 'movie']),
     isMovie() {
       return this.movie.id === this.$route.params.moviePk
+    },
+    isProfile() {
+      return this.currentUser.username === this.profile.username
     },
     runtime() {
       return `${parseInt(this.movie.runtime / 60)}시간 ${(this.movie.runtime % 60)}분`
@@ -57,11 +63,12 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchMovie'])
+    ...mapActions(['fetchProfile', 'fetchMovie'])
   },
 
   created() {
     this.fetchMovie(this.$route.params.moviePk)
+    this.fetchProfile(this.currentUser.username)
   },
 }
 </script>

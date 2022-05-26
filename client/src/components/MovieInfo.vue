@@ -20,7 +20,18 @@
         </div>
         <div>
           <p class="info-title text-secondary">나의 평점</p>
-          <p class="info-content text-secondary"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i></p>
+          <p class="star-rating info-content">
+            <input type="radio" id="5-stars" name="rating" value="5" v-model="ratings"/>
+            <label for="5-stars" class="star"><i @click="setRatings(5)" class="fa-solid fa-star"></i></label>
+            <input type="radio" id="4-stars" name="rating" value="4" v-model="ratings"/>
+            <label for="4-stars" class="star"><i @click="setRatings(4)" class="fa-solid fa-star"></i></label>
+            <input type="radio" id="3-stars" name="rating" value="3" v-model="ratings"/>
+            <label for="3-stars" class="star"><i @click="setRatings(3)" class="fa-solid fa-star"></i></label>
+            <input type="radio" id="2-stars" name="rating" value="2" v-model="ratings"/>
+            <label for="2-stars" class="star"><i @click="setRatings(2)" class="fa-solid fa-star"></i></label>
+            <input type="radio" id="1-stars" name="rating" value="1" v-model="ratings"/>
+            <label for="1-stars" class="star"><i @click="setRatings(1)" class="fa-solid fa-star"></i></label>
+          </p>
         </div>
         <div>
           <p class="info-title text-secondary">출연진</p>
@@ -41,14 +52,27 @@
 </template>
 
 <script>
+import drf from '@/api/drf'
+import axios from 'axios'
+
+import { mapGetters } from 'vuex'
+
 export default {
   name: 'MovieInfo',
 
   props: {
     movieDetail: Object,
+    profile: Object,
+  },
+
+  data() {
+    return {
+      ratings: 0,
+    }
   },
 
   computed: {
+    ...mapGetters(['authHeader']),
     videoPath() {
       const key = this.movieDetail.video_path.split('=')
       if (key[key.length - 1]) {
@@ -62,7 +86,22 @@ export default {
     },
   },
 
-  methods: {},
+  methods: {
+    setRatings(ratings) {
+      return axios({
+        url: drf.movies.movie(this.movieDetail.id),
+        method: 'POST',
+        data: {
+          'rating': ratings
+        },
+        headers: this.authHeader
+      })
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => console.error(err.response))
+    },
+  },
   
   created() {
     document.body.setAttribute('style', `background-image: url(${this.movieDetail.poster_path});`)
@@ -109,5 +148,37 @@ export default {
   font-size: 1rem;
   line-height: 22px;
   list-style: none;
+}
+
+/* 별점 */
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  justify-content: space-around;
+  padding: 0 0.2em;
+  text-align: center;
+  width: 5em;
+}
+ 
+.star-rating input {
+  display: none;
+}
+ 
+.star-rating label {
+  -webkit-text-fill-color: transparent; /* Will override color (regardless of order) */
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: #6c757d;
+  cursor: pointer;
+}
+ 
+.star-rating :checked ~ label {
+  -webkit-text-fill-color: #fff;
+}
+ 
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  -webkit-text-fill-color: #c4c4c4;
 }
 </style>

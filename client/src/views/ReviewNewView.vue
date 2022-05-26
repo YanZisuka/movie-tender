@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isMovie">
+  <div class="canvas" v-if="isMovie">
 
     <h1>{{ movieDetail.title }}</h1>
 
@@ -48,5 +48,8 @@ export default {
 </script>
 
 <style>
-
+.canvas {
+  width: 95vw;
+  height: 100vh;
+}
 </style>

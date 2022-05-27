@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import _ from 'lodash'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'NavBar',
@@ -33,12 +35,18 @@ export default {
   },
 
   computed: {
+    ...mapGetters(['currentUser']),
+    isCurrentUser() {
+      return !_.isEmpty(this.currentUser)
+    },
   },
 
   methods: {
+    ...mapActions(['fetchCurrentUser'])
   },
 
   created() {
+    this.fetchCurrentUser()
   }
 
 }

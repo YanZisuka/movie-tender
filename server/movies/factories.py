@@ -61,20 +61,21 @@ def set_movies_staff(row):
     if not Staff.objects.filter(tmdb_id=staff.tmdb_id).exists(): staff.save()
     movie = Movie.objects.get(tmdb_id=row[6])
     staff = Staff.objects.get(tmdb_id=row[2])
-    Credit.objects.create(movie=movie, staff=staff, character=row[4])
+    if not Credit.objects.filter(movie=movie, staff=staff).exists:
+        Credit.objects.create(movie=movie, staff=staff, character=row[4])
 
 
-data = pd.read_csv('../SetDatabase/movie.csv')
+data = pd.read_csv('../database/movie.csv')
 for i in range(data.shape[0]):
     row = data.iloc[i, :]
     set_movies_movie(row)
 
-data = pd.read_csv('../SetDatabase/keyword.csv')
+data = pd.read_csv('../database/keyword.csv')
 for i in range(data.shape[0]):
     row = data.iloc[i, :]
     set_movies_keyword(row)
 
-data = pd.read_csv('../SetDatabase/staff.csv')
+data = pd.read_csv('../database/staff.csv')
 for i in range(data.shape[0]):
     row = data.iloc[i, :]
     set_movies_staff(row)

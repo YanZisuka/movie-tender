@@ -17,7 +17,7 @@ def index(request):
 
     def get_recommendations():
         if request.user.survey:
-            movies = Movie.objects.filter(keywords__overlap=[kwrd for kwrd in request.user.survey])
+            movies = random.sample(list(Movie.objects.filter(keywords__overlap=[kwrd for kwrd in request.user.survey])), 10)
             serializer = MovieListSerializer(movies, many=True)
             return Response(serializer.data)
         else: return Response({
@@ -91,7 +91,12 @@ def get_genre(request, genre_group):
 
 @api_view(['GET'])
 def get_movies_with_keyword(request, pick_num):
-    kwrds = ['anime', 'superhero', 'military', 'musical', 'school', 'romance', 'army', 'space', 'future', 'mafia', 'action', 'jazz',]
+    kwrds = [
+        'anime', 'superhero', 'military', 'musical', 'school',
+        'romance', 'army', 'space', 'future', 'mafia',
+        'action', 'jazz', 'friendship', 'villain', 'elves',
+        'dwarf', 'steampunk', 'time travel', 'based on novel or book',
+    ]
     # kwrds = Keyword.objects.all().values('keyword')
     movies = random.sample(list(Movie.objects.filter(keywords__overlap=[kwrd for kwrd in kwrds])), pick_num)
     serializer = MovieListSerializer(movies, many=True)

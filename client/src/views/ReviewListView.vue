@@ -1,18 +1,20 @@
 <template>
-  <div v-if="isReviews" class="frame">
+  <div v-if="isReviews" class="community row justify-content-center align-items-center">
 
-    <div class="community-header d-flex flex-column align-items-start">
-      <div class="mb-5">
-        <search-bar></search-bar>
+    <div class="col-8">
+      <div class="community-header d-flex flex-column align-items-start">
+        <div class="mb-5">
+          <search-bar></search-bar>
+        </div>
+        <p class="mb-2">Latest Reviews</p>
       </div>
-      <p class="mb-2">Latest Reviews</p>
-    </div>
 
-    <review-card
-      v-for="review in reviews"
-      :key="review.id"
-      :review="review">
-    </review-card>
+      <review-card
+        v-for="review in reviews"
+        :key="review.id"
+        :review="review">
+      </review-card>
+    </div>
 
   </div>
 </template>
@@ -51,6 +53,10 @@ export default {
 </script>
 
 <style>
+.community {
+  padding: 2rem 5rem;
+}
+
 .community-header p {
   font-size: 2rem;
   font-weight: 700;

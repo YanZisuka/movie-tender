@@ -76,7 +76,7 @@ export default {
         })
     },
 
-    logout({ getters, dispatch }){
+    logout({ getters, dispatch, state }){
         axios({
             url : drf.accounts.logout(),
             method : 'post',
@@ -84,8 +84,9 @@ export default {
         })
           .then(() => {
               dispatch('removeToken')
+              state.currentUser = ''
               alert('Logout 되었습니다.')
-              router.push({ name : 'login' })
+              router.push({ name : 'index' })
           })
           .catch(err => console.error(err.response))
     },

@@ -48,25 +48,21 @@ export default {
 
 <style>
 #app {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'IBM Plex Sans KR', sans-serif, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #0b1b38;
-  backdrop-filter: blur(30px);
+  min-width: 100%;
+  min-height: 100%;
+  backdrop-filter: blur(40px);
 }
 
-nav {
-  padding: 30px;
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
-
-nav a {
-  font-weight: bold;
-  color: #0b1b38;
-}
-
-nav a.router-link-exact-active {
-  color: #cf1224;
-}
-
 </style>

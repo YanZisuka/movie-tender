@@ -159,7 +159,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .review-item {
   background-color: #fbfbfb;
   border-radius: 0.5rem;
@@ -213,14 +213,6 @@ export default {
   font-size: 22px;
   font-weight: 700;
   color: #c4c4c4;
-}
-
-.ellipsis {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
 }
 
 .modal-poster {

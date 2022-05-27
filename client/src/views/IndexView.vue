@@ -3,11 +3,11 @@
     <h1 class="logo">movietender</h1>
     <p class="index-text mt-3">지금,</p>
     <p class="index-text mb-5">어떤 영화를 볼지 고민된다면?</p>
-    <router-link v-if="!isCurrentUser" :to="{ name: 'signup' }">
-      <button class="default-btn">Signup!</button>
-    </router-link>  
     <router-link v-if="!isCurrentUser" :to="{ name: 'login' }">
       <button class="default-btn">Login!</button>
+    </router-link>
+    <router-link v-if="isCurrentUser" :to="{ name: 'logout', params: { username: currentUser.username } }">
+      <button class="default-btn">Logout!</button>
     </router-link>
   </div>
 </template>

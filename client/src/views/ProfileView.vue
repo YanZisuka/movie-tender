@@ -2,7 +2,7 @@
   <div class="body d-flex flex-column justify-content-center">
     <div class="profile d-flex flex-row my-5 justify-content-start align-items-center">
       <div>
-        <img class="profile-img me-2" src="@/assets/logo.png" alt="profile-img">
+        <img class="profile-img me-2" :src="profileImg" alt="profile-img">
       </div>
       <div class="userinfo d-flex flex-column align-items-start justify-content-around">
         <span class="profile-button">
@@ -54,6 +54,7 @@ export default {
   components : { ReviewCard },
   data() {
     return {
+      profileImg: require('@/assets/default-profile.png'),
       username : this.$route.params.username,
       followers_count : 0,
     }

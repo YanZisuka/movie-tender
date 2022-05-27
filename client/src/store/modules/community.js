@@ -8,7 +8,6 @@ export default {
   state: {
     reviews : [],
     review : {},
-    movie : {},
   },
 
   getters: {
@@ -18,8 +17,6 @@ export default {
       return state.review.user.id === getters.currentUser.pk
     },
     isReview: state => !_.isEmpty(state.review),
-    movie : state => state.movie,
-
   },
 
   mutations: {
@@ -27,8 +24,6 @@ export default {
     SET_REVIEW : (state, review) => state.review = review,
     SET_LIKECOUNT : (state, likeCount) => state.likeCount = likeCount,
     SET_REVIEW_COMMENTS: (state, comments) => (state.review.comments = comments),
-    SET_MOVIE : (state, movie) => ( state.movie = movie),
-
   },
 
   actions: {
@@ -95,17 +90,6 @@ export default {
           })
           .catch(err => console.error(err.response))
       }
-    },
-
-    fetchMovie({commit, getters }, moviePk){
-      axios({
-        url : drf.movies.movie(moviePk),
-        method : 'get',
-        headers : getters.authHeader,
-      })
-        .then(res => {
-          commit('SET_MOVIE', res.data)})
-        .catch(err => console.error(err.response))
     },
   },
 }

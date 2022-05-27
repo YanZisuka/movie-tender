@@ -11,41 +11,49 @@
 
     <div class="text-start">
       <p class="mt-5 mb-3 overview-title text-white">개요</p>
-      <span class="overview-content text-white">{{ movieDetail.overview }}</span>
+      <span class="overview-content text-white">{{ overview | strUnescape }}</span>
+
       <hr class="mt-5 mb-3 text-white">
-      <div class="d-flex flex-row justify-content-between">
-        <div>
+
+      <div class="row justify-content-between">
+
+        <div class="col-12 col-lg-3">
           <p class="info-title text-secondary">평균 평점</p>
-          <p class="info-content text-white"><i class="fa-solid fa-star"></i> {{ movieDetail.vote_average }}</p>
+          <p class="info-content text-white mb-4"><i class="fa-solid fa-star"></i> {{ movieDetail.vote_average }}</p>
         </div>
-        <div>
+
+        <div class="col-12 col-lg-3 mb-4">
           <p class="info-title text-secondary">나의 평점</p>
-          <p class="star-rating info-content">
-            <input type="radio" id="5-stars" name="rating" value="5" v-model="ratings"/>
+          <div class="star-rating info-content">
+            <input type="radio" id="5-stars" name="rating" value="5" v-model="rating"/>
             <label for="5-stars" class="star"><i @click="setRatings(5)" class="fa-solid fa-star"></i></label>
-            <input type="radio" id="4-stars" name="rating" value="4" v-model="ratings"/>
+            <input type="radio" id="4-stars" name="rating" value="4" v-model="rating"/>
             <label for="4-stars" class="star"><i @click="setRatings(4)" class="fa-solid fa-star"></i></label>
-            <input type="radio" id="3-stars" name="rating" value="3" v-model="ratings"/>
+            <input type="radio" id="3-stars" name="rating" value="3" v-model="rating"/>
             <label for="3-stars" class="star"><i @click="setRatings(3)" class="fa-solid fa-star"></i></label>
-            <input type="radio" id="2-stars" name="rating" value="2" v-model="ratings"/>
+            <input type="radio" id="2-stars" name="rating" value="2" v-model="rating"/>
             <label for="2-stars" class="star"><i @click="setRatings(2)" class="fa-solid fa-star"></i></label>
-            <input type="radio" id="1-stars" name="rating" value="1" v-model="ratings"/>
+            <input type="radio" id="1-stars" name="rating" value="1" v-model="rating"/>
             <label for="1-stars" class="star"><i @click="setRatings(1)" class="fa-solid fa-star"></i></label>
-          </p>
+          </div>
         </div>
-        <div>
+
+        <div class="col-12 col-lg-3">
           <p class="info-title text-secondary">출연진</p>
-          <ul class="info-content text-white p-0">
+          <ul class="info-content text-white p-0 mb-4">
             <li v-for="actor in credits" :key="actor.id">{{ actor.name }}</li>
           </ul>
         </div>
-        <div>
+
+        <div class="col-12 col-lg-3">
           <p class="info-title text-secondary">리뷰쓰기</p>
           <router-link :to="{ name: 'reviewNew' }">
-            <p class="info-content text-white"><i class="fa-solid fa-feather-pointed"></i></p>
+            <p class="info-content text-white mb-4"><i class="fa-solid fa-feather-pointed"></i></p>
           </router-link>
         </div>
+
       </div>
+
     </div>
     
   </div>
@@ -67,12 +75,15 @@ export default {
 
   data() {
     return {
-      ratings: 0,
+      rating: 0,
     }
   },
 
   computed: {
     ...mapGetters(['authHeader']),
+    overview() {
+      return this.movieDetail.overview.replaceAll('\\n', '\n')
+    },
     videoPath() {
       const key = this.movieDetail.video_path.split('=')
       if (key[key.length - 1]) {
@@ -87,12 +98,12 @@ export default {
   },
 
   methods: {
-    setRatings(ratings) {
-      return axios({
+    setRatings(rating) {
+      axios({
         url: drf.movies.movie(this.movieDetail.id),
         method: 'POST',
         data: {
-          'rating': ratings
+          'rating': rating
         },
         headers: this.authHeader
       })

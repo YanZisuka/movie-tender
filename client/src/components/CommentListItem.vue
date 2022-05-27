@@ -9,12 +9,12 @@
       <p>
       <input type="text" v-model="payload.content">
       </p>
-      <button class="btn" @click="onUpdate"><i class="fa-solid fa-pen"></i></button> |
+      <button class="btn" @click="onUpdate"><i class="fa-solid fa-pen"></i></button>
       <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-arrow-left-long"></i></button>
     </span>
 
     <span v-if="currentUser.pk === comment.user.id && !isEditing">
-      <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button> |
+      <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button>
       <button class="btn" @click="onDelete"><i class="fa-solid fa-xmark"></i></button>
     </span>
   </li>

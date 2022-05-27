@@ -17,9 +17,7 @@
       </div>
     </div>
 
-    <div v-if="isSurvey">
-      <movie-omakase></movie-omakase>
-    </div>
+    <movie-omakase></movie-omakase>
 
   </div>
 </template>

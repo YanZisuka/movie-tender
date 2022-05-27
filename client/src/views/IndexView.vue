@@ -57,7 +57,7 @@ export default {
   background-color: #cf1224;
   border: 0;
   color: #fff;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 600;
   width: 10rem;
   height: 3.5rem;

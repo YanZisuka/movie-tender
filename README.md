@@ -73,27 +73,29 @@
 ## :office: 프로젝트 구조
 
 ```
-📂Movietender
-┣📂client
-┃ ┣📂node_modules
-┃ ┣📂public
-┃ ┣📂src
-┃ ┃ ┣📂api
-┃ ┃ ┣📂assets
-┃ ┃ ┣📂components
-┃ ┃ ┣📂router
-┃ ┃ ┣📂store
-┃ ┃ ┃ ┣📂modules
-┃ ┃ ┣📂views
-┣📂server
-┃ ┣📂accounts
-┃ ┃ ┣📂migrations
-┃ ┣📂community
-┃ ┃ ┣📂migrations
-┃ ┣📂movies
-┃ ┃ ┣📂migrations
-┃ ┣📂server
-
+📂 Movietender
+├── 📂 client
+│   ├── 📂 node_modules
+│   ├── 📂 public
+│   └── 📂 src
+│       ├── 📂 api
+│       ├── 📂 assets
+│       ├── 📂 components
+│       ├── 📂 router
+│       ├── 📂 store
+│       │   └── 📂 modules
+│       ├── 📂 views
+│       ├── App.vue
+│       └── main.js
+└── 📂 server
+    ├── 📂 accounts
+    │    └── 📂 migrations
+    ├── 📂 community
+    │    └── 📂 migrations
+    ├── 📂 movies
+    │    └── 📂 migrations
+    ├── 📂 server
+    └── manage.py
 ```
 
 <br><br>

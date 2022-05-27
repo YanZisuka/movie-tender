@@ -39,7 +39,7 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['currentUser','profile', 'movie']),
+    ...mapGetters(['currentUser', 'profile', 'movie']),
     isMovie() {
       return this.movie.id === this.$route.params.moviePk
     },
@@ -63,12 +63,11 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchProfile', 'fetchMovie'])
+    ...mapActions(['fetchMovie'])
   },
 
   created() {
     this.fetchMovie(this.$route.params.moviePk)
-    this.fetchProfile(this.currentUser.username)
   },
 }
 </script>
@@ -87,10 +86,10 @@ export default {
 .provider-btn {
   background-color: #000;
   color: #fff;
-  font-size: 1.5rem;
-  font-weight: 500;
-  width: 13rem;
-  height: 4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 10rem;
+  height: 3.5rem;
   border-radius: 0.5rem;
 }
 

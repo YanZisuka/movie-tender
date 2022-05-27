@@ -1,5 +1,5 @@
 <template>
-  <nav v-if="isCurrentUser" class="d-flex justify-content-between sticky-top p-3">
+  <nav class="d-flex justify-content-between sticky-top p-3">
     <router-link :to="{ name: 'index' }" class="navbar-brand mx-3">
       <div :class="isDark ? 'text-white' : 'text-theme'" class="navbar-logo">movietender</div>
     </router-link>
@@ -24,8 +24,6 @@
 </template>
 
 <script>
-import _ from 'lodash'
-import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'NavBar',
@@ -35,18 +33,12 @@ export default {
   },
 
   computed: {
-    ...mapGetters(['currentUser']),
-    isCurrentUser() {
-      return !_.isEmpty(this.currentUser)
-    },
   },
 
   methods: {
-    ...mapActions(['fetchCurrentUser'])
   },
 
   created() {
-    this.fetchCurrentUser()
   }
 
 }

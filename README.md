@@ -6,7 +6,7 @@
 
 |                         yeonggyeong                          |                          YanZisuka                           |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <a href="https://github.com/yeonggyeong"><img style="width: 10rem;" src="README.assets/75614212.png" alt="Avatar"  /></a> | <a href="https://github.com/YanZisuka"><img style="width: 10rem;" src="README.assets/83825572.jpeg" alt="img"  /></a> |
+| <a href="https://github.com/yeonggyeong" target="_blank"><img style="width: 10rem;" src="README.assets/75614212.png" alt="Avatar"  /></a> | <a href="https://github.com/YanZisuka" target="_blank"><img style="width: 10rem;" src="README.assets/83825572.jpeg" alt="img"  /></a> |
 |                            공영경                            |                            한승재                            |
 
 <br>
@@ -107,13 +107,13 @@
 
 ## :cd: ERD
 
--   [draw.io](https://drive.google.com/file/d/1WqgOLr7BNAP7_DBBk-ysWIDRL2eX6Bk4/view?usp=sharing)
+-   <a href="https://drive.google.com/file/d/1WqgOLr7BNAP7_DBBk-ysWIDRL2eX6Bk4/view?usp=sharing" target="_blank">draw.io</a>
 
 <br><br>
 
 ## :iphone: 프로토타이핑
 
--   [Figma](https://www.figma.com/)
+-   <a href="https://www.figma.com/file/oQ3cjXbhtswUeQCz41NzOO/Movietender?node-id=0%3A1" target="_blank">Figma</a>
 
 <br><br>
 

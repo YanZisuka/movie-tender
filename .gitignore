@@ -1,6 +1,8 @@
-SetDatabase
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,visualstudiocode,python,venv,django
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,visualstudiocode,python,venv,django
+
+secrets.json
+database
 
 ### Django ###
 *.log

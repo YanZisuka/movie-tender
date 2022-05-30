@@ -17,7 +17,9 @@
       </div>
     </div>
 
-    <movie-omakase></movie-omakase>
+    <div v-if="isSurvey">
+      <movie-omakase></movie-omakase>
+    </div>
 
   </div>
 </template>
@@ -25,6 +27,7 @@
 <script>
 import _ from 'lodash'
 import { mapGetters, mapActions } from 'vuex'
+
 import MovieCard from '@/components/MovieCard.vue'
 import MovieOmakase from '@/components/MovieOmakase.vue'
 
@@ -33,7 +36,7 @@ export default {
   
   components: {
     MovieCard,
-    MovieOmakase
+    MovieOmakase,
   },
 
   data() {
@@ -49,7 +52,7 @@ export default {
       return this.profile.username === this.currentUser.username
     },
     isSurvey() {
-      if (this.profile.survey.length === 0) {
+      if (this.profile.survey?.length === 0) {
         return false 
       } else {
         return true

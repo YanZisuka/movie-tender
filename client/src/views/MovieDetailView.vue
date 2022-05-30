@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isMovie" :style="{'background-image': `url${movieDetail.poster_path}`}" class="row justify-content-center align-items-center p-5">
+  <div :style="{'background-image': `url${movieDetail.poster_path}`}" class="row justify-content-center align-items-center p-5">
     <div class="col-12 col-lg-6 text-start mb-5">
       <h1 class="movie-title text-white">{{ movieDetail.title }}</h1>
       <h2 class="movie-subtitle text-white">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
@@ -32,7 +32,7 @@ export default {
   name: 'MovieDetailView',
 
   components: {
-    MovieInfo
+    MovieInfo,
   },
 
   data() {
@@ -54,18 +54,22 @@ export default {
     },
     runtime() {
       const hh = parseInt(this.movieDetail.runtime / 60)
-      if (hh) {
-        return `${hh}시간 ${(this.movieDetail.runtime % 60)}분`
+      const mm = this.movieDetail.runtime % 60
+
+      if (hh && mm) {
+        return `${hh}시간 ${mm}분`
+      } else if (hh && !mm) {
+        return `${hh}시간`
       } else {
-        return `${(this.movieDetail.runtime % 60)}분`
+        return `${mm}분`
       }
     },
     releaseDate() {
-      return `${this.movieDetail.release_date.replaceAll('-', '/')} (KR)`
+      return `${this.movieDetail.release_date?.replaceAll('-', '/')} (KR)`
     },
     genres() {
       let st = ''
-      this.movieDetail.genres.forEach(genre => {
+      this.movieDetail.genres?.forEach(genre => {
         st += genre + ' '
       })
       return st.trim()
@@ -79,6 +83,8 @@ export default {
 
   created() {
     this.fetchMovie(this.$route.params.moviePk)
+    this.$emit('dark-emit')
+    document.body.setAttribute('style', 'background-color: #171717;')
   },
 }
 </script>

@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 export default {
   state: {
-    token: localStorage.getItem('token') || '' ,
+    token: localStorage.getItem('token') || '',
     currentUser: {},
     profile: {},
     authError: null,
@@ -118,6 +118,7 @@ export default {
               commit('SET_PROFILE', res.data)
           })
     },
+
     updateUser({ commit, getters }, {username, nickname}){
       axios({
         url : drf.accounts.profile(username),
@@ -130,6 +131,7 @@ export default {
           router.push({ name:'profile', params : { username : getters.profile.username }})
         })
     },
+    
     deleteUser({ commit, getters }, username) {
       if (confirm('탈퇴하시겠습니까?')) {
         axios({

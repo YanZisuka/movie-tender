@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createdPersistedState from 'vuex-persistedstate'
 
 import accounts from './modules/accounts'
 import movies from './modules/movies'
@@ -13,4 +14,10 @@ export default new Vuex.Store({
     movies,
     community,
   },
+
+  plugins: [
+    createdPersistedState({
+      paths: ['accounts',],
+    }),
+  ],
 })

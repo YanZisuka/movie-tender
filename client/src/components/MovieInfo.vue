@@ -22,19 +22,19 @@
           <p class="info-content text-white mb-4"><i class="fa-solid fa-star"></i> {{ movieDetail.vote_average }}</p>
         </div>
 
-        <div class="col-12 col-lg-3 mb-4">
+        <div class="col-12 col-lg-4 mb-4">
           <p class="info-title text-secondary">나의 평점</p>
           <div class="star-rating info-content">
             <input type="radio" id="5-stars" name="rating" value="5" v-model="rating"/>
-            <label for="5-stars" class="star"><i @click="setRatings(5)" class="fa-solid fa-star"></i></label>
+            <label for="5-stars" class="star"><i @click="setRating(5)" class="fa-solid fa-star"></i></label>
             <input type="radio" id="4-stars" name="rating" value="4" v-model="rating"/>
-            <label for="4-stars" class="star"><i @click="setRatings(4)" class="fa-solid fa-star"></i></label>
+            <label for="4-stars" class="star"><i @click="setRating(4)" class="fa-solid fa-star"></i></label>
             <input type="radio" id="3-stars" name="rating" value="3" v-model="rating"/>
-            <label for="3-stars" class="star"><i @click="setRatings(3)" class="fa-solid fa-star"></i></label>
+            <label for="3-stars" class="star"><i @click="setRating(3)" class="fa-solid fa-star"></i></label>
             <input type="radio" id="2-stars" name="rating" value="2" v-model="rating"/>
-            <label for="2-stars" class="star"><i @click="setRatings(2)" class="fa-solid fa-star"></i></label>
+            <label for="2-stars" class="star"><i @click="setRating(2)" class="fa-solid fa-star"></i></label>
             <input type="radio" id="1-stars" name="rating" value="1" v-model="rating"/>
-            <label for="1-stars" class="star"><i @click="setRatings(1)" class="fa-solid fa-star"></i></label>
+            <label for="1-stars" class="star"><i @click="setRating(1)" class="fa-solid fa-star"></i></label>
           </div>
         </div>
 
@@ -45,7 +45,7 @@
           </ul>
         </div>
 
-        <div class="col-12 col-lg-3">
+        <div class="col-12 col-lg-2">
           <p class="info-title text-secondary">리뷰쓰기</p>
           <router-link :to="{ name: 'reviewNew' }">
             <p class="info-content text-white mb-4"><i class="fa-solid fa-feather-pointed"></i></p>
@@ -82,6 +82,7 @@ export default {
   computed: {
     ...mapGetters(['authHeader']),
     overview() {
+      document.body.setAttribute('style', `background-image: url(${this.movieDetail.poster_path});`)
       return this.movieDetail.overview.replaceAll('\\n', '\n')
     },
     videoPath() {
@@ -98,7 +99,7 @@ export default {
   },
 
   methods: {
-    setRatings(rating) {
+    setRating(rating) {
       axios({
         url: drf.movies.movie(this.movieDetail.id),
         method: 'POST',
@@ -114,9 +115,7 @@ export default {
     },
   },
   
-  created() {
-    document.body.setAttribute('style', `background-image: url(${this.movieDetail.poster_path});`)
-  },
+  created() {},
 }
 </script>
 

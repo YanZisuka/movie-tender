@@ -8,7 +8,7 @@
         <div class="text-start text-black ms-5">
           <h1 class="text-white">{{ movie.title }}</h1>
           <h2 class="text-white"><i class="fa-solid fa-star"></i> {{ movie.vote_average }}</h2>
-          <p class="lead text-white ellipsis pe-5">{{ movie.overview }}</p>
+          <p class="lead text-white ellipsis pe-5">{{ overview }}</p>
         </div>
       </div>
     </router-link>
@@ -24,6 +24,9 @@ export default {
   },
 
   computed: {
+    overview() {
+      return this.movie.overview.replaceAll('\\n', '\n')
+    },
   },
 
 

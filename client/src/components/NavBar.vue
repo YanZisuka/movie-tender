@@ -6,7 +6,7 @@
     <div class="d-flex align-items-center">
       <router-link :to="{ name: 'movies' }" :class="isDark ? 'text-white' : 'text-theme'" class="text-decoration-none mx-5">OMAKASE</router-link>
       <router-link :to="{ name: 'reviews' }" :class="isDark ? 'text-white' : 'text-theme'" class="text-decoration-none mx-5">COMMUNITY</router-link>
-      <div class="dropdown mx-5">
+      <div v-if="isCurrentUser" class="dropdown mx-5">
         <button :class="isDark ? 'text-white' : 'text-theme'" class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <img class="profile-img me-2" :src="profileImg" alt="profile-img">
         </button>

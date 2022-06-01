@@ -1,9 +1,9 @@
 <template>
   <div class="row justify-content-center align-items-center mt-5">
-    <div @click="onClick(leftMovie)" class="col-6">
+    <div @click="onClick(leftMovie)" class="col-6 d-flex justify-content-center">
       <movie-card class="selection-card" :movieCard="leftMovie"></movie-card>
     </div>
-    <div @click="onClick(rightMovie)" class="col-6">
+    <div @click="onClick(rightMovie)" class="col-6 d-flex justify-content-center">
       <movie-card class="selection-card" :movieCard="rightMovie"></movie-card>
     </div>
     <p class="versus-text translate-middle">VS</p>

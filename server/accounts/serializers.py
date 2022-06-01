@@ -1,12 +1,13 @@
-from rest_framework import serializers
-
 from django.contrib.auth import get_user_model
+
+from rest_framework import serializers
 from dj_rest_auth.registration.serializers import RegisterSerializer
 
 from community.serializers import ReviewSerializer
 
 
 class CustomRegisterSerializer(RegisterSerializer):
+    
     nickname = serializers.CharField()
 
     def get_cleaned_data(self):

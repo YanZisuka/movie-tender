@@ -2,6 +2,7 @@ import random
 
 from django.shortcuts import get_object_or_404
 from django.db.models import Sum
+from django.contrib.auth import get_user_model
 
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -42,7 +43,7 @@ def index(request):
 
 
 @api_view(['GET', 'POST'])
-def movie(request, movie_pk):
+def movie(request, movie_pk: int):
 
     movie_obj = get_object_or_404(Movie, pk=movie_pk)
     
@@ -76,6 +77,23 @@ def movie(request, movie_pk):
 
 
 @api_view(['GET'])
+def get_rating(request, movie_pk: int, username: str):
+
+    movie = get_object_or_404(Movie, pk=movie_pk)
+    user = get_object_or_404(get_user_model(), username=username)
+
+    if Rating.objects.filter(movie=movie, user=user).exists():
+        rating = get_object_or_404(Rating, movie=movie, user=user)
+        serializer = RatingSerializer(rating)
+        return Response(serializer.data)
+    else: return Response({
+        'user': user.id,
+        'movie': movie.id,
+        'rating': 0
+    })
+
+
+@api_view(['GET'])
 def get_staff(request):
     staffs = random.sample(list(Staff.objects.filter(role='Actor')), 2)
     serializer = StaffSerializer(staffs, many=True)
@@ -83,14 +101,14 @@ def get_staff(request):
 
 
 @api_view(['GET'])
-def get_genre(request, genre_group):
+def get_genre(request, genre_group: str):
     movie = random.choice(Movie.objects.filter(genre_group=genre_group))
     serializer = MovieListSerializer(movie)
     return Response(serializer.data)
 
 
 @api_view(['GET'])
-def get_movies_with_keyword(request, pick_num):
+def get_movies_with_keyword(request, pick_num: int):
     kwrds = [
         'anime', 'superhero', 'military', 'musical', 'school',
         'romance', 'army', 'space', 'future', 'mafia',

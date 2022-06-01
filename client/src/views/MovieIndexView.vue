@@ -1,7 +1,7 @@
 <template>
   <div v-if="isCurrentUser && isMyProfile">
 
-    <div v-if="!isSurvey" class="row justify-content-center align-items-center mt-5">
+    <div v-if="!isSurvey" class="row justify-content-center align-items-center p-5">
       <div class="text-start col-6 ps-5">
         <p class="main-text m-0">무비텐더가 {{ profile.nickname }}님이</p>
         <p class="main-text m-0">좋아하실만한 영화를</p>
@@ -12,7 +12,7 @@
           <button class="default-btn">Start!</button>
         </router-link>
       </div>
-      <div class="col-6">
+      <div class="col-6 d-flex justify-content-center">
         <movie-card :movieCard="movieCard"></movie-card>
       </div>
     </div>

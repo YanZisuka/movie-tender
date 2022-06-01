@@ -34,8 +34,6 @@ export default {
 
 <style scoped>
 .card-frame {
-  position: relative;
-  left: 10%;
   background-color: #141414;
   border-radius: 2rem;
   width: 80vh;

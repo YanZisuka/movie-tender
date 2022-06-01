@@ -82,7 +82,7 @@ export default {
   computed: {
     ...mapGetters(['authHeader']),
     overview() {
-      document.body.setAttribute('style', `background-image: url(${this.movieDetail.poster_path});`)
+      document.body.setAttribute('style', `background-image: url(${this.movieDetail.poster_path}); background-size: cover;`)
       return this.movieDetail.overview.replaceAll('\\n', '\n')
     },
     videoPath() {
@@ -99,6 +99,19 @@ export default {
   },
 
   methods: {
+    getRating() {
+      axios({
+        url: drf.movies.rating(this.movieDetail.id, this.profile.username),
+        method: 'GET',
+        headers: this.authHeader
+      })
+        .then(res => {
+          console.log(res.data)
+          this.rating = res.data.rating
+        })
+        .catch(err => console.error(err.response))
+    },
+
     setRating(rating) {
       axios({
         url: drf.movies.movie(this.movieDetail.id),
@@ -115,7 +128,9 @@ export default {
     },
   },
   
-  created() {},
+  created() {
+    this.getRating()
+  },
 }
 </script>
 

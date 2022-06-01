@@ -1,9 +1,9 @@
 <template>
-  <div :style="{'background-image': `url${movieDetail.poster_path}`}" class="row justify-content-center align-items-center p-5">
+  <div v-if="isMovie" :style="{'background-image': `url${movieDetail.poster_path}`}" class="row justify-content-center align-items-center p-5">
     <div class="col-12 col-lg-6 text-start mb-5">
       <h1 class="movie-title text-white">{{ movieDetail.title }}</h1>
       <h2 class="movie-subtitle text-white">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
-      <button class="provider-btn d-flex justify-content-start align-items-center text-white mt-3" v-if="movieDetail.providers[0]">
+      <button v-if="isProvider" class="provider-btn d-flex justify-content-start align-items-center text-white mt-3">
         <img v-if="movieDetail.providers[0] === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
         <img v-if="movieDetail.providers[0] === 'Disney Plus'" :src="disneyPlusLogo" alt="disney-plus-logo">
         <img v-if="movieDetail.providers[0] === 'wavve'" :src="wavveLogo" alt="wavve-logo">
@@ -46,11 +46,17 @@ export default {
 
   computed: {
     ...mapGetters(['currentUser', 'profile', 'movieDetail',]),
+    moviePk() {
+      return this.$route.params.moviePk
+    },
     isMovie() {
-      return this.movieDetail.id === this.$route.params.moviePk
+      return this.movieDetail.id === this.moviePk
     },
     isProfile() {
       return this.currentUser.username === this.profile.username
+    },
+    isProvider() {
+      return this.movieDetail.providers?.length !== 0
     },
     runtime() {
       const hh = parseInt(this.movieDetail.runtime / 60)
@@ -82,7 +88,7 @@ export default {
   },
 
   created() {
-    this.fetchMovie(this.$route.params.moviePk)
+    this.fetchMovie(this.moviePk)
     this.$emit('dark-emit')
     document.body.setAttribute('style', 'background-color: #171717;')
   },

@@ -6,7 +6,7 @@ export default {
 
   state: {
     movies: [],
-    movieDetail: {},
+    movieDetail: localStorage.getItem('movie') || {},
     movieCard: {},
     movieCards: [],
   },
@@ -46,6 +46,7 @@ export default {
       })
         .then(res => {
           commit('SET_MOVIE_DETAIL', res.data)
+          localStorage.setItem('movie', JSON.stringify(res.data))
         })
         .catch(err => {
           if (err.response.status === 404) {

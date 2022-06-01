@@ -11,7 +11,7 @@ from .serializers import *
 User = get_user_model()
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-def profile(request, username):
+def profile(request, username: str):
 
     user = get_object_or_404(User, username=username)
     

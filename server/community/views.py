@@ -29,7 +29,7 @@ def index(request):
 
 
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
-def review(request, review_pk):
+def review(request, review_pk: int):
 
     review_obj = get_object_or_404(Review, pk=review_pk)
     
@@ -81,7 +81,7 @@ def review(request, review_pk):
 
 
 @api_view(['POST'])
-def create_comment(request, review_pk):
+def create_comment(request, review_pk: int):
     review = get_object_or_404(Review, pk=review_pk)
 
     serializer = CommentSerializer(data=request.data)
@@ -91,7 +91,7 @@ def create_comment(request, review_pk):
 
 
 @api_view(['PUT', 'DELETE'])
-def comment(request, review_pk, comment_pk):
+def comment(request, review_pk: int, comment_pk: int):
 
     review = get_object_or_404(Review, pk=review_pk)
     comment_obj = get_object_or_404(Comment, pk=comment_pk)

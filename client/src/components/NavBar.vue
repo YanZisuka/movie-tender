@@ -56,8 +56,8 @@ export default {
     ...mapActions(['fetchCurrentUser'])
   },
 
-  created() {
-    this.fetchCurrentUser()
+  async created() {
+    await this.fetchCurrentUser()
   }
 
 }

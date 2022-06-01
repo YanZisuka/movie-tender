@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    <div v-if="isSurvey">
+    <div v-else>
       <movie-omakase></movie-omakase>
     </div>
 
@@ -61,13 +61,16 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchProfile', 'fetchMovieCard', 'fetchMovieCards',])
+    ...mapActions(['fetchCurrentUser', 'fetchProfile', 'fetchMovieCard', 'fetchMovieCards',])
   },
 
-  created() {
-    this.fetchMovieCards(10)
-    this.fetchMovieCard()
-    this.fetchProfile(this.currentUser)
+  async created() {
+    await this.fetchCurrentUser()
+    await this.fetchProfile(this.currentUser)
+    await this.fetchMovieCards(10)
+    if (!this.isSurvey) {
+      this.fetchMovieCard()
+    }
     this.$emit('dark-emit')
     document.body.setAttribute('style', 'background-color: #171717;')
   },

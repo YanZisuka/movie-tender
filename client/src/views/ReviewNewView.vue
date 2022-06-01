@@ -32,8 +32,11 @@ export default {
 
   computed: {
     ...mapGetters(['movieDetail']),
+    moviePk() {
+      return parseInt(this.$route.params.moviePk)
+    },
     isMovie() {
-      return this.movieDetail.id === this.$route.params.moviePk
+      return this.movieDetail.id === this.moviePk
     },
   },
 
@@ -42,7 +45,7 @@ export default {
   },
 
   created() {
-    this.fetchMovie(this.$route.params.moviePk)
+    this.fetchMovie(this.moviePk)
   }
 }
 </script>

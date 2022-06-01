@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isMovie" :style="{'background-image': `url${movieDetail.poster_path}`}" class="row justify-content-center align-items-center p-5">
+  <div v-if="isMovie" class="row justify-content-center align-items-center p-5">
     <div class="col-12 col-lg-6 text-start mb-5">
       <h1 class="movie-title text-white">{{ movieDetail.title }}</h1>
       <h2 class="movie-subtitle text-white">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
@@ -47,7 +47,7 @@ export default {
   computed: {
     ...mapGetters(['currentUser', 'profile', 'movieDetail',]),
     moviePk() {
-      return this.$route.params.moviePk
+      return parseInt(this.$route.params.moviePk)
     },
     isMovie() {
       return this.movieDetail.id === this.moviePk
@@ -84,10 +84,12 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchMovie',])
+    ...mapActions(['fetchCurrentUser', 'fetchProfile', 'fetchMovie',])
   },
 
-  created() {
+  async created() {
+    await this.fetchCurrentUser()
+    await this.fetchProfile(this.currentUser)
     this.fetchMovie(this.moviePk)
     this.$emit('dark-emit')
     document.body.setAttribute('style', 'background-color: #171717;')

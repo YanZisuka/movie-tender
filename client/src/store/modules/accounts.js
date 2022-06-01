@@ -93,7 +93,7 @@ export default {
 
     fetchCurrentUser({ commit, getters, dispatch }){
       if (getters.isLoggedIn){
-        axios({
+        return axios({
             url : drf.accounts.currentUserInfo(),
             method : 'get',
             headers : getters.authHeader,
@@ -109,7 +109,7 @@ export default {
     },
     
     fetchProfile({ commit, getters }, { username }){
-      axios({
+      return axios({
         url : drf.accounts.profile(username),
         method : 'get',
         headers : getters.authHeader,

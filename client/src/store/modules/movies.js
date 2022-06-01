@@ -6,7 +6,7 @@ export default {
 
   state: {
     movies: [],
-    movieDetail: localStorage.getItem('movie') || {},
+    movieDetail: {},
     movieCard: {},
     movieCards: [],
   },
@@ -27,7 +27,7 @@ export default {
 
   actions: {
     fetchMovies({ getters, commit }) {
-      axios({
+      return axios({
         url: drf.movies.movies(),
         method: 'GET',
         headers: getters.authHeader,
@@ -39,14 +39,13 @@ export default {
     },
 
     fetchMovie({ getters, commit }, moviePk) {
-      axios({
+      return axios({
         url: drf.movies.movie(moviePk),
         method: 'GET',
         headers: getters.authHeader,
       })
         .then(res => {
           commit('SET_MOVIE_DETAIL', res.data)
-          localStorage.setItem('movie', JSON.stringify(res.data))
         })
         .catch(err => {
           if (err.response.status === 404) {
@@ -58,7 +57,7 @@ export default {
     },
 
     fetchMovieCard({ getters, commit }) {
-      axios({
+      return axios({
         url: drf.movies.moviesWithKeyword(1),
         method: 'GET',
         headers: getters.authHeader,
@@ -76,7 +75,7 @@ export default {
     },
 
     fetchMovieCards({ getters, commit }, pickNum) {
-      axios({
+      return axios({
         url: drf.movies.moviesWithKeyword(pickNum),
         method: 'GET',
         headers: getters.authHeader,

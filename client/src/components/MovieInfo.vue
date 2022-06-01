@@ -82,7 +82,6 @@ export default {
   computed: {
     ...mapGetters(['authHeader']),
     overview() {
-      document.body.setAttribute('style', `background-image: url(${this.movieDetail.poster_path}); background-size: cover;`)
       return this.movieDetail.overview.replaceAll('\\n', '\n')
     },
     videoPath() {
@@ -129,6 +128,7 @@ export default {
   },
   
   created() {
+    document.body.setAttribute('style', `background-image: url(${this.movieDetail.poster_path}); background-size: cover;`)
     this.getRating()
   },
 }

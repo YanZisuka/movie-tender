@@ -1,4 +1,4 @@
-# :movie_camera: Movietender
+# :movie_camera: movietender
 
 ## :mag_right: 소개
 
@@ -111,13 +111,9 @@
 
 <br><br>
 
-## :iphone: 프로토타이핑
+## :iphone: 프로토타입
 
 -   <a href="https://www.figma.com/file/oQ3cjXbhtswUeQCz41NzOO/Movietender?node-id=0%3A1" target="_blank">Figma</a>
 
 <br><br>
-
-## :cocktail: 협업
-
-
 

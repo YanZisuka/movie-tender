@@ -88,11 +88,11 @@ export default {
   },
 
   async created() {
+    this.$emit('dark-emit')
+    document.body.setAttribute('style', 'background-color: #171717;')
     await this.fetchCurrentUser()
     await this.fetchProfile(this.currentUser)
     this.fetchMovie(this.moviePk)
-    this.$emit('dark-emit')
-    document.body.setAttribute('style', 'background-color: #171717;')
   },
 }
 </script>

@@ -37,7 +37,7 @@ export default {
 <style scoped>
 .omakase-item {
   background-color: #030303;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.25);
   width: 100%;
 }
@@ -48,7 +48,7 @@ export default {
 
 .omakase-item img {
   width: 12rem;
-  border-radius: 0.5rem;
+  border-radius: 8px 0 0 8px;
 }
 
 .omakase-item h1 {

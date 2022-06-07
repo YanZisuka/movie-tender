@@ -105,7 +105,6 @@ export default {
         headers: this.authHeader
       })
         .then(res => {
-          console.log(res.data)
           this.rating = res.data.rating
         })
         .catch(err => console.error(err.response))
@@ -120,9 +119,7 @@ export default {
         },
         headers: this.authHeader
       })
-        .then(res => {
-          console.log(res.data)
-        })
+        .then()
         .catch(err => console.error(err.response))
     },
   },

@@ -73,7 +73,7 @@ export default {
       })
         .then(res => {
           commit('SET_REVIEW', res.data)
-          router.push({ name: 'index' })
+          router.go()
         })
     },
 
@@ -86,7 +86,7 @@ export default {
         })
           .then(() => {
             commit('SET_REVIEW', {})
-            router.push({ name: 'index' })
+            router.go()
           })
           .catch(err => console.error(err.response))
       }

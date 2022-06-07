@@ -14,8 +14,6 @@
 <script>
 import NavBar from '@/components/NavBar.vue'
 
-import { mapActions } from 'vuex'
-
 export default {
   name: 'App',
 
@@ -30,7 +28,6 @@ export default {
   },
   
   methods: {
-    ...mapActions(['fetchCurrentUser']),
     setDark() {
       this.isDark = true
     },
@@ -39,9 +36,7 @@ export default {
     },
   },
 
-  created() {
-    this.fetchCurrentUser()
-  },
+  created() {},
 }
 </script>
 

@@ -65,19 +65,17 @@ export default {
   },
 
   async created() {
-    await this.fetchCurrentUser()
-    await this.fetchProfile(this.currentUser)
-    await this.fetchMovieCards(10)
-    if (!this.isSurvey) {
-      this.fetchMovieCard()
-    }
     this.$emit('dark-emit')
     document.body.setAttribute('style', 'background-color: #171717;')
+    this.fetchMovieCards(10)
+    this.fetchMovieCard()
+    await this.fetchCurrentUser()
+    await this.fetchProfile(this.currentUser)
   },
 }
 </script>
 
-<style>
+<style scoped>
 .main-text {
   font-size: 3.75rem;
   font-weight: 700;

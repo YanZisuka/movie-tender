@@ -12,6 +12,7 @@ export default {
     currentUser: {},
     profile: {},
     authError: null,
+    showAccountModal: false,
     },
 
   getters: {
@@ -19,7 +20,8 @@ export default {
     currentUser: state => state.currentUser,
     profile: state => state.profile,
     authError: state => state.authError,
-    authHeader: state => ({ Authorization: `Token ${state.token}`}),
+    authHeader: state => ({ Authorization: `Token ${state.token}` }),
+    showAccountModal: state => state.showAccountModal,
   },
 
   mutations: {
@@ -27,6 +29,7 @@ export default {
     SET_CURRENT_USER: (state, user) => state.currentUser = user,
     SET_PROFILE: (state, profile) => state.profile = profile,
     SET_AUTH_ERROR: (state, error) => state.authError = error,
+    SWITCH_SHOW_ACCOUNT_MODAL: state => state.showAccountModal = !state.showAccountModal,
     },
     
   actions: {
@@ -85,7 +88,7 @@ export default {
           .then(() => {
               dispatch('removeToken')
               state.currentUser = ''
-              alert('Logout 되었습니다.')
+              alert('로그아웃 되었습니다.')
               router.push({ name : 'index' })
           })
           .catch(err => console.error(err.response))
@@ -145,6 +148,10 @@ export default {
           })
           .catch(err => console.error(err.response))
       }
+    },
+
+    switchShowAccountModal({ commit }) {
+      commit('SWITCH_SHOW_ACCOUNT_MODAL')
     },
   },
 }

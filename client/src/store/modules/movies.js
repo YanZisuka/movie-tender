@@ -101,7 +101,7 @@ export default {
         },
         headers: getters.authHeader,
       })
-        .then(res => console.log(res.data))
+        .then()
         .catch(err => console.error(err.response))
     },
   },

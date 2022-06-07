@@ -1,39 +1,35 @@
 <template>
   <div>
+
     <h1 class="logo">movietender</h1>
     <p class="index-text mt-3">지금,</p>
     <p class="index-text mb-5">어떤 영화를 볼지 고민된다면?</p>
-    <router-link v-if="!isCurrentUser" :to="{ name: 'login' }">
-      <button class="default-btn">Login!</button>
-    </router-link>
-    <router-link v-if="isCurrentUser" :to="{ name: 'logout', params: { username: currentUser.username } }">
+    <button v-if="!isLoggedIn" @click="switchShowAccountModal()" class="default-btn">Login!</button>
+    <router-link v-else :to="{ name: 'logout', params: { username: currentUser.username } }">
       <button class="default-btn">Logout!</button>
     </router-link>
+
   </div>
 </template>
 
 <script>
-import _ from 'lodash'
 import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'IndexView',
 
   computed: {
-    ...mapGetters(['currentUser']),
-    isCurrentUser() {
-      return !_.isEmpty(this.currentUser)
-    },
+    ...mapGetters(['isLoggedIn', 'currentUser']),
   },
 
   methods: {
-    ...mapActions(['fetchCurrentUser'])
+    ...mapActions(['fetchCurrentUser', 'switchShowAccountModal'])
   },
 
-  created() {
+  async created() {
     this.$emit('light-emit')
     document.body.setAttribute('style', 'background-color: #fff;')
-    this.fetchCurrentUser()
+    await this.fetchCurrentUser()
   },
 }
 </script>
@@ -64,5 +60,15 @@ export default {
   border-radius: 0.5rem;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.btn-theme {
+  background-color: #0b1b38;
+  width: 10rem;
+  height: 2.5rem;
+  border-radius: 8px;
+  border: 0;
+  color: #fff;
+  font-weight: 700;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div v-if="isReviews" class="community row justify-content-center align-items-center">
 
-    <div class="col-8">
+    <div class="col-6">
       <div class="community-header d-flex flex-column align-items-start">
         <div class="mb-5">
           <search-bar></search-bar>
@@ -41,13 +41,14 @@ export default {
   },
 
   methods : {
-    ...mapActions(['fetchReviews'])
+    ...mapActions(['fetchCurrentUser', 'fetchReviews'])
   },
 
   created() {
-    this.fetchReviews()
     this.$emit('light-emit')
     document.body.setAttribute('style', 'background-color: #fff;')
+    this.fetchCurrentUser()
+    this.fetchReviews()
   }
 }
 </script>

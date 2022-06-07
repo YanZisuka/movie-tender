@@ -201,7 +201,7 @@ export default {
 
 .review-item-poster {
   width: 12rem;
-  border-radius: 0.5rem;
+  border-radius: 8px 0 0 8px;
 }
 
 .review-item-title {
@@ -217,7 +217,7 @@ export default {
 
 .modal-poster {
   width: 30rem;
-  border-radius: 8px;
+  border-radius: 8px 0 0 8px;
 }
 
 .modal-body {

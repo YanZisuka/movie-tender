@@ -1,7 +1,7 @@
 <template>
   <div v-if="isReviews" class="community row justify-content-center align-items-center">
 
-    <div class="col-6">
+    <div class="col-7">
       <div class="community-header d-flex flex-column align-items-start">
         <div class="mb-5">
           <search-bar></search-bar>
@@ -9,11 +9,11 @@
         <p class="mb-2">Latest Reviews</p>
       </div>
 
-      <review-card
+      <review-item
         v-for="review in reviews"
         :key="review.id"
         :review="review">
-      </review-card>
+      </review-item>
     </div>
 
   </div>
@@ -21,7 +21,7 @@
 
 <script>
 import SearchBar from '@/components/SearchBar.vue'
-import ReviewCard from '@/components/ReviewCard.vue'
+import ReviewItem from '@/components/ReviewItem.vue'
 
 import { mapActions, mapGetters } from 'vuex'
 
@@ -30,7 +30,7 @@ export default {
 
   components : {
     SearchBar,
-    ReviewCard,
+    ReviewItem,
   },
 
   computed : {

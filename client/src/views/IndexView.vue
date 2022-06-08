@@ -57,14 +57,13 @@ export default {
   font-weight: 600;
   width: 10rem;
   height: 3.5rem;
-  border-radius: 0.5rem;
-  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .btn-theme {
-  background-color: #0b1b38;
-  width: 10rem;
+  background-color: #db2828;
+  width: 100%;
   height: 2.5rem;
   border-radius: 8px;
   border: 0;

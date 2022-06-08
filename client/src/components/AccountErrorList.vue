@@ -2,8 +2,10 @@
   <div class="account-error-list">
     <p v-for="(errors, field) in authError" :key="field" >
       <!-- {{ field }} -->
-      <ul>
-      <p v-for="(error, idx) in errors" :key="idx">{{ error }}</p>
+      <ul class="m-0 p-0">
+        <li>
+          <p v-for="(error, idx) in errors" :key="idx">{{ error }}</p>
+        </li>
       </ul>
     </p>
   </div>
@@ -22,7 +24,12 @@ export default {
 
 <style>
   .account-error-list {
-    color: #cf1224;
-    font-size: 25px;
+    width: 100%;
+    color: #db2828;
+    font-size: 1rem;
+  }
+
+  .account-error-list li {
+    list-style: none;
   }
 </style>

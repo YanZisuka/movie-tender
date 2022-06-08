@@ -17,7 +17,7 @@
         class="text-decoration-none mx-5"
         >COMMUNITY</router-link>
 
-      <div v-if="isCurrentUser" class="dropdown mx-5">
+      <div v-if="isLoggedIn" class="dropdown mx-5">
         <button
           :class="isDark ? 'text-white' : 'text-theme'"
           class="btn dropdown-toggle"
@@ -55,39 +55,21 @@
       </button>
     </div>
 
-    <modal-detail
-      :show="showAccountModal"
-      @close="switchShowAccountModal()"
-      >
-      <div slot="body">
-        <account-error-list v-if="authError"></account-error-list>
-
-        <div class="login-body d-flex flex-column text-start p-5">
-
-          <h1>LOGIN</h1>
-
-          <form @submit.prevent="login(credentials); switchShowAccountModal();">
-            <div class="my-4">
-              <div>
-                <label for="username">아이디</label>
-              </div>
-              <input v-model="credentials.username" type="text" id="username" placeholder="ID" required>
-            </div>
-
-            <div class="my-4">
-              <div>
-                <label for="password">비밀번호</label>
-              </div>
-              <input v-model="credentials.password" type="password" id="password" placeholder="Password" required>
-            </div>
-
-            <p>아직 회원이 아니신가요? 회원가입</p>
-
-            <button class="btn-theme mt-3">로그인</button>
-          </form>
-
-        </div>
-
+    <!-- modal component -->
+    <modal-detail :show="showAccountModal">
+      <div slot="body" class="modal-body d-flex flex-column">
+        <button
+          class="btn align-self-end mt-2 me-2"
+          @click="switchShowAccountModal()"
+          ><i class="fa-solid fa-xmark"></i></button>
+        <login-modal
+          v-if="!isSignUp"
+          @signup-emit="isSignUp = true"
+          ></login-modal>
+        <signup-modal
+          v-else
+          @login-emit="isSignUp = false"
+          ></signup-modal>
       </div>
     </modal-detail>
 
@@ -95,18 +77,19 @@
 </template>
 
 <script>
-import _ from 'lodash'
 import { mapGetters, mapActions } from 'vuex'
 
 import ModalDetail from '@/components/ModalDetail.vue'
-import AccountErrorList from '@/components/AccountErrorList.vue'
+import LoginModal from '@/components/LoginModal.vue'
+import SignupModal from '@/components/SignupModal.vue'
 
 export default {
   name: 'NavBar',
 
   components: {
     ModalDetail,
-    AccountErrorList,
+    LoginModal,
+    SignupModal,
   },
 
   props: {
@@ -116,22 +99,16 @@ export default {
   data() {
     return {
       profileImg: require('@/assets/default-profile.png'),
-      credentials: {
-        username: '',
-        password: '',
-      },
+      isSignUp: false,
     }
   },
 
   computed: {
-    ...mapGetters(['currentUser', 'authError', 'showAccountModal',]),
-    isCurrentUser() {
-      return !_.isEmpty(this.currentUser)
-    },
+    ...mapGetters(['isLoggedIn', 'currentUser', 'authError', 'showAccountModal',]),
   },
 
   methods: {
-    ...mapActions(['login', 'switchShowAccountModal',]),
+    ...mapActions(['switchShowAccountModal',]),
   },
 
   created() {}
@@ -180,20 +157,10 @@ nav a.router-link-exact-active {
   color: #0b1b38;
 }
 
-.login-body h1 {
-  font-weight: 700;
+.modal-body {
+  display: inline-block;
+  background-color: #fff;
+  border-radius: 16px;
 }
 
-.login-body label {
-  font-weight: 700;
-  margin: 0 0 3px 0;
-}
-
-.login-body input {
-  width: 20rem;
-  height: 2.5rem;
-  border: 2px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem;
-}
 </style>

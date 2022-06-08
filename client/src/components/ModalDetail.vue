@@ -4,13 +4,7 @@
       <div class="modal-wrapper">
         <div class="modal-container">
 
-          <div class="modal-body">
-            <button
-                class="btn modal-default-button"
-                @click="$emit('close')"
-              ><i class="fa-solid fa-xmark"></i></button>
-            <slot name="body">default body</slot>
-          </div>
+          <slot name="body">default body</slot>
 
         </div>
       </div>
@@ -34,7 +28,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.9);
   display: table;
   transition: opacity 0.3s ease;
 }
@@ -45,25 +39,8 @@ export default {
 }
 
 .modal-container {
-  width: 80rem;
-  margin: 0px auto;
-  background-color: #fbfbfb;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  display: inline-block;
   transition: all 0.3s ease;
-}
-
-.modal-header h3 {
-  margin-top: 0;
-  color: #0b1b38;
-}
-
-.modal-body {
-  margin: 0 1rem 0 0;
-}
-
-.modal-default-button {
-  float: right;
 }
 
 /*
@@ -87,10 +64,5 @@ export default {
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);
   transform: scale(1.1);
-}
-
-.modal-body,
-.modal {
-  color: #0b1b38;
 }
 </style>

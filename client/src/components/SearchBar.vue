@@ -27,8 +27,8 @@ export default{
 </script>
 <style>
   .search-bar > input {
-    padding: 0.5rem;
-    font-size: 2rem;
+    padding: 0 1rem;
+    height: 2.5rem;
   }
   .search-bar {
     transition: margin 0.5s;

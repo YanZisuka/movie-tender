@@ -1,25 +1,25 @@
 <template>
   <nav class="d-flex justify-content-between sticky-top p-3">
     <router-link :to="{ name: 'index' }" class="navbar-brand mx-5">
-      <div :class="isDark ? 'text-white' : 'text-theme'" class="navbar-logo">movietender</div>
+      <div :class="isDark ? 'text-fff' : 'text-theme'" class="navbar-logo">movietender</div>
     </router-link>
     <div class="d-flex align-items-center">
 
       <router-link
         :to="{ name: 'movies' }"
-        :class="isDark ? 'text-white' : 'text-theme'"
+        :class="isDark ? 'text-fff' : 'text-theme'"
         class="text-decoration-none mx-5"
         >OMAKASE</router-link>
 
       <router-link
         :to="{ name: 'reviews' }"
-        :class="isDark ? 'text-white' : 'text-theme'"
+        :class="isDark ? 'text-fff' : 'text-theme'"
         class="text-decoration-none mx-5"
         >COMMUNITY</router-link>
 
       <div v-if="isLoggedIn" class="dropdown mx-5">
         <button
-          :class="isDark ? 'text-white' : 'text-theme'"
+          :class="isDark ? 'text-fff' : 'text-theme'"
           class="btn dropdown-toggle"
           type="button"
           id="dropdownMenuButton"
@@ -122,7 +122,7 @@ nav {
 }
 
 nav a {
-  font-weight: bold;
+  font-weight: 700;
   color: #0b1b38;
 }
 
@@ -141,7 +141,7 @@ nav a.router-link-exact-active {
   height: 28px;
   border-radius: 16px;
   border: 0;
-  color: white;
+  color: #fff;
 }
 
 .profile {
@@ -153,13 +153,17 @@ nav a.router-link-exact-active {
   width: 2rem;
 }
 
+.text-fff {
+  color: #fff;
+}
+
 .text-theme {
   color: #0b1b38;
 }
 
 .modal-body {
   display: inline-block;
-  background-color: #fff;
+  background-color: #fbfbfb;
   border-radius: 16px;
 }
 

@@ -100,19 +100,19 @@ export default {
 <style scoped>
 .movie-title {
   font-size: 4.5rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .movie-subtitle {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .provider-btn {
   background-color: #000;
   color: #fff;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   width: 10rem;
   height: 3.5rem;
   border-radius: 0.5rem;

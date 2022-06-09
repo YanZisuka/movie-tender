@@ -3,7 +3,7 @@
     @submit.prevent="onSubmit"
     class="comment-list-form">
     <input type="text" id="comment" v-model="content" placeholder="Type comment..." required autofocus>
-    <button class="btn"><i class="fa-solid fa-paper-plane"></i></button>
+    <button class="btn btn-sm"><i class="fa-solid fa-paper-plane"></i></button>
   </form>
 </template>
 
@@ -32,4 +32,7 @@ export default {
 </script>
 
 <style>
+.comment-list-form {
+  width: 100%;
+}
 </style>

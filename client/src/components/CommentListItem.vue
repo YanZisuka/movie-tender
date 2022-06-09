@@ -1,21 +1,19 @@
 <template>
-  <li class="comment-list">
-    <router-link class="" :to="{ name: 'profile', params: { username: comment.user.username } }">
-      {{ comment.user.nickname }}
-    </router-link>: 
+  <li class="comment-list mx-2">
+    <router-link :to="{ name: 'profile', params: { username: comment.user.username } }">
+      {{ comment.user.nickname }}: 
+    </router-link>
     
     <span v-if="!isEditing">{{ payload.content }}</span>
     <span v-if="isEditing">
-      <p>
       <input type="text" v-model="payload.content">
-      </p>
-      <button class="btn" @click="onUpdate"><i class="fa-solid fa-pen"></i></button>
-      <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-arrow-left-long"></i></button>
+      <button class="btn btn-sm" @click="onUpdate"><i class="fa-solid fa-pen"></i></button>
+      <button class="btn btn-sm" @click="switchIsEditing"><i class="fa-solid fa-arrow-left-long"></i></button>
     </span>
 
     <span v-if="currentUser.pk === comment.user.id && !isEditing">
-      <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button>
-      <button class="btn" @click="onDelete"><i class="fa-solid fa-xmark"></i></button>
+      <button class="btn btn-sm" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button>
+      <button class="btn btn-sm" @click="onDelete"><i class="fa-solid fa-xmark"></i></button>
     </span>
   </li>
 </template>

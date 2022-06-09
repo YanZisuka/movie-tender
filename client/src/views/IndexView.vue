@@ -28,7 +28,7 @@ export default {
 
   async created() {
     this.$emit('light-emit')
-    document.body.setAttribute('style', 'background-color: #fff;')
+    document.body.setAttribute('style', 'background-color: #fafafa;')
     await this.fetchCurrentUser()
   },
 }
@@ -54,7 +54,7 @@ export default {
   border: 0;
   color: #fff;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   width: 10rem;
   height: 3.5rem;
   border-radius: 8px;

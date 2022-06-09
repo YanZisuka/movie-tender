@@ -1,7 +1,7 @@
 <template>
-  <div class="mb-4">
+  <div>
     
-    <ul class="p-0">
+    <ul class="comments p-0 mt-2 mb-1">
       <comment-list-item 
         v-for="comment in comment_set" 
         :key="comment.id"
@@ -121,5 +121,27 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+.comments {
+  background-color: #f3f3f3;
+  border-radius: 8px;
+  width: 100%;
+  height: 5rem;
+  overflow: auto;
+}
+
+.comments::-webkit-scrollbar {
+  width: 10px;
+}
+
+.comments::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+
+.comments::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
 </style>

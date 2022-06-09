@@ -85,7 +85,6 @@ export default {
 
 .sub-text {
   font-size: 2rem;
-  font-weight: 700;
   line-height: 39px;
   color: #fff;
 }

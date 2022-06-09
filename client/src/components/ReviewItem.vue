@@ -1,24 +1,43 @@
 <template>
   <div>
-    <!-- <router-link class="text-decoration-none" :to="{ name: 'reviewDetail', params: { reviewPk: review.id } }"> -->
-    <div @click="showModal = true" class="review-item d-flex flex-row align-items-center mb-5">
+    <div class="review-item d-flex flex-row align-items-center mb-5">
+
       <div>
-        <img class="review-item-poster" :src="posterPath" :alt="`${review.movie.title}'s poster`">
+        <img :src="posterPath" :alt="`${review.movie.title}'s poster`">
       </div>
-      <div class="text-start text-black ms-5">
-        <h2 class="review-item-author">{{ review.user.nickname }}</h2>
-        <h1 class="review-item-title">{{ review.movie.title }}</h1>
-        <button @click="likeReview(review.id)" class="like-btn d-flex justify-content-between align-items-center px-3">
-          <div class="d-flex flex-row align-items-center">
-            <i class="ms-0 me-2 fa-solid fa-heart"></i>
-            <p class="m-0">Like</p>
-          </div>
-          <span>{{ likeCount }}</span>
-        </button>
+
+      <div class="text-start mx-5" style="width: 100%;">
+        
+        <router-link class="text-decoration-none" :to="{ name: 'movie', params: { moviePk: review.movie.id } }">
+          <h1>{{ review.movie.title }}</h1>
+        </router-link>
+
+        <router-link class="text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
+          <h2>{{ review.user.nickname }}</h2>
+        </router-link>
+
         <p class="lead ellipsis pe-5">{{ review.content }}</p>
+
+        <div class="d-flex">
+          <div @click="likeReview(review.id)" class="btn-like me-3">
+            <i :class="isLike ? 'active' : 'inactive'" class="ms-0 me-2 fa-solid fa-heart"></i>
+            <span>{{ likeCount }}</span>
+          </div>
+          <div @click="isOpenComment = !isOpenComment" class="btn-comment ms-3">
+            <span class="me-1">댓글</span>
+            <span>{{ review.comment_set.length }}</span>
+          </div>
+        </div>
+
+        <div v-if="isOpenComment" class="comment-box">
+          <comment-list
+            :comments="review.comment_set"
+            :review="review"
+            ></comment-list>
+        </div>
+
       </div>
     </div>
-    <!-- </router-link> -->
 
     <!-- use the modal component, pass in the prop -->
     <modal-detail
@@ -72,7 +91,7 @@
 
           <hr>
 
-          <div class="">
+          <div style="">
             <comment-list
               :comments="review.comment_set"
               :review="review"
@@ -85,6 +104,7 @@
 
   </div>
 </template>
+
 <script>
 import ModalDetail from '@/components/ModalDetail.vue'
 import CommentList from '@/components/CommentList.vue'
@@ -108,21 +128,21 @@ export default {
   data() {
     return {
       isEditing: false,
+      isOpenComment: false,
       reviewPk: this.review.id,
-      showModal: false,
       likeCount: this.review.like_users.length,
-      newReview: {
-        reviewPk: this.review.id,
-        movie: this.review.movie.id,
-        content: this.review.content
-        },
+      likeUsers: this.review.like_users,
+      showModal: false,
       }
   },
 
   computed: {
     ...mapGetters(['currentUser', 'isAuthor', 'isReview', 'authHeader']),
-    posterPath(){
+    posterPath() {
       return this.review.movie.poster_path
+    },
+    isLike() {
+      return this.likeUsers.includes(parseInt(this.currentUser.pk))
     },
   },
 
@@ -139,8 +159,18 @@ export default {
         method : 'post',
         headers : this.authHeader,
       })
-        .then(res=> {
+        .then(res => {
           this.likeCount = res.data.like_users_count
+
+          if (res.data.is_like) {
+            this.likeUsers.push(this.currentUser.pk)
+          } else {
+            this.likeUsers = this.likeUsers.filter(userPk => {
+              return userPk !== this.currentUser.pk
+            })
+          }
+
+          this.$emit('like-emit', this.reviewPk, this.likeUsers)
         })
         .catch(err => console.error(err.response))
     },
@@ -154,65 +184,53 @@ export default {
     }
   },
 
-  created() {
-  }
+  created() {}
 }
 </script>
 
 <style scoped>
 .review-item {
   background-color: #fbfbfb;
-  border-radius: 0.5rem;
-  box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  border: 1px solid #ddd;
   width: 100%;
 }
 
-.like-btn {
-  border: 1px solid #db2828;
-  background: linear-gradient(90deg, #db2828 60%, #fff 40%);
-  border-radius: 0.25rem;
-  color: #db2828;
-  width: 8rem;
-  height: 2.2rem;
-  margin-bottom: 1rem;
-}
-
-.like-btn:hover {
-  cursor: pointer;
-}
-
-.like-btn span {
-  font-weight: 800;
-}
-
-.like-btn p {
-  color: #fff;
-  font-size: 0.8rem;
-}
-
-.like-btn i {
-  color: #ffb2b2;
-}
-
-.review-item:hover {
-  cursor: pointer;
-  background-color: #eee;
-}
-
-.review-item-poster {
-  width: 12rem;
+.review-item img {
+  width: 13rem;
   border-radius: 8px 0 0 8px;
 }
 
-.review-item-title {
-  font-size: 2.5rem;
+.review-item h1 {
+  font-size: 2rem;
   font-weight: 700;
+  color: #0b1b38;
 }
 
-.review-item-author {
-  font-size: 22px;
+.review-item h2 {
+  font-size: 1rem;
   font-weight: 700;
   color: #c4c4c4;
+}
+
+.review-item h2:hover {
+  color: #171717;
+}
+
+.btn-like:hover {
+  cursor: pointer;
+}
+
+.active {
+  color: #ed4959;
+}
+
+.inactive {
+  color: #ffb2b2;
+}
+
+.btn-comment:hover {
+  cursor: pointer;
 }
 
 .modal-poster {

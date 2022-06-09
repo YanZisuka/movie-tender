@@ -5,7 +5,7 @@
       <button class="default-btn">다시하기</button>
     </router-link>
 
-    <div class="col-7">
+    <div class="col-6">
       <omakase-item
         v-for="movie in movies"
         :key="movie.id"

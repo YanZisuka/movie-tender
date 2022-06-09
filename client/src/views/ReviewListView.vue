@@ -1,7 +1,7 @@
 <template>
   <div v-if="isReviews" class="community row justify-content-center align-items-center">
 
-    <div class="col-7">
+    <div class="col-6">
       <div class="community-header d-flex flex-column align-items-start">
         <div class="mb-5">
           <search-bar></search-bar>
@@ -12,8 +12,9 @@
       <review-item
         v-for="review in reviews"
         :key="review.id"
-        :review="review">
-      </review-item>
+        :review="review"
+        @like-emit="onLike"
+        ></review-item>
     </div>
 
   </div>
@@ -41,12 +42,19 @@ export default {
   },
 
   methods : {
-    ...mapActions(['fetchCurrentUser', 'fetchReviews'])
+    ...mapActions(['fetchCurrentUser', 'fetchReviews']),
+    onLike(reviewPk, likeUsers) {
+      const curReview = this.reviews.filter(review => {
+        return review.id === reviewPk
+      })[0]
+
+      curReview.like_users = likeUsers
+    },
   },
 
   created() {
     this.$emit('light-emit')
-    document.body.setAttribute('style', 'background-color: #fff;')
+    document.body.setAttribute('style', 'background-color: #fafafa;')
     this.fetchCurrentUser()
     this.fetchReviews()
   }
@@ -59,7 +67,7 @@ export default {
 }
 
 .community-header p {
-  font-size: 2rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #c4c4c4;
 }

@@ -1,112 +1,52 @@
 <template>
-  <div>
-    <div class="review-item d-flex flex-row align-items-center mb-5">
+  <div class="review-item d-flex flex-row align-items-center mb-5">
 
-      <div>
-        <img :src="posterPath" :alt="`${review.movie.title}'s poster`">
-      </div>
+    <div>
+      <img :src="posterPath" :alt="`${review.movie.title}'s poster`">
+    </div>
 
-      <div class="text-start mx-5" style="width: 100%;">
-        
+    <div class="text-start mx-5" style="width: 100%;">
+      
+      <div class="d-flex justify-content-between">
         <router-link class="text-decoration-none" :to="{ name: 'movie', params: { moviePk: review.movie.id } }">
           <h1>{{ review.movie.title }}</h1>
         </router-link>
-
-        <router-link class="text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
-          <h2>{{ review.user.nickname }}</h2>
-        </router-link>
-
-        <p class="lead ellipsis pe-5">{{ review.content }}</p>
-
-        <div class="d-flex">
-          <div @click="likeReview(review.id)" class="btn-like me-3">
-            <i :class="isLike ? 'active' : 'inactive'" class="ms-0 me-2 fa-solid fa-heart"></i>
-            <span>{{ likeCount }}</span>
-          </div>
-          <div @click="isOpenComment = !isOpenComment" class="btn-comment ms-3">
-            <span class="me-1">댓글</span>
-            <span>{{ review.comment_set.length }}</span>
-          </div>
-        </div>
-
-        <div v-if="isOpenComment" class="comment-box">
-          <comment-list
-            :comments="review.comment_set"
-            :review="review"
-            ></comment-list>
-        </div>
-
+        <span v-if="review.user.id === currentUser.pk && !isEditing" >
+          <button v-if="false" @click="switchIsEditing" class="btn btn-sm"><i class="fa-solid fa-pen"></i></button>
+          <button @click="onDelete(review.id)" class="btn btn-sm"><i class="fa-solid fa-delete-left"></i></button>
+        </span>
       </div>
+
+      <router-link class="text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
+        <h2>{{ review.user.nickname }}</h2>
+      </router-link>
+
+      <p class="lead ellipsis pe-5">{{ review.content }}</p>
+
+      <div class="d-flex">
+        <div @click="likeReview(review.id)" class="btn-like me-3">
+          <i :class="isLike ? 'active' : 'inactive'" class="me-2 fa-solid fa-heart"></i>
+          <span>{{ likeCount }}</span>
+        </div>
+        <div @click="isOpenComment = !isOpenComment" class="btn-comment ms-3">
+          <i class="me-2 fa-regular fa-comment"></i>
+          <span>{{ review.comment_set.length }}</span>
+        </div>
+      </div>
+
+      <div v-if="isOpenComment" class="comment-box">
+        <comment-list
+          :comments="review.comment_set"
+          :review="review"
+          @comment-emit="onCommentEmit"
+          ></comment-list>
+      </div>
+
     </div>
-
-    <!-- use the modal component, pass in the prop -->
-    <modal-detail
-      :show="showModal"
-      @close="showModal = false"
-      >
-      <div slot="body" class="d-flex text-start">
-
-        <img class="modal-poster" :src="posterPath" alt="">
-        <div class="d-flex flex-column justify-content-between modal-body ms-5">
-          <div>
-            <!-- 작성자 -->
-            <div>
-              <h2 class="mt-3">
-                <router-link class="modal-author text-decoration-none" :to="{ name: 'profile', params: { username: review.user.username } }">
-                  {{ review.user.nickname }}
-                </router-link>
-              </h2>
-              <span v-if="review.user.id === currentUser.pk && !isEditing" >
-                <button @click="switchIsEditing" class="btn"><i class="fa-solid fa-pen"></i></button>
-                <button @click="onDelete(review.id)" class="btn"><i class="fa-solid fa-xmark"></i></button>
-              </span>
-            </div>
-            <!-- 영화제목 -->
-            <h1 class="modal-title">
-              {{ review.movie.title }}
-            </h1>
-            <!-- 좋아요 버튼 -->
-            <button @click="likeReview(review.id)" class="like-btn d-flex justify-content-between align-items-center px-3">
-              <div class="d-flex flex-row align-items-center">
-                <i class="ms-0 me-2 fa-solid fa-heart"></i>
-                <p class="m-0">Like</p>
-              </div>
-              <span>{{ likeCount }}</span>
-            </button>
-            <!-- 내용 -->
-            <span v-if="!isEditing">
-              <div class="lead mt-3">
-                {{ review.content }}
-              </div>
-            </span>
-            <span v-if="isEditing">
-              <p>
-              <input type="text" v-model="newReview.content">
-              </p>
-              <button class="btn" @click="onUpdate(newReview)"><i class="fa-solid fa-pen"></i></button> |
-              <button class="btn" @click="switchIsEditing"><i class="fa-solid fa-arrow-left-long"></i></button>
-            </span>
-
-          </div>
-
-          <hr>
-
-          <div style="">
-            <comment-list
-              :comments="review.comment_set"
-              :review="review"
-              ></comment-list>
-          </div>
-
-        </div>
-      </div>
-    </modal-detail>
-
   </div>
 </template>
 
 <script>
-import ModalDetail from '@/components/ModalDetail.vue'
 import CommentList from '@/components/CommentList.vue'
 
 import drf from '@/api/drf'
@@ -117,7 +57,6 @@ export default {
   name: "ReviewItem",
 
   components: {
-    ModalDetail,
     CommentList,
   },
 
@@ -129,15 +68,13 @@ export default {
     return {
       isEditing: false,
       isOpenComment: false,
-      reviewPk: this.review.id,
       likeCount: this.review.like_users.length,
       likeUsers: this.review.like_users,
-      showModal: false,
       }
   },
 
   computed: {
-    ...mapGetters(['currentUser', 'isAuthor', 'isReview', 'authHeader']),
+    ...mapGetters(['currentUser', 'authHeader']),
     posterPath() {
       return this.review.movie.poster_path
     },
@@ -147,12 +84,10 @@ export default {
   },
 
   methods: {
-    ...mapActions(['fetchReview', 'updateReview', 'deleteReview']),
-
+    ...mapActions(['updateReview', 'deleteReview']),
     switchIsEditing() {
       this.isEditing = !this.isEditing
     },
-
     likeReview(reviewPk) {
       axios({
         url : drf.community.review(reviewPk),
@@ -170,18 +105,19 @@ export default {
             })
           }
 
-          this.$emit('like-emit', this.reviewPk, this.likeUsers)
+          this.$emit('like-emit', this.review.id, this.likeUsers)
         })
         .catch(err => console.error(err.response))
     },
-
     onUpdate(review) {
       this.updateReview(review)
     },
-
     onDelete(reviewPk) {
       this.deleteReview(reviewPk)
-    }
+    },
+    onCommentEmit(reviewPk, commentSet) {
+      this.$emit('comment-emit', reviewPk, commentSet)
+    },
   },
 
   created() {}

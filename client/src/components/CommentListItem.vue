@@ -1,20 +1,30 @@
 <template>
-  <li class="comment-list mx-2">
-    <router-link :to="{ name: 'profile', params: { username: comment.user.username } }">
-      {{ comment.user.nickname }}: 
-    </router-link>
-    
-    <span v-if="!isEditing">{{ payload.content }}</span>
-    <span v-if="isEditing">
-      <input type="text" v-model="payload.content">
-      <button class="btn btn-sm" @click="onUpdate"><i class="fa-solid fa-pen"></i></button>
-      <button class="btn btn-sm" @click="switchIsEditing"><i class="fa-solid fa-arrow-left-long"></i></button>
-    </span>
+  <li :class="isMaxIdx ? '' : 'mb-4'" class="comment-list d-flex justify-content-between">
 
-    <span v-if="currentUser.pk === comment.user.id && !isEditing">
-      <button class="btn btn-sm" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button>
-      <button class="btn btn-sm" @click="onDelete"><i class="fa-solid fa-xmark"></i></button>
-    </span>
+    <div>
+      <router-link class="fw-bold" :to="{ name: 'profile', params: { username: comment.user.username } }">
+        {{ comment.user.nickname }}
+      </router-link>
+
+      <br>
+
+      <span v-if="!isEditing">{{ comment.content }}</span>
+      <input v-if="currentUser.pk === comment.user.id && isEditing" type="text" v-model="payload.content">
+    </div>
+
+    <div>
+      <div v-if="currentUser.pk === comment.user.id && !isEditing">
+        <button class="btn btn-sm" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button>
+        <button class="btn btn-sm" @click="onDelete"><i class="fa-solid fa-delete-left"></i></button>
+      </div>
+
+      <div v-if="currentUser.pk === comment.user.id && isEditing">
+        <button class="btn btn-sm" @click="onUpdate"><i class="fa-solid fa-pen"></i></button>
+        <button class="btn btn-sm" @click="switchIsEditing"><i class="fa-solid fa-arrow-left-long"></i></button>
+      </div>
+    </div>
+    
+
   </li>
 </template>
 
@@ -26,6 +36,7 @@ export default {
 
   props: {
     comment: Object,
+    isMaxIdx: Boolean,
   },
 
   data() {
@@ -60,17 +71,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .comment-list {
   list-style: none;
+  background-color: #f2f2f2;
+  padding: 0.7rem 1rem 1rem 1rem;
+  border-radius: 8px;
 }
 
-.comment-list > a {
+.comment-list a {
   text-decoration: none;
   color: #000;
 }
 
-.comment-list > a:hover {
+.comment-list a:hover {
   color: #c4c4c4;
 }
 </style>

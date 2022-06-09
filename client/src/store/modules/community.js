@@ -1,29 +1,22 @@
 import drf from '@/api/drf'
 import router from '@/router'
 import axios from 'axios'
-import _ from 'lodash'
 
 export default {
 
   state: {
-    reviews : [],
-    review : {},
+    reviews: [],
+    review: {},
   },
 
   getters: {
-    reviews : state => state.reviews,
-    review : state => state.review,
-    isAuthor : (state, getters) => {
-      return state.review.user.id === getters.currentUser.pk
-    },
-    isReview: state => !_.isEmpty(state.review),
+    reviews: state => state.reviews,
+    review: state => state.review,
   },
 
   mutations: {
     SET_REVIEWS : (state, reviews) => state.reviews = reviews,
     SET_REVIEW : (state, review) => state.review = review,
-    SET_LIKECOUNT : (state, likeCount) => state.likeCount = likeCount,
-    SET_REVIEW_COMMENTS: (state, comments) => (state.review.comments = comments),
   },
 
   actions: {

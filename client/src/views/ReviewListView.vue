@@ -14,6 +14,7 @@
         :key="review.id"
         :review="review"
         @like-emit="onLike"
+        @comment-emit="setComments"
         ></review-item>
     </div>
 
@@ -49,6 +50,13 @@ export default {
       })[0]
 
       curReview.like_users = likeUsers
+    },
+    setComments(reviewPk, commentSet) {
+      const curReview = this.reviews.filter(review => {
+        return review.id === reviewPk
+      })[0]
+
+      curReview.comment_set = commentSet
     },
   },
 

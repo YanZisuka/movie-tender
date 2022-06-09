@@ -1,8 +1,8 @@
 <template>
   <div v-if="isMovie" class="row justify-content-center align-items-center p-5">
     <div class="col-12 col-lg-6 text-start mb-5">
-      <h1 class="movie-title text-white">{{ movieDetail.title }}</h1>
-      <h2 class="movie-subtitle text-white">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
+      <h1 class="movie-title">{{ movieDetail.title }}</h1>
+      <h2 class="movie-subtitle">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
       <button v-if="isProvider" class="provider-btn d-flex justify-content-start align-items-center text-white mt-3">
         <img v-if="movieDetail.providers[0] === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
         <img v-if="movieDetail.providers[0] === 'Disney Plus'" :src="disneyPlusLogo" alt="disney-plus-logo">
@@ -98,6 +98,10 @@ export default {
 </script>
 
 <style scoped>
+h1, h2 {
+  color: #fff;
+}
+
 .movie-title {
   font-size: 4.5rem;
   font-weight: 700;

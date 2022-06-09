@@ -25,25 +25,25 @@
           id="dropdownMenuButton"
           data-toggle="dropdown"
           aria-haspopup="true"
-          aria-expanded="false">
-          <img class="profile-img me-2" :src="profileImg" alt="profile-img">
+          aria-expanded="false"
+          ><img class="profile-img me-2" :src="profileImg" alt="profile-img">
         </button>
 
-        <div class="profile dropdown-menu me-5" aria-labelledby="dropdownMenuButton">
+        <div class="profile dropdown-menu" aria-labelledby="dropdownMenuButton">
             <router-link
               :to="{ name: 'profile', params: { username: currentUser.username } }"
               class="text-decoration-none"
               role="button">
-              <p class="text-center m-0">
+              <p class="text-fff text-center m-0">
               Profile
               </p>
             </router-link>
-            <hr class="m-1">
+            <hr class="text-white m-1">
             <router-link
               :to="{ name: 'logout', params: { username: currentUser.username } }"
               class="text-decoration-none"
               role="button">
-              <p class="text-center m-0">
+              <p class="text-fff text-center m-0">
               Logout
               </p>
             </router-link> 
@@ -145,8 +145,9 @@ nav a.router-link-exact-active {
 }
 
 .profile {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(0, 0, 0, 0.5);
   border: 0;
+  margin: 0 75px 0 0;
 }
 
 .profile-img {

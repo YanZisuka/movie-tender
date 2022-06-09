@@ -3,17 +3,18 @@
     
     <ul class="comments p-0 mt-2 mb-1">
       <comment-list-item 
-        v-for="comment in comment_set" 
+        v-for="(comment, idx) in commentSet" 
         :key="comment.id"
         :comment="comment"
-        @update-comment="updateEmit"
-        @delete-comment="deleteEmit"
+        :isMaxIdx="idx === commentSet.length - 1"
+        @update-comment="onUpdate"
+        @delete-comment="onDelete"
         >
       </comment-list-item>        
     </ul>
 
     <comment-form
-    @create-comment="createEmit"
+    @create-comment="onCreate"
     ></comment-form>
 
   </div>
@@ -32,7 +33,7 @@ export default {
 
   data() {
     return {
-      comment_set: this.comments,
+      commentSet: this.comments,
     }
   },
 
@@ -60,7 +61,8 @@ export default {
         headers: this.authHeader,
       })
         .then(res => {
-          this.comment_set.push(res.data)
+          this.commentSet.push(res.data)
+          this.$emit('comment-emit', this.review.id, this.commentSet)
         })
         .catch(err => console.error(err.response))
     },
@@ -75,12 +77,14 @@ export default {
         headers: this.authHeader,
       })
         .then(res => {
-          console.log(res.data)
-          this.comment_set.forEach(comment => {
+          this.commentSet = this.commentSet.map(comment => {
             if (comment.id === res.data.id) {
               comment = res.data
             }
+            return comment
           })
+
+          this.$emit('comment-emit', this.review.id, this.commentSet)
         })
         .catch(err => console.error(err.response))
     },
@@ -91,30 +95,31 @@ export default {
         axios({
           url: drf.community.comment(reviewPk, commentPk),
           method: 'delete',
-          data : {},
           headers: this.authHeader,
         })
-          .then(res => {
-            console.log(res.data)
-            this.comment_set = this.comment_set.filter(comment => {
-              if (comment.id !== commentPk) {
-                return true
-              }
+          .then(() => {
+            this.commentSet = this.commentSet.filter(comment => {
+              return comment.id !== commentPk
             })
+
+            this.$emit('comment-emit', this.review.id, this.commentSet)
           })
           .catch(err => console.error(err.response))
       }
     },
     
-    createEmit(content) {
-      this.createComment({ reviewPk: this.review.id, content: content})
+    onCreate(content) {
+      this.createComment({
+        reviewPk: this.review.id,
+        content: content
+      })
     },
 
-    updateEmit(payload) {
+    onUpdate(payload) {
       this.updateComment(payload)
     },
 
-    deleteEmit(payload) {
+    onDelete(payload) {
       this.deleteComment(payload)
     },
   },
@@ -123,7 +128,6 @@ export default {
 
 <style scoped>
 .comments {
-  background-color: #f3f3f3;
   border-radius: 8px;
   width: 100%;
   height: 5rem;

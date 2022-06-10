@@ -59,7 +59,7 @@
     <modal-detail :show="showAccountModal">
       <div slot="body" class="modal-body d-flex flex-column">
         <button
-          class="btn align-self-end mt-2 me-2"
+          class="btn align-self-end text-fff mt-2 me-2"
           @click="switchShowAccountModal()"
           ><i class="fa-solid fa-xmark"></i></button>
         <login-modal
@@ -127,7 +127,7 @@ nav a {
 }
 
 nav a.router-link-exact-active {
-  color: #cf1224;
+  color: #ed4959;
 }
 
 .navbar-logo {
@@ -164,7 +164,7 @@ nav a.router-link-exact-active {
 
 .modal-body {
   display: inline-block;
-  background-color: #fbfbfb;
+  background: linear-gradient(to bottom right, #3d74ff, #ed4959);
   border-radius: 16px;
 }
 

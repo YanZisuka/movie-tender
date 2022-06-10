@@ -53,6 +53,33 @@ export default {
   backdrop-filter: blur(40px);
 }
 
+.btn-theme-lg {
+  margin: 5px;
+  background-color: #ed4959;
+  border: 0;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  width: 10rem;
+  height: 3.5rem;
+  border-radius: 8px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.btn-theme {
+  background-color: #0b1b38;
+  width: 50%;
+  height: 2.5rem;
+  border-radius: 8px;
+  border: 0;
+  color: #fff;
+  font-weight: 700;
+}
+
+.text-fff {
+  color: #fff;
+}
+
 .ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;

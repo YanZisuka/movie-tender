@@ -9,7 +9,7 @@
         <p class="sub-text m-0">두 개의 선택지 중 더 마음에 드는 영화를 골라주시면,</p>
         <p class="sub-text mt-0">{{ profile.nickname }}님의 취향에 맞는 영화를 추천해드려요.</p>
         <router-link :to="{ name: 'movieSurvey' }">
-          <button class="default-btn">Start!</button>
+          <button class="btn-theme-lg">Start!</button>
         </router-link>
       </div>
       <div class="col-6 d-flex justify-content-center">

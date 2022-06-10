@@ -34,7 +34,7 @@ export default {
 <style scoped>
 .comment-list-form {
   background-color: #eee;
-  width: 98.3%;
+  width: 100%;
   border-radius: 8px;
 }
 

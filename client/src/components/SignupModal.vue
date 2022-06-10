@@ -4,42 +4,42 @@
 
     <div class="signup-body d-flex flex-column text-start pt-3 pb-5 px-5">
       
-      <h1>회원가입</h1>
+      <h1 class="text-fff">회원가입</h1>
 
-      <form @submit.prevent="signup(credentials); switchShowAccountModal();">
+      <form @submit.prevent="signup(credentials); switchShowAccountModal();" class="d-flex flex-column">
         <div class="my-4">
           <div>
-            <label for="username">아이디</label>
+            <label for="username" class="text-fff">아이디</label>
           </div>
           <input v-model="credentials.username" type="text" id="username" placeholder="ID" required>
         </div>
 
         <div class="my-4">
           <div>
-            <label for="nickname">별명</label>
+            <label for="nickname" class="text-fff">별명</label>
           </div>
           <input v-model="credentials.nickname" type="text" id="nickname" placeholder="Nickname" required>
         </div>
 
         <div class="my-4">
           <div>
-            <label for="password1">비밀번호</label>
+            <label for="password1" class="text-fff">비밀번호</label>
           </div>
           <input v-model="credentials.password1" type="password" id="password1" placeholder="Password" required>
         </div>
 
         <div class="mt-4">
           <div>
-            <label for="password2">비밀번호 확인</label>
+            <label for="password2" class="text-fff">비밀번호 확인</label>
           </div>
           <input v-model="credentials.password2" type="password" id="password2" placeholder="Password Confirmation" required>
         </div>
 
         <div class="mt-1 mb-2">
-          <span @click="$emit('login-emit')">로그인으로 돌아가기</span>
+          <span @click="$emit('login-emit')" class="text-fff">로그인으로 돌아가기</span>
         </div>
 
-        <button class="btn-theme mt-3">회원가입</button>
+        <button class="btn-theme align-self-center mt-5">회원가입</button>
       </form>
 
     </div>

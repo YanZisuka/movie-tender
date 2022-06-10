@@ -159,10 +159,12 @@ export default {
 
 .active {
   color: #ed4959;
+  transition: color 0.2s ease;
 }
 
 .inactive {
   color: #ffb2b2;
+  transition: color 0.2s ease;
 }
 
 .btn-comment:hover {

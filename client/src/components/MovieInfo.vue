@@ -47,15 +47,27 @@
 
         <div class="col-12 col-lg-2">
           <p class="info-title text-secondary">리뷰쓰기</p>
-          <router-link :to="{ name: 'reviewNew' }">
+          <div @click="showModal = true" class="btn-review">
             <p class="info-content text-white mb-4"><i class="fa-solid fa-feather-pointed"></i></p>
-          </router-link>
+          </div>
         </div>
 
       </div>
 
     </div>
     
+    <!-- modal component -->
+    <modal-detail :show="showModal">
+      <div slot="body" class="modal-body d-flex flex-column">
+        <button
+          class="btn align-self-end text-fff mt-2 me-2"
+          @click="showModal = !showModal"
+          ><i class="fa-solid fa-xmark"></i></button>
+        <review-form-modal
+          :movieDetail="movieDetail"
+          ></review-form-modal>
+      </div>
+    </modal-detail>
   </div>
 </template>
 
@@ -64,9 +76,16 @@ import drf from '@/api/drf'
 import axios from 'axios'
 
 import { mapGetters } from 'vuex'
+import ModalDetail from '@/components/ModalDetail.vue'
+import ReviewFormModal from '@/components/ReviewFormModal.vue'
 
 export default {
   name: 'MovieInfo',
+
+  components: {
+    ModalDetail,
+    ReviewFormModal,
+  },
 
   props: {
     movieDetail: Object,
@@ -75,6 +94,7 @@ export default {
 
   data() {
     return {
+      showModal: false,
       rating: 0,
     }
   },
@@ -170,6 +190,20 @@ export default {
   font-size: 1rem;
   line-height: 22px;
   list-style: none;
+}
+
+.btn-review {
+  display: inline-block;
+}
+
+.btn-review:hover {
+  cursor: pointer;
+}
+
+.modal-body {
+  display: inline-block;
+  background: linear-gradient(to bottom right, #3d74ff, #ed4959);
+  border-radius: 16px;
 }
 
 /* 별점 */

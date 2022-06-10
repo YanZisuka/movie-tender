@@ -1,8 +1,8 @@
 <template>
-  <div class="omakase row justify-content-center align-items-center">
+  <div class="omakase row flex-column justify-content-center align-items-center">
     <p class="omakase-text mt-5">{{ profile.nickname }}님이 좋아하실 영화들이에요!</p>
     <router-link :to="{ name: 'movieSurvey' }">
-      <button class="default-btn">다시하기</button>
+      <button class="btn-theme-lg">다시하기</button>
     </router-link>
 
     <div class="col-6">
@@ -46,14 +46,19 @@ export default {
 </script>
 
 <style scoped>
-  .omakase {
-    margin: 3rem 5rem;
-  }
+.omakase {
+  margin: 3rem 5rem;
+}
 
 .omakase-text {
   font-size: 3rem;
   font-weight: 700;
   line-height: 77px;
   color: #fff;
+}
+
+.omakase a {
+  width: fit-content;
+  padding: 0;
 }
 </style>

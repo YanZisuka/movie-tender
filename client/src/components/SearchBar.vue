@@ -4,7 +4,7 @@
       v-model="inputKeyword"
       @keydown.enter="fetchKeywordReview(inputKeyword)"
       type="text"
-      placeholder="Search Movie..."
+      placeholder="리뷰 검색"
     />
   </div>
 </template>

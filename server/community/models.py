@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from django.conf import settings
 from movies.models import Movie
@@ -15,6 +17,10 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def is_modified(self):
+        return abs(self.created_at - self.updated_at) > timedelta(seconds=1)
+
     def __str__(self):
         return f"Review {self.pk}: {self.user}'s review for {self.movie}"
 
@@ -29,6 +35,10 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def is_modified(self):
+        return abs(self.created_at - self.updated_at) > timedelta(seconds=1)
 
     def __str__(self):
         return f"Comment {self.pk}: {self.user}'s comment for {self.review}"

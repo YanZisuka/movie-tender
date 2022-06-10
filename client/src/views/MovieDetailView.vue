@@ -4,12 +4,12 @@
       <h1 class="movie-title">{{ movieDetail.title }}</h1>
       <h2 class="movie-subtitle">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
       <button v-if="isProvider" class="provider-btn d-flex justify-content-start align-items-center text-white mt-3">
-        <img v-if="movieDetail.providers[0] === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
-        <img v-if="movieDetail.providers[0] === 'Disney Plus'" :src="disneyPlusLogo" alt="disney-plus-logo">
-        <img v-if="movieDetail.providers[0] === 'wavve'" :src="wavveLogo" alt="wavve-logo">
-        <img v-if="movieDetail.providers[0] === 'Watcha'" :src="watchaLogo" alt="watcha-logo">
+        <img v-if="movieDetail._providers[0] === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
+        <img v-if="movieDetail._providers[0] === 'Disney Plus'" :src="disneyPlusLogo" alt="disney-plus-logo">
+        <img v-if="movieDetail._providers[0] === 'wavve'" :src="wavveLogo" alt="wavve-logo">
+        <img v-if="movieDetail._providers[0] === 'Watcha'" :src="watchaLogo" alt="watcha-logo">
         <span>
-          {{ movieDetail.providers[0] }}
+          {{ movieDetail._providers[0] }}
         </span>
       </button>
     </div>
@@ -56,7 +56,7 @@ export default {
       return this.currentUser.username === this.profile.username
     },
     isProvider() {
-      return this.movieDetail.providers?.length !== 0
+      return this.movieDetail._providers?.length !== 0
     },
     runtime() {
       const hh = parseInt(this.movieDetail.runtime / 60)
@@ -75,7 +75,7 @@ export default {
     },
     genres() {
       let st = ''
-      this.movieDetail.genres?.forEach(genre => {
+      this.movieDetail._genres?.forEach(genre => {
         st += genre + ' '
       })
       return st.trim()

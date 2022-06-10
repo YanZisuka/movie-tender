@@ -110,11 +110,11 @@ AUTH_USER_MODEL = 'accounts.User'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'movie_tender',
         'USER': 'movie_tender',
         'PASSWORD': 'qwer`123',
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
@@ -171,7 +171,6 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://127.0.0.1:8080',
     'http://localhost:8080',
 ]
 

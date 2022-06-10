@@ -1,3 +1,5 @@
+from typing import List, Set
+
 from django.db import models
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
@@ -19,46 +21,106 @@ class Movie(models.Model):
     adult = models.BooleanField()
     release_date = models.CharField(max_length=30)
     runtime = models.IntegerField()
-    genres = ArrayField(models.CharField(max_length=20), blank=True)
+    _genres = ArrayField(models.CharField(max_length=20), blank=True, db_column='genres')
+    _genre = None
     genre_group = models.CharField(max_length=20)
     vote_count = models.IntegerField()
     vote_average = models.FloatField()
     country = models.CharField(max_length=100)
-    keywords = ArrayField(models.CharField(max_length=100), blank=True)
-    providers = ArrayField(models.CharField(max_length=150), blank=True, default=list)
+    _keywords = ArrayField(models.CharField(max_length=100), blank=True, db_column='keywords')
+    _keyword = None
+    _providers = ArrayField(models.CharField(max_length=150), blank=True, default=list, db_column='providers')
+    _provider = None
 
-    def has_genre(self, genre: str):
-        return genre in self.genres
+    @property
+    def genres(self):
+        self._genre = self._genre or self.Genres(self._genres, self)
+        return self._genre
 
-    def add_genre(self, genre: str):
-        if self.has_genre(genre): return
-        self.genres.append(genre)
-        self.save(update_fields=['genres'])
-        return self.genres
+    @property
+    def keywords(self):
+        self._keyword = self._keyword or self.Keywords(self._keywords, self)
+        return self._keyword
 
-    def has_keyword(self, kwrd: str):
-        return kwrd in self.keywords
+    @property
+    def providers(self):
+        self._provider = self._provider or self.Providers(self._providers, self)
+        return self._provider
 
-    def add_keyword(self, kwrd: str):
-        if self.has_keyword(kwrd): return
-        self.keywords.append(kwrd)
-        self.save(update_fields=['keywords'])
-        return self.keywords
+    class Genres:
+        def __init__(self, genres: List[str], movie: 'Movie'):
+            self.genres = set(genres)
+            self._movie = movie
 
-    def has_provider(self, provider: str):
-        return provider in self.providers
+        @property
+        def set(self) -> Set[str]:
+            return self.genres
 
-    def add_provider(self, provider: str):
-        if self.has_provider(provider): return
-        self.providers.append(provider)
-        self.save(update_fields=['providers'])
-        return self.providers
+        def contains(self, genre: str):
+            return genre in self.genres
 
-    def get_release_date(self):
-        return f"{self.release_date.replace('-', '/')} (KR)"
+        def add(self, genre: str):
+            self.genres.add(genre)
+            self._commit()
 
-    def get_runtime(self):
-        return f'{self.runtime // 60}시간 {self.runtime % 60}분'
+        def remove(self, genre: str):
+            if not self.contains(genre): return
+            self.genres.remove(genre)
+            self._commit()
+
+        def _commit(self):
+            self._movie._genres = list(self.genres)
+            self._movie.save(update_fields=['_genres'])
+
+    class Keywords:
+        def __init__(self, keywords: List[str], movie: 'Movie'):
+            self.keywords = set(keywords)
+            self._movie = movie
+
+        @property
+        def set(self) -> Set[str]:
+            return self.keywords
+
+        def contains(self, keyword: str):
+            return keyword in self.keywords
+
+        def add(self, keyword: str):
+            self.keywords.add(keyword)
+            self._commit()
+
+        def remove(self, keyword: str):
+            if not self.contains(keyword): return
+            self.keywords.remove(keyword)
+            self._commit()
+
+        def _commit(self):
+            self._movie._keywords = list(self.keywords)
+            self._movie.save(update_fields=['_keywords'])
+
+    class Providers:
+        def __init__(self, providers: List[str], movie: 'Movie'):
+            self.providers = set(providers)
+            self._movie = movie
+
+        @property
+        def set(self) -> Set[str]:
+            return self.providers
+
+        def contains(self, provider: str):
+            return provider in self.providers
+
+        def add(self, provider: str):
+            self.providers.add(provider)
+            self._commit()
+
+        def remove(self, provider: str):
+            if not self.contains(provider): return
+            self.providers.remove(provider)
+            self._commit()
+
+        def _commit(self):
+            self._movie._providers = list(self.providers)
+            self._movie.save(update_fields=['_providers'])
 
     def __str__(self):
         return f'Movie {self.pk}: {self.title}'

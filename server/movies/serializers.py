@@ -16,9 +16,9 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = (
-            'id', 'tmdb_id', 'title', 'adult', 'release_date', 'genres',
+            'id', 'tmdb_id', 'title', 'adult', 'release_date', '_genres',
             'runtime', 'overview', 'vote_average', 'credits',
-            'rating_users', 'poster_path', 'video_path', 'providers',
+            'rating_users', 'poster_path', 'video_path', '_providers',
             )
 
 
@@ -27,7 +27,7 @@ class MovieListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         fields = (
-            'id', 'title', 'vote_average', 'overview', 'poster_path', 'keywords',
+            'id', 'title', 'vote_average', 'overview', 'poster_path', '_keywords',
         )
 
 

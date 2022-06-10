@@ -51,7 +51,7 @@ export default {
         this.progressCount += 2
       } else {
         this.selectionResult.forEach(movie => {
-          movie.keywords.forEach(kwrd => {
+          movie._keywords.forEach(kwrd => {
             this.resultToSend.push(kwrd)
           })
         })

@@ -18,11 +18,10 @@ def index(request):
 
     def get_recommendations():
         if request.user.survey:
-            movies = random.sample(list(Movie.objects.filter(keywords__overlap=[kwrd for kwrd in request.user.survey])), 10)
+            movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in request.user.survey])), 10)
             serializer = MovieListSerializer(movies, many=True)
             return Response(serializer.data)
         else: return Response({
-            'id': None,
             'detail': 'This user has no survey.'
             })
 
@@ -116,6 +115,6 @@ def get_movies_with_keyword(request, pick_num: int):
         'dwarf', 'steampunk', 'time travel', 'based on novel or book',
     ]
     # kwrds = Keyword.objects.all().values('keyword')
-    movies = random.sample(list(Movie.objects.filter(keywords__overlap=[kwrd for kwrd in kwrds])), pick_num)
+    movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in kwrds])), pick_num)
     serializer = MovieListSerializer(movies, many=True)
     return Response(serializer.data)

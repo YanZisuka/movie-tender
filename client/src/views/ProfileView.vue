@@ -1,57 +1,63 @@
 <template>
-  <div class="body d-flex flex-column justify-content-center">
-    <div class="profile d-flex flex-row my-5 justify-content-start align-items-center">
-      <div>
-        <img class="profile-img me-2" :src="profileImg" alt="profile-img">
-      </div>
-      <div class="userinfo d-flex flex-column align-items-start justify-content-around">
-        <span class="profile-button">
-          <h3 class="profile-nickname">{{profile.nickname}}</h3>
-          <button v-if="!isProfileUser " @click="followUser(profile.username)" class="btn btn-danger shadow">Follow</button>
-          <span v-if="isProfileUser">
-            <router-link :to="{name : 'profileEdit', params : { username } }">
-              <button class="btn btn-outline-dark">Edit</button> 
-            </router-link> |
-             <button @click="deleteUser(username)" class="btn btn-outline-danger">Delete </button>
-            | <router-link :to="{name : 'logout'}">
-              <button class="btn btn-outline-secondary">Logout</button>
-            </router-link>
-          </span>
-        </span>
-        <h4 class="profile-username">{{profile.username}}</h4>
-          <span class="profil-follow"> 
-            follower <span class="follow-count">{{ followers_count }}</span> 
-            following <span class="follow-count">{{ profile.followings_count }}</span>
-          </span>
-      </div>
-    </div>
+  <div class="row justify-content-center align-items-center">
+    <div class="col-6 body d-flex flex-column justify-content-center text-start">
 
-    <!-- 영화 리뷰 정보 -->
-    <h3 class="profile-content">감상한 영화</h3>
-    <ul>
-      <li v-for="movie in profile.watch_movies" :key="movie.pk">
-        <router-link :to="{ name: 'movie', params: { moviePk: movie.pk } }">
-          {{ movie.title }}
-        </router-link>
-      </li>
-    </ul>
-    <h3 class="profile-content">작성한 리뷰</h3>
-    <ul>
-      <review-card v-for="review in profile.review_set" :key="review.id" :review="review">
-      </review-card>
-    </ul>
+      <div class="profile d-flex flex-row my-5 justify-content-start align-items-center">
+
+        <div>
+          <img class="profile-img me-2" :src="profileImg" alt="profile-img">
+        </div>
+
+        <div class="userinfo d-flex flex-column align-items-start justify-content-around">
+            <h3 class="profile-nickname">{{profile.nickname}}</h3>
+            <button v-if="!isProfileUser " @click="followUser(profile.username)" class="btn btn-danger shadow">Follow</button>
+
+            <span v-if="isProfileUser">
+              <router-link :to="{name : 'profileEdit', params : { username } }">
+                <button class="btn btn-outline-dark">Edit</button> 
+              </router-link> |
+              <button @click="deleteUser(username)" class="btn btn-outline-danger">Delete </button>
+              | <router-link :to="{name : 'logout'}">
+                <button class="btn btn-outline-secondary">Logout</button>
+              </router-link>
+            </span>
+
+          <h4 class="profile-username">{{profile.username}}</h4>
+            <span class="profil-follow"> 
+              follower <span class="follow-count">{{ followers_count }}</span> 
+              following <span class="follow-count">{{ profile.followings_count }}</span>
+            </span>
+        </div>
+      </div>
+
+      <!-- 영화 리뷰 정보 -->
+      <h3 class="profile-content">감상한 영화</h3>
+      <ul>
+        <li v-for="movie in profile.watch_movies" :key="movie.id">
+          <router-link :to="{ name: 'movie', params: { moviePk: movie.id } }">
+            {{ movie.title }}
+          </router-link>
+        </li>
+      </ul>
+      <h3 class="profile-content">작성한 리뷰</h3>
+      <ul>
+        <review-item v-for="review in profile.review_set" :key="review.id" :review="review">
+        </review-item>
+      </ul>
+      
+    </div>
   </div>
 </template>
 
 <script>
-import ReviewCard from '@/components/ReviewCard.vue'
+import ReviewItem from '@/components/ReviewItem.vue'
 import { mapGetters, mapActions } from 'vuex'
 import drf from '@/api/drf'
 import axios from 'axios'
 
 export default {
   name: 'ProfileView',
-  components : { ReviewCard },
+  components : { ReviewItem },
   data() {
     return {
       profileImg: require('@/assets/default-profile.png'),
@@ -83,16 +89,32 @@ export default {
         .catch(err => console.error(err.response))
     }
   },
-  created() {
-    const payload = { username: this.$route.params.username }
-    this.fetchProfile(payload)
+  async created() {
     this.$emit('light-emit')
-    document.body.setAttribute('style', 'background-color: #fff;')
+    document.body.setAttribute('style', 'background-color: #fafafa;')
+    const payload = { username: this.$route.params.username }
+    await this.fetchProfile(payload)
   },
 }
 </script>
 
 <style scoped>
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  list-style: none;
+}
+
+h3 {
+  text-align: left;
+  margin: 2rem 0 1rem 0;
+  font-weight: 700;
+  font-size: 2rem;
+}
+
 .profile-nickname {
   margin-right: 20px;
   font-size: 40px;
@@ -137,10 +159,4 @@ img {
   vertical-align: middle;
 }
 
-.profile-content {
-  text-align: left;
-  padding-left : 32px;
-  font-weight: 600;
-  font-size: 20px;
-}
 </style>

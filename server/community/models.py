@@ -6,7 +6,13 @@ from movies.models import Movie
 
 
 class Review(models.Model):
-    """content (`str`), created_at (`date`), updated_at(`date`), user (class `User`), movie (class `Movie`)
+    """ == Schema Information
+    user :`User`
+    movie :`Movie`
+    like_users :`User`
+    content :`str`
+    created_at :`datetime`
+    updated_at :`datetime`
     """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -26,7 +32,12 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
-    """content (`str`), created_at (`date`), updated_at(`date`), user (class `User`), review (class `Review`)
+    """ == Schema Information
+    user :`User`
+    review :`Review`
+    content :`str`
+    created_at :`datetime`
+    updated_at :`datetime`
     """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

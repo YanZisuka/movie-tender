@@ -1,19 +1,15 @@
 from django.test import TestCase
-import requests
-from bs4 import BeautifulSoup as bs
+
+from .models import Movie
+from .factories import MovieFactory
 
 
-SEARCH_URL = 'https://www.netflix.com/search?q=스파이패밀리'
-REDIRECT_URL = 'https://www.netflix.com/kr/title/{netflix_id}'
+class MovieTest(TestCase):
+    def test_can_create_keywords(self):
+        pass
 
-id = '81511410'
+    def test_can_filter_keywords(self):
+        pass
 
-response = requests.get(SEARCH_URL)
-
-if response.status_code == 200:
-    print(response.text)
-    soup = bs(response.text, 'html.parser')
-    a = soup.select_one('#title-card-0-0 > div.ptrack-content > a')
-    print(a)
-else:
-    print(response.status_code)
+    def test_can_know_keywords_len(self):
+        pass

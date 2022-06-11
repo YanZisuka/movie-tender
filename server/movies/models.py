@@ -6,9 +6,22 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class Movie(models.Model):
-    """title (`str`), overview (`str`), tmdb_id (`number`), poster_path (`str`), video_path (`str`), adult (`boolean`),
-    release_date (`str`), runtime (`number`), genres (`List[str]`), genre_group (`str`), vote_count (`number`),
-    vote_average (`number`), country (`str`), keywords (`List[str]`), providers (`List[str]`)
+    """ == Schema Information
+    title :`str`
+    overview :`str`
+    tmdb_id :`int`
+    poster_path :`str`
+    video_path :`str`
+    adult :`bool`
+    release_date :`str`
+    runtime :`int`
+    genres :`List[str]`
+    genre_group :`str`
+    vote_count :`int`
+    vote_average :`float`
+    country :`str`
+    keywords :`List[str]`
+    providers :`List[str]`
     """
 
     rating_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='watch_movies', through='Rating')
@@ -127,7 +140,11 @@ class Movie(models.Model):
 
 
 class Staff(models.Model):
-    """name (`str`), profile_path: (`str`), role: (`str`), films: (class `Movie`)
+    """ == Schema Information
+    films :`Movie`
+    name :`str`
+    profile_path :`str`
+    role :`str`
     """
 
     films = models.ManyToManyField(Movie, related_name='credits', through='Credit')
@@ -142,7 +159,10 @@ class Staff(models.Model):
 
 
 class Credit(models.Model):
-    """character (`str`), staff (class `Staff`), movie (class `Movie`)
+    """ == Schema Information
+    staff :`Staff`
+    movie :`Movie`
+    character :`str`
     """
 
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
@@ -155,7 +175,10 @@ class Credit(models.Model):
 
 
 class Rating(models.Model):
-    """rating (`number`), user (class `User`), movie (class `Movie`)
+    """ == Schema Information
+    user :`User`
+    movie :`Movie`
+    rating :`float`
     """
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -168,7 +191,10 @@ class Rating(models.Model):
 
 
 class Keyword(models.Model):
-    """keyword (`str`), genre_group (`str`)
+    """ == Schema Information
+    keyword :`str`
+    tmdb_id :`int`
+    genre_group :`str`
     """
 
     keyword = models.CharField(max_length=100)

@@ -3,15 +3,18 @@
     <div class="col-12 col-lg-6 text-start mb-5">
       <h1 class="movie-title">{{ movieDetail.title }}</h1>
       <h2 class="movie-subtitle">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
-      <button v-if="isProvider" class="provider-btn d-flex justify-content-start align-items-center text-white mt-3">
-        <img v-if="movieDetail._providers[0] === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
-        <img v-if="movieDetail._providers[0] === 'Disney Plus'" :src="disneyPlusLogo" alt="disney-plus-logo">
-        <img v-if="movieDetail._providers[0] === 'wavve'" :src="wavveLogo" alt="wavve-logo">
-        <img v-if="movieDetail._providers[0] === 'Watcha'" :src="watchaLogo" alt="watcha-logo">
-        <span>
-          {{ movieDetail._providers[0] }}
-        </span>
-      </button>
+      <a :href="provider.url" target="_blank" class="text-decoration-none">
+        <button v-if="isProvider" class="btn-provider d-flex justify-content-start align-items-center text-white mt-3">
+          <img v-if="provider.name === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
+          <img v-if="provider.name === 'Disney+'" :src="disneyPlusLogo" alt="disney-plus-logo">
+          <img v-if="provider.name === 'wavve'" :src="wavveLogo" alt="wavve-logo">
+          <img v-if="provider.name === 'Watcha'" :src="watchaLogo" alt="watcha-logo">
+          <img v-if="provider.name === 'Apple TV+'" :src="appleTvPlusLogo" alt="apple-tv-plus-logo">
+          <span>
+            {{ provider.name }}
+          </span>
+        </button>
+      </a>
     </div>
 
     <div class="col-12 col-lg-6">
@@ -40,7 +43,8 @@ export default {
       netflixLogo: 'https://image.tmdb.org/t/p/original/t2yyOv40HZeVlLjYsCsPHnWLk4W.jpg',
       disneyPlusLogo: 'https://image.tmdb.org/t/p/original/7rwgEs15tFwyR9NPQ5vpzxTj19Q.jpg',
       watchaLogo: require('@/assets/watcha.png'),
-      wavveLogo: require('@/assets/wavve.png'),
+      wavveLogo: 'https://image.tmdb.org/t/p/original/2ioan5BX5L9tz4fIGU93blTeFhv.jpg',
+      appleTvPlusLogo: 'https://image.tmdb.org/t/p/original/6uhKBfmtzFqOcLousHwZuzcrScK.jpg',
     }
   },
 
@@ -51,9 +55,6 @@ export default {
     },
     isMovie() {
       return this.movieDetail.id === this.moviePk
-    },
-    isProfile() {
-      return this.currentUser.username === this.profile.username
     },
     isProvider() {
       return this.movieDetail._providers?.length !== 0
@@ -80,7 +81,20 @@ export default {
       })
       return st.trim()
     },
-
+    provider() {
+      if (this.isProvider) {
+        const providerArray = this.movieDetail._providers[0].split('::')
+        if (providerArray[0] === 'Disney Plus' || providerArray[0] === 'Apple TV Plus') {
+          providerArray[0] = providerArray[0].replace(' Plus', '+')
+        }
+        return {
+          'name': providerArray[0],
+          'url': providerArray[1]
+        }
+      } else {
+        return {}
+      }
+    },
   },
 
   methods: {
@@ -102,6 +116,10 @@ h1, h2 {
   color: #fff;
 }
 
+a {
+  display: inline-block;
+}
+
 .movie-title {
   font-size: 4.5rem;
   font-weight: 700;
@@ -112,7 +130,7 @@ h1, h2 {
   font-weight: 700;
 }
 
-.provider-btn {
+.btn-provider {
   background-color: #000;
   color: #fff;
   font-size: 1rem;
@@ -122,11 +140,12 @@ h1, h2 {
   border-radius: 0.5rem;
 }
 
-.provider-btn > img {
+.btn-provider > img {
   width: 3rem;
+  border-radius: 16px;
 }
 
-.provider-btn > span {
+.btn-provider > span {
   width: 100%;
 }
 </style>

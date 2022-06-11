@@ -34,15 +34,15 @@ class Movie(models.Model):
     adult = models.BooleanField()
     release_date = models.CharField(max_length=30)
     runtime = models.IntegerField()
-    _genres = ArrayField(models.CharField(max_length=20), blank=True, db_column='genres')
+    _genres = ArrayField(models.CharField(max_length=20), blank=True, default=list, db_column='genres')
     _genre = None
     genre_group = models.CharField(max_length=20)
     vote_count = models.IntegerField()
     vote_average = models.FloatField()
     country = models.CharField(max_length=100)
-    _keywords = ArrayField(models.CharField(max_length=100), blank=True, db_column='keywords')
+    _keywords = ArrayField(models.CharField(max_length=100), blank=True, default=list, db_column='keywords')
     _keyword = None
-    _providers = ArrayField(models.CharField(max_length=150), blank=True, default=list, db_column='providers')
+    _providers = ArrayField(models.CharField(max_length=300), blank=True, default=list, db_column='providers')
     _provider = None
 
     @property

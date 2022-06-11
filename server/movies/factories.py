@@ -5,6 +5,7 @@ from factory import Faker
 from factory.django import DjangoModelFactory
 
 from .models import Movie, Keyword, Staff, Credit
+from .crawlers import *
 
 
 class MovieFactory:
@@ -19,6 +20,12 @@ class MovieFactory:
     class Csv:
         def __init__(self):
             self.data = pd.read_csv('../database/movie.csv')
+            self._crawler = None
+        
+        @property
+        def crawler(self):
+            self._crawler = self._crawler or MovieCrawler()
+            return self._crawler
 
         def seeds(self):
             for i in range(self.data.shape[0]):
@@ -38,18 +45,25 @@ class MovieFactory:
             if row[7] == 'false': return
             movie.release_date = row[7]
             movie.runtime = row[8]
+
             genres = list(map(lambda x: x.strip("'") if x else None, row[9].replace('[', '').replace(']', '').split(', ')))
             if '공포' in genres: return
             movie._genres = genres
+            
             movie.genre_group = row[10]
             if row[11] < 200: return
             movie.vote_count = row[11]
             movie.vote_average = row[12]
             movie.country = row[13]
+
             keywords = list(map(lambda x: x.strip("'") if x else None, row[14].replace('[', '').replace(']', '').split(', ')))
             if not keywords[0]: return
             movie._keywords = keywords if keywords else []
+
             movie._providers = [row[15]] if row[15] != 'no' else []
+            if movie._providers:
+                res = self.crawler.scrap(movie.tmdb_id, movie._providers[0])
+                if res: movie._providers[0] += '::' + res
             
             if Movie.objects.filter(tmdb_id=movie.tmdb_id).exists(): return
             movie.save()

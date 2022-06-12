@@ -61,7 +61,7 @@
     
 -   `영화 추천`
 
-    <img src="README.assets/project-operation.gif">
+    <img src="README.assets/project_operation.gif">
 
     -   각 영화를 나타내는 **`keywords` 기반 추천을** 통해 사용자에게 최적의 영화를 추천합니다.
 

@@ -1,10 +1,10 @@
 <template>
   <div v-if="isMovie" class="row justify-content-center align-items-center p-5">
     <div class="col-12 col-lg-6 text-start mb-5">
-      <h1 class="movie-title">{{ movieDetail.title }}</h1>
-      <h2 class="movie-subtitle">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
-      <a :href="provider.url" target="_blank" class="text-decoration-none">
-        <button v-if="isProvider" class="btn-provider d-flex justify-content-start align-items-center text-white mt-3">
+      <h1 class="movie-title text-fff">{{ movieDetail.title }}</h1>
+      <h2 class="movie-subtitle text-fff mb-4">{{ releaseDate }} | {{ genres }} | {{ runtime }}</h2>
+      <a v-if="isProvider" :href="provider.url" target="_blank" class="d-inline-block text-decoration-none">
+        <button class="btn-provider d-flex justify-content-start align-items-center text-fff">
           <img v-if="provider.name === 'Netflix'" :src="netflixLogo" alt="netflix-logo">
           <img v-if="provider.name === 'Disney+'" :src="disneyPlusLogo" alt="disney-plus-logo">
           <img v-if="provider.name === 'wavve'" :src="wavveLogo" alt="wavve-logo">
@@ -112,14 +112,6 @@ export default {
 </script>
 
 <style scoped>
-h1, h2 {
-  color: #fff;
-}
-
-a {
-  display: inline-block;
-}
-
 .movie-title {
   font-size: 4.5rem;
   font-weight: 700;

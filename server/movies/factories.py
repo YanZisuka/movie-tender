@@ -1,9 +1,5 @@
 import pandas as pd
 
-import faker
-from factory import Faker
-from factory.django import DjangoModelFactory
-
 from .models import Movie, Keyword, Staff, Credit
 from .crawlers import *
 
@@ -27,7 +23,7 @@ class MovieFactory:
             self._crawler = self._crawler or MovieCrawler()
             return self._crawler
 
-        def seeds(self):
+        def seed(self):
             for i in range(self.data.shape[0]):
                 row = self.data.iloc[i, :]
                 self._commit(row)
@@ -86,7 +82,7 @@ class KeywordFactory:
         def __init__(self):
             self.data = pd.read_csv('../database/keyword.csv')
 
-        def seeds(self):
+        def seed(self):
             for i in range(self.data.shape[0]):
                 row = self.data.iloc[i, :]
                 self._commit(row)
@@ -116,7 +112,7 @@ class StaffFactory:
         def __init__(self):
             self.data = pd.read_csv('../database/staff.csv')
 
-        def seeds(self):
+        def seed(self):
             for i in range(self.data.shape[0]):
                 row = self.data.iloc[i, :]
                 self._commit(row)

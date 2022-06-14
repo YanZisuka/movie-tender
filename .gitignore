@@ -2,7 +2,9 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,visualstudiocode,python,venv,django
 
 crawlers.py
+test_crawlers.py
 secrets.json
+secrets.py
 database
 
 ### Django ###

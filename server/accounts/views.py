@@ -26,7 +26,7 @@ def profile(request, username: str):
         else:
             user = get_object_or_404(User, username=username)
             data = UserSerializer(user).data
-            cache.set(key, data)
+            cache.set(key, data, timeout=12 * 60 * 60)
             return Response(data)
     
     def follow_user():

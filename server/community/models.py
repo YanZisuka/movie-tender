@@ -2,6 +2,10 @@ from datetime import timedelta
 
 from django.db import models
 from django.conf import settings
+
+from django.core.cache import cache
+
+from . import redis_key_schema
 from movies.models import Movie
 
 
@@ -22,6 +26,14 @@ class Review(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        cache.delete(redis_key_schema.reviews())
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        cache.delete(redis_key_schema.reviews())
+        super().delete(*args, **kwargs)
 
     @property
     def is_modified(self):
@@ -46,6 +58,14 @@ class Comment(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        cache.delete(redis_key_schema.reviews())
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        cache.delete(redis_key_schema.reviews())
+        super().delete(*args, **kwargs)
 
     @property
     def is_modified(self):

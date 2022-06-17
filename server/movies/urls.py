@@ -10,5 +10,5 @@ urlpatterns = [
     path('<int:movie_pk>/accounts/<str:username>/', views.get_rating, name='get_rating'),
     path('staffs/', views.get_staff, name='get_staff'),
     path('genres/<str:genre_group>/', views.get_genre, name='get_genre'),
-    path('keywords/<int:pick_num>/', views.get_movies_with_keyword, name='get_movies_with_keyword'),
+    path('keywords/<int:pick_num>/', views.get_movies_with_keywords, name='get_movies_with_keywords'),
 ]

@@ -29,7 +29,7 @@ def index(request):
             else:
                 movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in request.user.survey])), 10)
                 data = MovieSerializer(movies, many=True).data
-                cache.set(key, data, timeout=1 * 60)
+                cache.set(key, data, timeout=5 * 60)
                 return Response(data)
 
         else:
@@ -128,14 +128,21 @@ def get_genre(request, genre_group: str):
 
 
 @api_view(['GET'])
-def get_movies_with_keyword(request, pick_num: int):
-    kwrds = [
-        'anime', 'superhero', 'military', 'musical', 'school',
-        'romance', 'army', 'space', 'future', 'mafia',
-        'action', 'jazz', 'friendship', 'villain', 'elves',
-        'dwarf', 'steampunk', 'time travel', 'based on novel or book',
-    ]
-    # kwrds = Keyword.objects.all().values('keyword')
-    movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in kwrds])), pick_num)
-    serializer = MovieListSerializer(movies, many=True)
-    return Response(serializer.data)
+def get_movies_with_keywords(request, pick_num: int):
+    key = redis_key_schema.movie_list_with_keywords(request.user, pick_num)
+    data = cache.get(key)
+
+    if data:
+        return Response(data)
+    else:
+        kwrds = [
+            'anime', 'superhero', 'military', 'musical', 'school',
+            'romance', 'army', 'space', 'future', 'mafia',
+            'action', 'jazz', 'friendship', 'villain', 'elves',
+            'dwarf', 'steampunk', 'time travel', 'based on novel or book',
+        ]
+        # kwrds = Keyword.objects.all().values('keyword')
+        movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in kwrds])), pick_num)
+        data = MovieListSerializer(movies, many=True).data
+        cache.set(key, data, timeout=5 * 60)
+        return Response(data)

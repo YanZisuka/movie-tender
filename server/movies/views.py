@@ -4,10 +4,13 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Sum
 from django.contrib.auth import get_user_model
 
+from django.core.cache import cache
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from . import redis_key_schema
 from .models import Movie, Staff, Rating, Keyword
 from .serializers import *
 from accounts.serializers import SurveySerializer
@@ -18,11 +21,20 @@ def index(request):
 
     def get_recommendations():
         if request.user.survey:
-            movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in request.user.survey])), 10)
-            serializer = MovieListSerializer(movies, many=True)
-            return Response(serializer.data)
-        else: return Response({
-            'detail': 'This user has no survey.'
+            key = redis_key_schema.movie_list(request.user)
+            data = cache.get(key)
+
+            if data:
+                return Response(data)
+            else:
+                movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in request.user.survey])), 10)
+                data = MovieSerializer(movies, many=True).data
+                cache.set(key, data, timeout=1 * 60)
+                return Response(data)
+
+        else:
+            return Response({
+                'detail': 'This user has no survey.'
             })
 
     def set_survey():
@@ -44,13 +56,22 @@ def index(request):
 @api_view(['GET', 'POST'])
 def movie(request, movie_pk: int):
 
-    movie_obj = get_object_or_404(Movie, pk=movie_pk)
+    key = redis_key_schema.movie_detail(movie_pk)
     
     def get_movie_detail():
-        serializer = MovieSerializer(movie_obj)
-        return Response(serializer.data)
+        data = cache.get(key)
+
+        if data:
+            return Response(data)
+        else:
+            movie_obj = get_object_or_404(Movie, pk=movie_pk)
+            data = MovieSerializer(movie_obj).data
+            cache.set(key, data, timeout=24 * 60 * 60)
+            return Response(data)
 
     def set_rating():
+        movie_obj = get_object_or_404(Movie, pk=movie_pk)
+
         serializer = RatingSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             if Rating.objects.filter(user=request.user, movie=movie_obj).exists():

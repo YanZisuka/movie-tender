@@ -1,10 +1,13 @@
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model
 
+from django.core.cache import cache
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from . import redis_key_schema
 from .serializers import *
 
 
@@ -13,13 +16,22 @@ User = get_user_model()
 @api_view(['GET', 'POST', 'PUT', 'DELETE'])
 def profile(request, username: str):
 
-    user = get_object_or_404(User, username=username)
+    key = redis_key_schema.user_profile(username)
     
     def get_profile():
-        serializer = UserSerializer(user)
-        return Response(serializer.data)
+        data = cache.get(key)
+
+        if data:
+            return Response(data)
+        else:
+            user = get_object_or_404(User, username=username)
+            data = UserSerializer(user).data
+            cache.set(key, data)
+            return Response(data)
     
     def follow_user():
+        user = get_object_or_404(User, username=username)
+
         if request.user != user:
             if user.followers.filter(pk=request.user.pk).exists():
                 user.followers.remove(request.user)
@@ -38,6 +50,8 @@ def profile(request, username: str):
         else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def update_user():
+        user = get_object_or_404(User, username=username)
+
         if request.user == user:
             serializer = UserSerializer(instance=user, data=request.data)
             if serializer.is_valid(raise_exception=True):
@@ -46,6 +60,8 @@ def profile(request, username: str):
         else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete_user():
+        user = get_object_or_404(User, username=username)
+
         if request.user == user:
             res = {
                 'id': user.id,

@@ -71,7 +71,7 @@
 
 ## :books: 기술 스택
 
-![image-20220520221843919](README.assets/image-20220520221843919.png)
+![image-20220617211316935](README.assets/image-20220617211316935.png)
 
 <br><br>
 

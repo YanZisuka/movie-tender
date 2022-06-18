@@ -3,7 +3,7 @@
 
 crawlers.py
 test_crawlers.py
-.secrets.json
+.env
 secrets.py
 database
 

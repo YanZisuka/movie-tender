@@ -18,13 +18,11 @@ def index(request):
         key = redis_key_schema.reviews()
         data = cache.get(key)
 
-        if data:
-            return Response(data)
-        else:
+        if not data:
             reviews = Review.objects.order_by('-pk')
             data = ReviewListSerializer(reviews, many=True).data
             cache.set(key, data, timeout=12 * 60 * 60)
-            return Response(data)
+        return Response(data)
 
     def create_review():
         serializer = CreateReviewSerializer(data=request.data)

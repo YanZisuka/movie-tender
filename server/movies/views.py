@@ -24,13 +24,11 @@ def index(request):
             key = redis_key_schema.movie_list(request.user)
             data = cache.get(key)
 
-            if data:
-                return Response(data)
-            else:
+            if not data:
                 movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in request.user.survey])), 10)
                 data = MovieSerializer(movies, many=True).data
                 cache.set(key, data, timeout=5 * 60)
-                return Response(data)
+            return Response(data)
 
         else:
             return Response({
@@ -61,13 +59,11 @@ def movie(request, movie_pk: int):
     def get_movie_detail():
         data = cache.get(key)
 
-        if data:
-            return Response(data)
-        else:
+        if not data:
             movie_obj = get_object_or_404(Movie, pk=movie_pk)
             data = MovieSerializer(movie_obj).data
             cache.set(key, data, timeout=24 * 60 * 60)
-            return Response(data)
+        return Response(data)
 
     def set_rating():
         movie_obj = get_object_or_404(Movie, pk=movie_pk)
@@ -132,9 +128,7 @@ def get_movies_with_keywords(request, pick_num: int):
     key = redis_key_schema.movie_list_with_keywords(request.user, pick_num)
     data = cache.get(key)
 
-    if data:
-        return Response(data)
-    else:
+    if not data:
         kwrds = [
             'anime', 'superhero', 'military', 'musical', 'school',
             'romance', 'army', 'space', 'future', 'mafia',
@@ -145,4 +139,4 @@ def get_movies_with_keywords(request, pick_num: int):
         movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in kwrds])), pick_num)
         data = MovieListSerializer(movies, many=True).data
         cache.set(key, data, timeout=5 * 60)
-        return Response(data)
+    return Response(data)

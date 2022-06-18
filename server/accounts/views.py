@@ -21,13 +21,11 @@ def profile(request, username: str):
     def get_profile():
         data = cache.get(key)
 
-        if data:
-            return Response(data)
-        else:
+        if not data:
             user = get_object_or_404(User, username=username)
             data = UserSerializer(user).data
             cache.set(key, data, timeout=12 * 60 * 60)
-            return Response(data)
+        return Response(data)
     
     def follow_user():
         user = get_object_or_404(User, username=username)

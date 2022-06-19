@@ -1,5 +1,11 @@
 # :movie_camera: movietender
 
+<a href="https://codecov.io/gh/YanZisuka/movie-tender" target="_blank">
+        <img src="README.assets/badge-16555765096352.svg"/>
+      </a>
+
+<br>
+
 ## :mag_right: 소개
 
 ### :computer: Contributors

@@ -1,5 +1,11 @@
 # :movie_camera: movietender
 
+<a href="https://codecov.io/gh/YanZisuka/movie-tender" target="_blank">
+  <img src="https://codecov.io/gh/YanZisuka/movie-tender/branch/master/graph/badge.svg?token=DTAEWIZ28X"/>
+</a>
+
+<br>
+
 ## :mag_right: 소개
 
 ### :computer: Contributors
@@ -37,7 +43,7 @@
 <br>
 
 -   **브랜치 전략**
-    -   [Git-flow](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)
+    -   [GitHub-flow](https://docs.github.com/en/get-started/quickstart/github-flow)
 
 <br>
 

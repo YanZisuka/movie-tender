@@ -1,10 +1,11 @@
+from ast import keyword
 import random
 
 import faker
 from factory import Faker, LazyFunction
 from factory.django import DjangoModelFactory
 
-from movies.models import Movie
+from movies.models import Movie, Keyword
 
 
 def _random_array_fields():
@@ -31,4 +32,13 @@ class MovieFactory(DjangoModelFactory):
     _genres = LazyFunction(_random_array_fields)
     _keywords = LazyFunction(_random_array_fields)
     _providers = LazyFunction(_random_array_fields)
+
+
+class KeywordFactory(DjangoModelFactory):
+    class Meta:
+        model = Keyword
+
+    keyword = Faker('text', max_nb_chars=100)
+    tmdb_id = Faker('pyint', min_value=1)
+    genre_group = Faker('text', max_nb_chars=20)
     

@@ -12,9 +12,10 @@ class MoviesViewTest(TestCase):
         token = res.json().get('key')
         cls.header = {'HTTP_AUTHORIZATION': f'Token {token}'}
 
-        cls.movie = MovieFactory.create()
-        cls.keyword1 = KeywordFactory.create(keyword='anime')
-        cls.keyword2 = KeywordFactory.create(keyword='superhero')
+        cls.movies = MovieFactory.create_batch(10)
+        cls.keywords = []
+        cls.keywords.append(KeywordFactory.create(keyword='anime'))
+        cls.keywords.append(KeywordFactory.create(keyword='superhero'))
 
 
     def test_영화추천을_받을수있다(self):
@@ -24,17 +25,26 @@ class MoviesViewTest(TestCase):
 
 
     def test_영화상세정보를_볼수있다(self):
-        res = self.client.get(reverse('movies:movie', args=[self.movie.id]), **self.header)
+        res = self.client.get(reverse('movies:movie', args=[self.movies[0].id]), **self.header)
 
         self.assertEqual(res.status_code, 200)
 
     def test_평점을_설정할수있다(self):
-        res = self.client.post(reverse('movies:movie', args=[self.movie.id]), data={'rating': 3.5}, **self.header)
+        res = self.client.post(reverse('movies:movie', args=[self.movies[0].id]), data={'rating': 3.5}, **self.header)
 
         self.assertEqual(res.status_code, 201)
 
 
     def test_평점을_불러올수있다(self):
-        res = self.client.get(reverse('movies:get_rating', args=[self.movie.id, 'credential']), **self.header)
+        res = self.client.get(reverse('movies:get_rating', args=[self.movies[0].id, 'credential']), **self.header)
+
+        self.assertEqual(res.status_code, 200)
+
+    
+    def test_키워드에_맞는_영화를_뽑을수있다(self):
+        self.movies[0].keywords.add('anime')
+        self.movies[1].keywords.add('superhero')
+
+        res = self.client.get(reverse('movies:get_movies_with_keywords', args=[2]), **self.header)
 
         self.assertEqual(res.status_code, 200)

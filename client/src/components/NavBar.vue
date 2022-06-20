@@ -30,23 +30,23 @@
         </button>
 
         <div class="profile dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <router-link
-              :to="{ name: 'profile', params: { username: currentUser.username } }"
-              class="text-decoration-none"
-              role="button">
-              <p class="text-fff text-center m-0">
-              Profile
-              </p>
-            </router-link>
-            <hr class="text-white m-1">
-            <router-link
-              :to="{ name: 'logout', params: { username: currentUser.username } }"
-              class="text-decoration-none"
-              role="button">
-              <p class="text-fff text-center m-0">
-              Logout
-              </p>
-            </router-link> 
+          <router-link
+            :to="{ name: 'profile', params: { username: currentUser.username } }"
+            class="text-decoration-none"
+            role="button">
+            <p class="text-fff text-center m-0">
+            Profile
+            </p>
+          </router-link>
+          <hr class="text-white m-1">
+          <router-link
+            :to="{ name: 'logout', params: { username: currentUser.username } }"
+            class="text-decoration-none"
+            role="button">
+            <p class="text-fff text-center m-0">
+            Logout
+            </p>
+          </router-link> 
         </div>
       </div>
 
@@ -110,9 +110,6 @@ export default {
   methods: {
     ...mapActions(['switchShowAccountModal',]),
   },
-
-  created() {}
-
 }
 </script>
 

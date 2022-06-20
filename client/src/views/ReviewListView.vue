@@ -6,8 +6,9 @@
         <div class="mb-5">
           <search-bar></search-bar>
         </div>
-        <p class="mb-2">Latest Reviews</p>
+        <p class="mb-3">Latest Reviews</p>
       </div>
+      <hr class="mt-0 mb-3">
 
       <review-item
         v-for="review in reviews"
@@ -77,6 +78,5 @@ export default {
 .community-header p {
   font-size: 1rem;
   font-weight: 700;
-  color: #c4c4c4;
 }
 </style>

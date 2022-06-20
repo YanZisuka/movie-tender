@@ -1,49 +1,57 @@
 <template>
-  <div class="row justify-content-center align-items-center">
-    <div class="col-6 body d-flex flex-column justify-content-center text-start">
+  <div v-if="isFetchedProfile" class="row justify-content-center align-items-center">
+    <div class="col-6 d-flex flex-column justify-content-center text-start">
 
       <div class="profile d-flex flex-row my-5 justify-content-start align-items-center">
 
-        <div>
-          <img class="profile-img me-2" :src="profileImg" alt="profile-img">
-        </div>
+        <img :src="profileImg" alt="">
 
-        <div class="userinfo d-flex flex-column align-items-start justify-content-around">
-            <h3 class="profile-nickname">{{profile.nickname}}</h3>
-            <button v-if="!isProfileUser " @click="followUser(profile.username)" class="btn btn-danger shadow">Follow</button>
+        <div class="user-info d-flex flex-column justify-content-center align-items-start w-100 ms-5">
+          <div class="d-flex justify-content-between w-100">
+            
+            <h1 v-if="!isEditing" class="m-0">{{profile.nickname}}</h1>
+            <input v-else type="text" v-model="payload.nickname" style="height: 3rem;">
 
-            <span v-if="isProfileUser">
-              <router-link :to="{name : 'profileEdit', params : { username } }">
-                <button class="btn btn-outline-dark">Edit</button> 
-              </router-link> |
-              <button @click="deleteUser(username)" class="btn btn-outline-danger">Delete </button>
-              | <router-link :to="{name : 'logout'}">
-                <button class="btn btn-outline-secondary">Logout</button>
-              </router-link>
-            </span>
+            <button v-if="isMe && !isEditing" @click="isEditing = true" class="btn-profile">프로필 편집</button>
 
-          <h4 class="profile-username">{{profile.username}}</h4>
-            <span class="profil-follow"> 
-              follower <span class="follow-count">{{ followers_count }}</span> 
-              following <span class="follow-count">{{ profile.followings_count }}</span>
-            </span>
+            <div v-if="isMe && isEditing" style="height: 3rem;">
+              <button @click="isEditing = false" class="btn-profile me-3" style="height: 100%; background-color: #c4c4c4;">취소</button>
+              <button @click="updateUser(payload); isEditing = false" class="btn-profile" style="height: 100%;">저장</button>
+            </div>
+
+            <button v-if="!isMe" @click="followUser(profile)" class="btn-profile">
+              <span v-if="!isFollowing">팔로우</span>
+              <span v-else>언팔로우</span>
+            </button>
+          </div>
+
+          <h2>{{profile.username}}</h2>
+            <p class="m-0">
+              <span>팔로워 </span><span>{{ profile.followers_count }}</span> 
+              <span class="ms-3">팔로잉 </span><span>{{ profile.followings_count }}</span>
+            </p>
         </div>
       </div>
 
-      <!-- 영화 리뷰 정보 -->
-      <h3 class="profile-content">감상한 영화</h3>
-      <ul>
-        <li v-for="movie in profile.watch_movies" :key="movie.id">
-          <router-link :to="{ name: 'movie', params: { moviePk: movie.id } }">
-            {{ movie.title }}
-          </router-link>
-        </li>
-      </ul>
-      <h3 class="profile-content">작성한 리뷰</h3>
-      <ul>
-        <review-item v-for="review in profile.review_set" :key="review.id" :review="review">
-        </review-item>
-      </ul>
+      <h3 class="mt-5 mb-3">감상한 영화</h3>
+      <hr class="mt-0 mb-3">
+      <div class="profile-box">
+        <ul class="d-flex flex-wrap justify-content-start">
+          <li v-for="movie in profile.watch_movies" :key="movie.id">
+            <router-link :to="{ name: 'movie', params: { moviePk: movie.id } }">
+              <img class="movie-poster" :src="movie.poster_path" alt="">
+            </router-link>
+          </li>
+        </ul>
+      </div>
+
+      <div v-if="false">
+        <h3>작성한 리뷰</h3>
+        <ul>
+          <review-item v-for="review in profile.review_set" :key="review.id" :review="review">
+          </review-item>
+        </ul>
+      </div>
       
     </div>
   </div>
@@ -57,50 +65,69 @@ import axios from 'axios'
 
 export default {
   name: 'ProfileView',
+
   components : { ReviewItem },
+
   data() {
     return {
       profileImg: require('@/assets/default-profile.png'),
-      username : this.$route.params.username,
-      followers_count : 0,
+      isEditing: false,
     }
   },
+
   computed: {
-    ...mapGetters(['profile', 'currentUser', 'authHeader']),
-    isProfileUser() {
+    ...mapGetters(['profile', 'currentUser', 'authHeader',]),
+    isFetchedProfile() {
+      return this.$route.params.username === this.profile.username
+    },
+    isMe() {
       return this.profile.username === this.currentUser.username
     },
-    followerCount(){
-      return this.profile.followers_count
-    }
-
+    payload() {
+      return {
+        username: this.currentUser.username,
+        nickname: this.profile.nickname,
+      }  
+    },
+    isFollowing() {
+      return !!this.profile.followers.filter(user => {
+        return user.id === this.currentUser.pk
+      }).length
+    },
   },
+
   methods: {
-    ...mapActions(['fetchProfile', 'deleteUser',]),
-    followUser(username){
+    ...mapActions(['fetchCurrentUser', 'fetchProfile', 'updateUser', 'deleteUser',]),
+    followUser({ username }) {
       axios({
         url : drf.accounts.profile(username),
-        method : 'post',
+        method : 'POST',
         headers : this.authHeader,
       })
-        .then(res => {
-          this.followers_count = res.data.followers_count
+        .then(() => {
+          this.fetchProfile({ username })
         })
         .catch(err => console.error(err.response))
     }
   },
-  async created() {
+
+  created() {
     this.$emit('light-emit')
     document.body.setAttribute('style', 'background-color: #fafafa;')
-    const payload = { username: this.$route.params.username }
-    await this.fetchProfile(payload)
+    this.fetchCurrentUser()
+    this.fetchProfile({ username: this.$route.params.username })
   },
+
+  updated() {
+    if (!this.isFetchedProfile) {
+      this.fetchProfile({ username: this.$route.params.username })
+    }
+  }
 }
 </script>
 
 <style scoped>
 ul {
-  margin: 0;
   padding: 0;
 }
 
@@ -109,54 +136,41 @@ ul li {
 }
 
 h3 {
-  text-align: left;
-  margin: 2rem 0 1rem 0;
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 1rem;
 }
 
-.profile-nickname {
-  margin-right: 20px;
-  font-size: 40px;
-  display : inline;
-  text-align: left;
-  font-weight: bold;
-}
-.body {
-  margin: 30px;
+.profile img {
+  width : 8rem;
 }
 
-.profile {
-  padding-left : 32px;
-}
-
-img {
-  height : 150px;
-  width : 150px;
-}
-
-.userinfo {
-  margin-top: 8px;
-  height : 150px;
-  width : 750px;
-}
-
-.profile-username {
-  font-size: 25px;
+.user-info h1 {
   font-weight: 700;
+}
+
+.user-info h2 {
   color: #c4c4c4;
 }
 
-.follow-count {
-  font-weight : 600;
+.btn-profile {
+  background-color: #0b1b38;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  width: 7rem;
 }
 
-.profile-follow {
-  font-size: 15;
+.btn-profile:hover {
+  background-color: #0b1b3880;
 }
 
-.profile-button {
-  vertical-align: middle;
+.profile-box {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 1rem;
 }
 
+.movie-poster {
+  width: 7rem;
+}
 </style>

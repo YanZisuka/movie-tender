@@ -1,5 +1,5 @@
 <template>
-  <div class="review-item d-flex flex-row align-items-center mb-5">
+  <div class="review-item d-flex flex-row align-items-center mb-4">
 
     <div>
       <img :src="posterPath" :alt="`${review.movie.title}'s poster`">

@@ -1,5 +1,8 @@
+from string import ascii_lowercase
+
 from django.test import TestCase, Client
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 
 from .factories import MovieFactory, KeywordFactory
 
@@ -12,22 +15,29 @@ class MoviesViewTest(TestCase):
         token = res.json().get('key')
         cls.header = {'HTTP_AUTHORIZATION': f'Token {token}'}
 
+        cls.user = get_user_model().objects.get(username='credential')
+
         cls.movies = MovieFactory.create_batch(10)
         cls.keywords = [KeywordFactory.create(keyword='anime'), KeywordFactory.create(keyword='superhero')]
 
 
     def test_영화추천을_받을수있다(self):
-        for _ in range(2):  # cache 검증
-            res = self.client.get(reverse('movies:index'), **self.header)
+        # survey 없는 경우
+        res = self.client.get(reverse('movies:index'), **self.header)
+        self.assertEqual(res.status_code, 200)
+        
+        # survey 있는 경우
+        self.user.survey = ['anime', 'superhero'] + [a for a in ascii_lowercase]
+        self.user.save(update_fields=['survey'])
 
-            self.assertEqual(res.status_code, 200)
+        res = self.client.get(reverse('movies:index'), **self.header)
+        self.assertEqual(res.status_code, 200)
 
 
     def test_영화상세정보를_볼수있다(self):
-        for _ in range(2):  # cache 검증
-            res = self.client.get(reverse('movies:movie', args=[self.movies[0].id]), **self.header)
+        res = self.client.get(reverse('movies:movie', args=[self.movies[0].id]), **self.header)
 
-            self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)
 
     def test_평점을_설정할수있다(self):
         res = self.client.post(reverse('movies:movie', args=[self.movies[0].id]), data={'rating': 3.5}, **self.header)
@@ -44,8 +54,8 @@ class MoviesViewTest(TestCase):
     def test_키워드에_맞는_영화를_뽑을수있다(self):
         self.movies[0].keywords.add('anime')
         self.movies[1].keywords.add('superhero')
-        for _ in range(2):  # cache 검증
-            res = self.client.get(reverse('movies:get_movies_with_keywords', args=[2]), **self.header)
 
-            self.assertEqual(res.status_code, 200)
-            self.assertEqual(len(res.data), 2)
+        res = self.client.get(reverse('movies:get_movies_with_keywords', args=[2]), **self.header)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.data), 2)

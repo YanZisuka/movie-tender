@@ -17,15 +17,17 @@ class MoviesViewTest(TestCase):
 
 
     def test_영화추천을_받을수있다(self):
-        res = self.client.get(reverse('movies:index'), **self.header)
+        for _ in range(2):  # cache 검증
+            res = self.client.get(reverse('movies:index'), **self.header)
 
-        self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.status_code, 200)
 
 
     def test_영화상세정보를_볼수있다(self):
-        res = self.client.get(reverse('movies:movie', args=[self.movies[0].id]), **self.header)
+        for _ in range(2):  # cache 검증
+            res = self.client.get(reverse('movies:movie', args=[self.movies[0].id]), **self.header)
 
-        self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.status_code, 200)
 
     def test_평점을_설정할수있다(self):
         res = self.client.post(reverse('movies:movie', args=[self.movies[0].id]), data={'rating': 3.5}, **self.header)
@@ -42,7 +44,8 @@ class MoviesViewTest(TestCase):
     def test_키워드에_맞는_영화를_뽑을수있다(self):
         self.movies[0].keywords.add('anime')
         self.movies[1].keywords.add('superhero')
-        res = self.client.get(reverse('movies:get_movies_with_keywords', args=[2]), **self.header)
+        for _ in range(2):  # cache 검증
+            res = self.client.get(reverse('movies:get_movies_with_keywords', args=[2]), **self.header)
 
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(res.data), 2)
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(len(res.data), 2)

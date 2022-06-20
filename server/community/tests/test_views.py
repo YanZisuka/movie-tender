@@ -12,7 +12,7 @@ class ReviewsViewTest(TestCase):
 
 
     def test_리뷰들을_받아올수있다(self):
-        res = self.client.get(reverse('community:index'), **self.header)
+        for _ in range(2):  # cache 검증
+            res = self.client.get(reverse('community:index'), **self.header)
 
-        self.assertEqual(res.status_code, 200)
-        
+            self.assertEqual(res.status_code, 200)

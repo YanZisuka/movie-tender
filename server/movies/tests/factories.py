@@ -1,5 +1,5 @@
-from ast import keyword
 import random
+from string import ascii_lowercase
 
 import faker
 from factory import Faker, LazyFunction
@@ -10,7 +10,7 @@ from movies.models import Movie, Keyword
 
 def _random_array_fields():
     _faker = faker.Faker()
-    return _faker.words(nb=random.randrange(1, 10), unique=True)
+    return _faker.words(nb=random.randrange(1, 10), ext_word_list=ascii_lowercase, unique=True)
 
 
 class MovieFactory(DjangoModelFactory):
@@ -27,7 +27,7 @@ class MovieFactory(DjangoModelFactory):
     runtime = Faker('pyint', min_value=30, max_value=180)
     genre_group = Faker('text', max_nb_chars=20)
     vote_count = Faker('pyint', min_value=200)
-    vote_average = Faker('pyfloat', positive=True)
+    vote_average = Faker('pyfloat', min_value=0, max_value=5)
     country = Faker('country')
     _genres = LazyFunction(_random_array_fields)
     _keywords = LazyFunction(_random_array_fields)

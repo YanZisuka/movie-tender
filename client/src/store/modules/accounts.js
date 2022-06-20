@@ -105,7 +105,7 @@ export default {
           .catch(err => {
               if (err.response === 401){
                   dispatch('removeToken')
-                  router.push({ name:'login' })
+                  router.push({ name:'index' })
               }
           })
       }
@@ -118,7 +118,7 @@ export default {
         headers : getters.authHeader,
         })
           .then(res => {
-              commit('SET_PROFILE', res.data)
+            commit('SET_PROFILE', res.data)
           })
     },
 
@@ -131,7 +131,6 @@ export default {
       })
         .then(res => {
           commit('SET_PROFILE', res.data)
-          router.push({ name:'profile', params : { username : getters.profile.username }})
         })
     },
     
@@ -144,7 +143,7 @@ export default {
         })
           .then(() => {
             commit('SET_PROFILE', {})
-            router.push({ name: 'login'})
+            router.push({ name: 'index'})
           })
           .catch(err => console.error(err.response))
       }

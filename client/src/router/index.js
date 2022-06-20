@@ -11,7 +11,6 @@ import ReviewListView from '@/views/ReviewListView'
 
 import LogoutView from '@/views/LogoutView.vue'
 import ProfileView from '@/views/ProfileView.vue'
-import ProfileEditView from '@/views/ProfileEditView.vue'
 import NotFound404 from '../views/NotFound404.vue'
 
 Vue.use(VueRouter)
@@ -31,11 +30,6 @@ const routes = [
     path: '/profile/:username',
     name: 'profile',
     component: ProfileView,
-  },
-  {
-    path: '/profile/:username/edit',
-    name: 'profileEdit',
-    component: ProfileEditView,
   },
   {
     path: '/movies',

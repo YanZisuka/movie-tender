@@ -13,9 +13,7 @@ class MoviesViewTest(TestCase):
         cls.header = {'HTTP_AUTHORIZATION': f'Token {token}'}
 
         cls.movies = MovieFactory.create_batch(10)
-        cls.keywords = []
-        cls.keywords.append(KeywordFactory.create(keyword='anime'))
-        cls.keywords.append(KeywordFactory.create(keyword='superhero'))
+        cls.keywords = [KeywordFactory.create(keyword='anime'), KeywordFactory.create(keyword='superhero')]
 
 
     def test_영화추천을_받을수있다(self):
@@ -44,7 +42,7 @@ class MoviesViewTest(TestCase):
     def test_키워드에_맞는_영화를_뽑을수있다(self):
         self.movies[0].keywords.add('anime')
         self.movies[1].keywords.add('superhero')
-
         res = self.client.get(reverse('movies:get_movies_with_keywords', args=[2]), **self.header)
 
         self.assertEqual(res.status_code, 200)
+        self.assertEqual(len(res.data), 2)

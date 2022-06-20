@@ -9,9 +9,6 @@ class MovieTest(TestCase):
     def setUpTestData(cls):
         cls.movie = MovieFactory.create(_genres=['a', 'b'], _keywords=['a', 'b'], _providers=['a', 'b'])
 
-    def setUp(self):
-        pass
-
 
     def test_장르가_있는지_검사할수있다(self):
         assert self.movie.genres.contains('a')

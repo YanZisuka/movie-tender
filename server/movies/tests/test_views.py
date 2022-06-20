@@ -20,15 +20,21 @@ class MoviesViewTest(TestCase):
     def test_영화추천을_받을수있다(self):
         res = self.client.get(reverse('movies:index'), **self.header)
 
-        self.assertEquals(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)
 
 
     def test_영화상세정보를_볼수있다(self):
         res = self.client.get(reverse('movies:movie', args=[self.movie.id]), **self.header)
 
-        self.assertEquals(res.status_code, 200)
+        self.assertEqual(res.status_code, 200)
 
     def test_평점을_설정할수있다(self):
         res = self.client.post(reverse('movies:movie', args=[self.movie.id]), data={'rating': 3.5}, **self.header)
 
-        self.assertEquals(res.status_code, 201)
+        self.assertEqual(res.status_code, 201)
+
+
+    def test_평점을_불러올수있다(self):
+        res = self.client.get(reverse('movies:get_rating', args=[self.movie.id, 'credential']), **self.header)
+
+        self.assertEqual(res.status_code, 200)

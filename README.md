@@ -1,6 +1,6 @@
 # :movie_camera: movietender
 
-<a href="https://codecov.io/gh/YanZisuka/movie-tender" target="_blank">
+<a style="float: right;" href="https://codecov.io/gh/YanZisuka/movie-tender" target="_blank">
   <img src="https://codecov.io/gh/YanZisuka/movie-tender/branch/master/graph/badge.svg?token=DTAEWIZ28X"/>
 </a>
 
@@ -21,8 +21,21 @@
 
 -   프로젝트는 대면을 원칙으로 진행합니다.
 -   **하나 이상의 기능 구현시,** `개발 일지`를 **작성하는 것을 원칙으로** 합니다.
+-   **브랜치 전략**
+    -   [GitHub-flow](https://docs.github.com/en/get-started/quickstart/github-flow)
 
 <br>
+
+#### :page_with_curl: 개발 일지
+
+-   구현에 사용된 기술과 해당 기술 선택 이유
+-   구현 내용
+-   개인적 소감 (*Optional*)
+-   어려웠던 점 & 해결 방법 (*Optional*)
+
+<br>
+
+### :pencil2: Convention
 
 -   **파일명**
     -   컴포넌트의 파일명은 `UpperCamelCase`로 작성합니다.
@@ -42,17 +55,21 @@
 
 <br>
 
--   **브랜치 전략**
-    -   [GitHub-flow](https://docs.github.com/en/get-started/quickstart/github-flow)
+-   **커밋 메시지**
+    -   `TASK_TYPE`: `ADD`, `FIX`, etc.,
+
+```bash
+$ git commit -m '[TASK_TYPE] task_content' -m 'description[Optional]'
+```
 
 <br>
 
-#### :page_with_curl: 개발 일지
+-   **브랜치명**
 
--   구현에 사용된 기술과 해당 기술 선택 이유
--   구현 내용
--   개인적 소감 (*Optional*)
--   어려웠던 점 & 해결 방법 (*Optional*)
+```bash
+$ git checkout -b '[task_type]-[target]'
+$ git push -u origin [branch_name]
+```
 
 <br><br>
 
@@ -77,7 +94,7 @@
 
 ## :books: 기술 스택
 
-![image-20220617211316935](README.assets/image-20220617211316935.png)
+![image-20220621102519753](README.assets/image-20220621102519753.png)
 
 <br><br>
 
@@ -100,11 +117,8 @@
 │       └── main.js
 └── 📂 server
     ├── 📂 accounts
-    │    └── 📂 migrations
     ├── 📂 community
-    │    └── 📂 migrations
     ├── 📂 movies
-    │    └── 📂 migrations
     ├── 📂 server
     └── manage.py
 ```
@@ -120,6 +134,4 @@
 ## :iphone: 프로토타입
 
 -   <a href="https://www.figma.com/file/oQ3cjXbhtswUeQCz41NzOO/Movietender?node-id=0%3A1" target="_blank">Figma</a>
-
-<br><br>
 

@@ -133,8 +133,8 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'movie_tender',
-            'USER': 'movie_tender',
+            'NAME': 'movie-tender',
+            'USER': 'movie-tender',
             'PASSWORD': 'qwer`123',
             'HOST': 'localhost',
             'PORT': '5432',

@@ -1,13 +1,13 @@
-from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
-
-from django.core.cache import cache
-
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django.core.cache import cache
 from . import redis_key_schema
+
+from django.shortcuts import get_object_or_404
+from django.contrib.auth import get_user_model
+
 from .serializers import *
 
 
@@ -19,6 +19,7 @@ def profile(request, username: str):
     key = redis_key_schema.user_profile(username)
     
     def get_profile():
+
         data = cache.get(key)
 
         if not data:
@@ -29,6 +30,7 @@ def profile(request, username: str):
         return Response(data)
     
     def follow_user():
+
         user = get_object_or_404(User, username=username)
 
         if request.user != user:
@@ -40,7 +42,7 @@ def profile(request, username: str):
                     'is_following': False,
                     'followers_count': user.followers.count(),
                     'followings_count': user.followings.count()
-                })
+                }, status=status.HTTP_204_NO_CONTENT)
             else:
                 user.followers.add(request.user)
                 cache.delete(key)
@@ -49,10 +51,11 @@ def profile(request, username: str):
                     'is_following': True,
                     'followers_count': user.followers.count(),
                     'followings_count': user.followings.count()
-                })
+                }, status=status.HTTP_201_CREATED)
         else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def update_user():
+
         user = get_object_or_404(User, username=username)
 
         if request.user == user:
@@ -63,6 +66,7 @@ def profile(request, username: str):
         else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete_user():
+        
         user = get_object_or_404(User, username=username)
 
         if request.user == user:

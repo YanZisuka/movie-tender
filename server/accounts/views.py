@@ -50,7 +50,8 @@ def profile(request, username: str):
                     'followers_count': user.followers.count(),
                     'followings_count': user.followings.count()
                 }, status=status.HTTP_201_CREATED)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     def update_user():
         user = get_object_or_404(User, username=username)
@@ -60,7 +61,8 @@ def profile(request, username: str):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     def delete_user():
         user = get_object_or_404(User, username=username)
@@ -73,7 +75,8 @@ def profile(request, username: str):
             }
             user.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == 'GET':
         return get_profile()

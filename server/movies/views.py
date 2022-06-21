@@ -32,9 +32,8 @@ def index(request):
             return Response(data)
 
         else:
-            return Response({
-                'detail': 'This user has no survey.'
-            })
+            return Response({'detail': 'This user has no survey.'}, 
+                            status=status.HTTP_400_BAD_REQUEST)
 
     def set_survey():
         validation = {'survey': []}
@@ -72,17 +71,23 @@ def movie(request, movie_pk: int):
         serializer = RatingSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             if Rating.objects.filter(user=request.user, movie=movie_obj).exists():
-
-                movie_obj.vote_average = ((movie_obj.vote_average * movie_obj.vote_count) - Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(Sum('rating'))['rating__sum']) / (movie_obj.vote_count - Rating.objects.filter(user=request.user, movie=movie_obj).count())
+                
+                # 영화 평점 복구
+                numerator = (movie_obj.vote_average * movie_obj.vote_count) - Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(Sum('rating'))['rating__sum']
+                denominator = movie_obj.vote_count - Rating.objects.filter(user=request.user, movie=movie_obj).count()
+                
+                movie_obj.vote_average = (numerator / denominator) if denominator != 0 else 0
                 movie_obj.vote_count -= Rating.objects.filter(user=request.user, movie=movie_obj).count()
 
                 Rating.objects.filter(user=request.user, movie=movie_obj).delete()
             serializer.save(user=request.user, movie=movie_obj)
 
             # 영화 평점 재계산
-            new_rating = ((movie_obj.vote_average * movie_obj.vote_count) + Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(Sum('rating'))['rating__sum']) / (movie_obj.vote_count + 1)
-            movie_obj.vote_average = round(new_rating, 1)
+            numerator = (movie_obj.vote_average * movie_obj.vote_count) + Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(Sum('rating'))['rating__sum']
             movie_obj.vote_count += 1
+
+            new_rating = numerator / movie_obj.vote_count
+            movie_obj.vote_average = round(new_rating, 1)
             movie_obj.save(update_fields=['vote_count', 'vote_average'])
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)

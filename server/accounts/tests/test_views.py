@@ -14,8 +14,13 @@ class CommunityViewsTest(TestCase):
         credentials = UserFactory.build()
         credentials.password = 'qwer`123'
         
-        res = Client().post('/api/v1/accounts/signup/', \
-            data={'username': credentials.username, 'nickname': credentials.nickname, 'password1': credentials.password, 'password2': credentials.password})
+        res = Client().post('/api/v1/accounts/signup/', 
+            data={
+                'username': credentials.username,
+                'nickname': credentials.nickname,
+                'password1': credentials.password,
+                'password2': credentials.password,
+            })
         token = res.json().get('key')
         cls.header = {'HTTP_AUTHORIZATION': f'Token {token}'}
 
@@ -29,7 +34,7 @@ class CommunityViewsTest(TestCase):
 
     def test_다른유저를_팔로우할수있다(self):
         res = self.client.post(reverse('accounts:profile', args=[self.users[0].username]), **self.header)
-        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.status_code, 401)
 
         res = self.client.post(reverse('accounts:profile', args=[self.users[1].username]), **self.header)
         self.assertEqual(res.status_code, 201)
@@ -42,11 +47,15 @@ class CommunityViewsTest(TestCase):
             'nickname': 'YanZisuka'
         })
         res = self.client.put(reverse('accounts:profile', args=[self.users[0].username]), data=data, content_type='application/json', **self.header)
-
         self.assertEqual(res.status_code, 200)
         self.assertEqual(get_user_model().objects.get(pk=self.users[0].id).nickname, 'YanZisuka')
 
+        res = self.client.put(reverse('accounts:profile', args=[self.users[1].username]), data=data, content_type='application/json', **self.header)
+        self.assertEqual(res.status_code, 401)
+
     def test_회원탈퇴를_할수있다(self):
         res = self.client.delete(reverse('accounts:profile', args=[self.users[0].username]), **self.header)
-
         self.assertEqual(res.status_code, 204)
+
+        res = self.client.delete(reverse('accounts:profile', args=[self.users[1].username]), **self.header)
+        self.assertEqual(res.status_code, 401)

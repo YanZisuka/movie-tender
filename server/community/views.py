@@ -20,7 +20,7 @@ def index(request):
         data = cache.get(key)
 
         if not data:
-            reviews = Review.objects.order_by('-pk')
+            reviews = Review.objects.order_by('-created_at')
             data = ReviewListSerializer(reviews, many=True).data
             cache.set(key, data, timeout=12 * 60 * 60)
         return Response(data)
@@ -29,7 +29,8 @@ def index(request):
         serializer = CreateReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data,
+                            status=status.HTTP_201_CREATED)
     
     if request.method == 'GET':
         return get_reviews()
@@ -52,7 +53,7 @@ def review(request, review_pk: int):
             return Response({
                     'is_like': False,
                     'like_users_count': review_obj.like_users.count()
-                }, status=status.HTTP_201_CREATED)
+                }, status=status.HTTP_204_NO_CONTENT)
         else:
             review_obj.like_users.add(request.user)
             return Response({
@@ -66,7 +67,8 @@ def review(request, review_pk: int):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     def delete_review():
         if request.user == review_obj.user:
@@ -77,7 +79,8 @@ def review(request, review_pk: int):
             }
             review_obj.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'},
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == 'GET':
         return get_review_detail()
@@ -96,7 +99,8 @@ def create_comment(request, review_pk: int):
     serializer = CommentSerializer(data=request.data)
     if serializer.is_valid(raise_exception=True):
         serializer.save(user=request.user, review=review)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data,
+                        status=status.HTTP_201_CREATED)
 
 
 @api_view(['PUT', 'DELETE'])
@@ -110,7 +114,8 @@ def comment(request, review_pk: int, comment_pk: int):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     def delete_comment():
         if request.user == comment_obj.user:
@@ -121,7 +126,8 @@ def comment(request, review_pk: int, comment_pk: int):
             }
             comment_obj.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == 'PUT':
         return update_comment()

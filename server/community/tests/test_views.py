@@ -72,22 +72,22 @@ class CommunityViewsTest(TestCase):
             'content': 'update_test',
         })
         res = self.client.put(reverse('community:review', args=[self.reviews[0].id]), 
+                            data=data, content_type='application/json', **self.headers[1])
+        
+        self.assertEqual(res.status_code, 401)
+
+        res = self.client.put(reverse('community:review', args=[self.reviews[0].id]), 
                             data=data, content_type='application/json', **self.headers[0])
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(Review.objects.get(pk=self.reviews[0].id).content, 'update_test')
 
-        res = self.client.put(reverse('community:review', args=[self.reviews[0].id]), 
-                            data=data, content_type='application/json', **self.headers[1])
-        
-        self.assertEqual(res.status_code, 401)
-
     def test_리뷰_삭제를_할수있다(self):
-        res = self.client.delete(reverse('community:review', args=[self.reviews[0].id]), **self.headers[0])
-        self.assertEqual(res.status_code, 204)
-
         res = self.client.delete(reverse('community:review', args=[self.reviews[0].id]), **self.headers[1])
         self.assertEqual(res.status_code, 401)
+
+        res = self.client.delete(reverse('community:review', args=[self.reviews[0].id]), **self.headers[0])
+        self.assertEqual(res.status_code, 204)
 
     
     def test_댓글을_작성할수있다(self):
@@ -104,20 +104,20 @@ class CommunityViewsTest(TestCase):
         data = json.dumps({
             'content': 'update_test',
         })
-        res = self.client.put(reverse('community:comment', args=[self.reviews[0].id, self.comment.id]), 
+        res = self.client.put(reverse('community:comment', args=[self.reviews[1].id, self.comment.id]), 
+                            data=data, content_type='application/json', **self.headers[1])
+        
+        self.assertEqual(res.status_code, 401)
+
+        res = self.client.put(reverse('community:comment', args=[self.reviews[1].id, self.comment.id]), 
                             data=data, content_type='application/json', **self.headers[0])
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(Comment.objects.get(pk=self.comment.id).content, 'update_test')
 
-        res = self.client.put(reverse('community:comment', args=[self.reviews[0].id, self.comment.id]), 
-                            data=data, content_type='application/json', **self.headers[1])
-        
-        self.assertEqual(res.status_code, 401)
-
     def test_댓글_삭제를_할수있다(self):
-        res = self.client.delete(reverse('community:comment', args=[self.reviews[0].id, self.comment.id]), **self.headers[0])
-        self.assertEqual(res.status_code, 204)
-
-        res = self.client.delete(reverse('community:comment', args=[self.reviews[0].id, self.comment.id]), **self.headers[1])
+        res = self.client.delete(reverse('community:comment', args=[self.reviews[1].id, self.comment.id]), **self.headers[1])
         self.assertEqual(res.status_code, 401)
+
+        res = self.client.delete(reverse('community:comment', args=[self.reviews[1].id, self.comment.id]), **self.headers[0])
+        self.assertEqual(res.status_code, 204)

@@ -3,8 +3,8 @@ from datetime import datetime
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import AbstractUser
-from django.core.cache import cache
 
+from django.core.cache import cache
 from . import redis_key_schema
 
 

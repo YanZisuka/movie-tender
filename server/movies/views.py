@@ -1,17 +1,18 @@
 import random
 
-from django.shortcuts import get_object_or_404
-from django.db.models import Sum
-from django.contrib.auth import get_user_model
-
-from django.core.cache import cache
-
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django.core.cache import cache
 from . import redis_key_schema
+
+from django.shortcuts import get_object_or_404
+from django.db.models import Sum
+
+from django.contrib.auth import get_user_model
 from .models import Movie, Staff, Rating, Keyword
+
 from .serializers import *
 from accounts.serializers import SurveySerializer
 
@@ -20,6 +21,7 @@ from accounts.serializers import SurveySerializer
 def index(request):
 
     def get_recommendations():
+        
         if request.user.survey:
             key = redis_key_schema.movie_list(request.user)
             data = cache.get(key)
@@ -36,6 +38,7 @@ def index(request):
             })
 
     def set_survey():
+
         validation = {'survey': []}
         for kwrd in request.data['survey']:
             if Keyword.objects.filter(keyword=kwrd).exists(): validation['survey'].append(kwrd)
@@ -57,6 +60,7 @@ def movie(request, movie_pk: int):
     key = redis_key_schema.movie_detail(movie_pk)
     
     def get_movie_detail():
+
         data = cache.get(key)
 
         if not data:
@@ -66,6 +70,7 @@ def movie(request, movie_pk: int):
         return Response(data)
 
     def set_rating():
+
         movie_obj = get_object_or_404(Movie, pk=movie_pk)
 
         serializer = RatingSerializer(data=request.data)
@@ -111,6 +116,7 @@ def get_rating(request, movie_pk: int, username: str):
 
 @api_view(['GET'])
 def get_staff(request):
+
     staffs = random.sample(list(Staff.objects.filter(role='Actor')), 2)
     serializer = StaffSerializer(staffs, many=True)
     return Response(serializer.data)
@@ -118,6 +124,7 @@ def get_staff(request):
 
 @api_view(['GET'])
 def get_genre(request, genre_group: str):
+
     movie = random.choice(Movie.objects.filter(genre_group=genre_group))
     serializer = MovieListSerializer(movie)
     return Response(serializer.data)
@@ -125,6 +132,7 @@ def get_genre(request, genre_group: str):
 
 @api_view(['GET'])
 def get_movies_with_keywords(request, pick_num: int):
+
     key = redis_key_schema.movie_list_with_keywords(request.user, pick_num)
     data = cache.get(key)
 

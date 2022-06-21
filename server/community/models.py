@@ -4,8 +4,8 @@ from django.db import models
 from django.conf import settings
 
 from django.core.cache import cache
-
 from . import redis_key_schema
+
 from movies.models import Movie
 
 

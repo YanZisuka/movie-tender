@@ -1,3 +1,4 @@
+import json
 from string import ascii_lowercase
 
 from django.test import TestCase, Client
@@ -32,6 +33,15 @@ class MoviesViewTest(TestCase):
 
         res = self.client.get(reverse('movies:index'), **self.header)
         self.assertEqual(res.status_code, 200)
+
+    def test_서베이를_설정할수있다(self):
+        data = json.dumps({
+            'survey': ['anime', 'superhero']
+        })
+        res = self.client.put(reverse('movies:index'), data=data, content_type='application/json', **self.header)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(get_user_model().objects.get(pk=self.user.id).survey, ['anime', 'superhero'])
 
 
     def test_영화상세정보를_볼수있다(self):

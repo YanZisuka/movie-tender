@@ -4,7 +4,6 @@
 crawlers.py
 test_crawlers.py
 .env
-secrets.py
 database
 
 ### Django ###

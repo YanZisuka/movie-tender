@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from .factories import MovieFactory, KeywordFactory
 
 
-class MoviesViewTest(TestCase):
+class MoviesViewsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         res = Client().post('/api/v1/accounts/signup/', \

@@ -42,7 +42,7 @@ def profile(request, username: str):
                     'is_following': False,
                     'followers_count': user.followers.count(),
                     'followings_count': user.followings.count()
-                })
+                }, status=status.HTTP_204_NO_CONTENT)
             else:
                 user.followers.add(request.user)
                 cache.delete(key)
@@ -51,7 +51,7 @@ def profile(request, username: str):
                     'is_following': True,
                     'followers_count': user.followers.count(),
                     'followings_count': user.followings.count()
-                })
+                }, status=status.HTTP_201_CREATED)
         else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def update_user():

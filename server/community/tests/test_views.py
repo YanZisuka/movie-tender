@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from ..models import Review, Comment
 
 
-class ReviewsViewTest(TestCase):
+class CommunityViewsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         res = Client().post('/api/v1/accounts/signup/', \

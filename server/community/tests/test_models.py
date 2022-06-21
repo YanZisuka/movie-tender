@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.db import connection
 
 from .factories import ReviewFactory
 from accounts.tests.factories import UserFactory
@@ -28,7 +29,9 @@ class ReviewTest(TestCase):
  LIMIT 5"""))
 
     def test_개선된_오프셋_페이징을_할수있다(self):
-        self.assertEqual(Review.objects.paginated_v2(1), Review.objects.raw("""SELECT "community_review"."id",
+        def queryset():
+            with connection.cursor() as cursor:
+                cursor.execute("""SELECT "community_review"."id",
        "community_review"."user_id",
        "community_review"."movie_id",
        "community_review"."content",
@@ -41,7 +44,9 @@ class ReviewTest(TestCase):
          ORDER BY "community_review"."id" DESC
          LIMIT 5
        )
- ORDER BY "community_review"."id" DESC"""))
+ ORDER BY "community_review"."id" DESC""")
+            return cursor.fetchone()
+        self.assertEqual(Review.objects.paginated_v2(1), queryset())
 
     def test_커서_페이징을_할수있다(self):
         self.assertEqual(Review.objects.cursor_paginated(35), Review.objects.raw("""SELECT "community_review"."id",

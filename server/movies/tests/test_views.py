@@ -6,18 +6,21 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from .factories import MovieFactory, KeywordFactory
+from accounts.tests.factories import UserFactory
 
 
 class MoviesViewsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
+        credentials = UserFactory.build()
+        credentials.password = 'qwer`123'
+        
         res = Client().post('/api/v1/accounts/signup/', \
-            data={'username': 'credential', 'nickname': 'RandomNick', 'password1': 'qwer`123', 'password2': 'qwer`123'})
+            data={'username': credentials.username, 'nickname': credentials.nickname, 'password1': credentials.password, 'password2': credentials.password})
         token = res.json().get('key')
         cls.header = {'HTTP_AUTHORIZATION': f'Token {token}'}
 
-        cls.user = get_user_model().objects.get(username='credential')
-
+        cls.user = get_user_model().objects.get(username=credentials.username)
         cls.movies = MovieFactory.create_batch(10)
         cls.keywords = [KeywordFactory.create(keyword='anime'), KeywordFactory.create(keyword='superhero')]
 
@@ -56,7 +59,7 @@ class MoviesViewsTest(TestCase):
 
 
     def test_평점을_불러올수있다(self):
-        res = self.client.get(reverse('movies:get_rating', args=[self.movies[0].id, 'credential']), **self.header)
+        res = self.client.get(reverse('movies:get_rating', args=[self.movies[0].id, self.user.username]), **self.header)
 
         self.assertEqual(res.status_code, 200)
 

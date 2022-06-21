@@ -16,7 +16,6 @@ from .serializers import *
 def index(request):
 
     def get_reviews():
-
         key = redis_key_schema.reviews()
         data = cache.get(key)
 
@@ -27,7 +26,6 @@ def index(request):
         return Response(data)
 
     def create_review():
-
         serializer = CreateReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
@@ -45,12 +43,10 @@ def review(request, review_pk: int):
     review_obj = get_object_or_404(Review, pk=review_pk)
     
     def get_review_detail():
-
         serializer = ReviewSerializer(review_obj)
         return Response(serializer.data)
 
     def like_review():
-
         if review_obj.like_users.filter(username=request.user.username).exists():
             review_obj.like_users.remove(request.user)
             return Response({
@@ -65,7 +61,6 @@ def review(request, review_pk: int):
                 }, status=status.HTTP_201_CREATED)
 
     def update_review():
-
         if request.user == review_obj.user:
             serializer = ReviewSerializer(instance=review_obj, data=request.data)
             if serializer.is_valid(raise_exception=True):
@@ -74,7 +69,6 @@ def review(request, review_pk: int):
         else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete_review():
-
         if request.user == review_obj.user:
             res = {
                 'id': review_obj.id,
@@ -97,7 +91,6 @@ def review(request, review_pk: int):
 
 @api_view(['POST'])
 def create_comment(request, review_pk: int):
-
     review = get_object_or_404(Review, pk=review_pk)
 
     serializer = CommentSerializer(data=request.data)
@@ -108,12 +101,10 @@ def create_comment(request, review_pk: int):
 
 @api_view(['PUT', 'DELETE'])
 def comment(request, review_pk: int, comment_pk: int):
-
     review = get_object_or_404(Review, pk=review_pk)
     comment_obj = get_object_or_404(Comment, pk=comment_pk)
 
     def update_comment():
-
         if request.user == comment_obj.user:
             serializer = CommentSerializer(instance=comment_obj, data=request.data)
             if serializer.is_valid(raise_exception=True):
@@ -122,7 +113,6 @@ def comment(request, review_pk: int, comment_pk: int):
         else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
 
     def delete_comment():
-        
         if request.user == comment_obj.user:
             res = {
                 'id': comment_obj.id,

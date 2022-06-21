@@ -17,8 +17,8 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = get_user_model()
     
-    username = Faker('first_name')
-    nickname = Faker('first_name')
+    username = Faker('pystr')
+    nickname = Faker('word')
     first_name = faker.Faker('ko-KR').first_name()
     last_name = faker.Faker('ko-KR').last_name()
     email = Faker('ascii_email')

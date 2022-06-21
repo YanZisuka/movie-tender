@@ -11,12 +11,15 @@ from django.contrib.auth import get_user_model
 class CommunityViewsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
+        credentials = UserFactory.build()
+        credentials.password = 'qwer`123'
+        
         res = Client().post('/api/v1/accounts/signup/', \
-            data={'username': 'credential', 'nickname': 'RandomNick', 'password1': 'qwer`123', 'password2': 'qwer`123'})
+            data={'username': credentials.username, 'nickname': credentials.nickname, 'password1': credentials.password, 'password2': credentials.password})
         token = res.json().get('key')
         cls.header = {'HTTP_AUTHORIZATION': f'Token {token}'}
 
-        cls.users = [get_user_model().objects.get(username='credential'), UserFactory.create(password='qwer`123')]
+        cls.users = [get_user_model().objects.get(username=credentials.username), UserFactory.create(password='qwer`123')]
 
 
     def test_프로필을_조회할수있다(self):

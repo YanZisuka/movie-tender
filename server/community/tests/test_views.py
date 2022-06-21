@@ -4,6 +4,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 
 from .factories import ReviewFactory, CommentFactory
+from accounts.tests.factories import UserFactory
 from movies.tests.factories import MovieFactory
 
 from django.contrib.auth import get_user_model
@@ -13,12 +14,15 @@ from ..models import Review, Comment
 class CommunityViewsTest(TestCase):
     @classmethod
     def setUpTestData(cls):
+        credentials = UserFactory.build()
+        credentials.password = 'qwer`123'
+        
         res = Client().post('/api/v1/accounts/signup/', \
-            data={'username': 'credential', 'nickname': 'RandomNick', 'password1': 'qwer`123', 'password2': 'qwer`123'})
+            data={'username': credentials.username, 'nickname': credentials.nickname, 'password1': credentials.password, 'password2': credentials.password})
         token = res.json().get('key')
         cls.header = {'HTTP_AUTHORIZATION': f'Token {token}'}
 
-        cls.user = get_user_model().objects.get(username='credential')
+        cls.user = get_user_model().objects.get(username=credentials.username)
         cls.movie = MovieFactory.create()
         cls.reviews = [ReviewFactory.create(movie=cls.movie, user=cls.user) \
             , ReviewFactory.create(movie=cls.movie, user=cls.user)]

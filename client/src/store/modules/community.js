@@ -20,9 +20,9 @@ export default {
   },
 
   actions: {
-    fetchReviews({ commit, getters }){
+    fetchReviews({ commit, getters }, cursor = 0){
       axios({
-        url : drf.community.reviews(),
+        url : drf.community.reviews(cursor),
         method : 'get',
         headers : getters.authHeader,
       })

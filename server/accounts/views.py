@@ -19,7 +19,6 @@ def profile(request, username: str):
     key = redis_key_schema.user_profile(username)
     
     def get_profile():
-
         data = cache.get(key)
 
         if not data:
@@ -30,7 +29,6 @@ def profile(request, username: str):
         return Response(data)
     
     def follow_user():
-
         user = get_object_or_404(User, username=username)
 
         if request.user != user:
@@ -42,7 +40,7 @@ def profile(request, username: str):
                     'is_following': False,
                     'followers_count': user.followers.count(),
                     'followings_count': user.followings.count()
-                }, status=status.HTTP_204_NO_CONTENT)
+                })
             else:
                 user.followers.add(request.user)
                 cache.delete(key)
@@ -52,10 +50,10 @@ def profile(request, username: str):
                     'followers_count': user.followers.count(),
                     'followings_count': user.followings.count()
                 }, status=status.HTTP_201_CREATED)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     def update_user():
-
         user = get_object_or_404(User, username=username)
 
         if request.user == user:
@@ -63,10 +61,10 @@ def profile(request, username: str):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     def delete_user():
-        
         user = get_object_or_404(User, username=username)
 
         if request.user == user:
@@ -77,7 +75,8 @@ def profile(request, username: str):
             }
             user.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'BAD REQUEST.'}, status=status.HTTP_400_BAD_REQUEST)
+        else: return Response({'detail': 'UNAUTHORIZED.'}, 
+                                status=status.HTTP_401_UNAUTHORIZED)
 
     if request.method == 'GET':
         return get_profile()

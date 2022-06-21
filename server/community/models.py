@@ -9,7 +9,22 @@ from . import redis_key_schema
 from movies.models import Movie
 
 
+class ReviewQuerySet(models.QuerySet):
+    def paginated(self, page: int, page_size: int = 5):
+        limit = (page - 1) * page_size
+        return self[limit : limit + page_size]
+
+    def paginated_v2(self, page: int, page_size: int = 5):
+        index_only_scan = self.paginated(page, page_size)
+        return self.filter(id__in=index_only_scan)
+
+    def cursor_paginated(self, cursor: int, page_size: int = 5):
+        return self.filter(id__lte=cursor)[ : page_size]
+
+
 class Review(models.Model):
+    class Meta:
+        ordering = ['-id']
     """ == Schema Information
     user :`User`
     movie :`Movie`
@@ -27,12 +42,18 @@ class Review(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = ReviewQuerySet.as_manager()
+
+    def flush_cache(self, prefix):
+        for key in cache.iter_keys(prefix):
+            cache.delete(key)
+
     def save(self, *args, **kwargs):
-        cache.delete(redis_key_schema.reviews())
+        self.flush_cache('reviews:*')
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        cache.delete(redis_key_schema.reviews())
+        self.flush_cache('reviews:*')
         super().delete(*args, **kwargs)
 
     @property
@@ -59,12 +80,16 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def flush_cache(self, prefix):
+        for key in cache.iter_keys(prefix):
+            cache.delete(key)
+
     def save(self, *args, **kwargs):
-        cache.delete(redis_key_schema.reviews())
+        self.flush_cache('reviews:*')
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        cache.delete(redis_key_schema.reviews())
+        self.flush_cache('reviews:*')
         super().delete(*args, **kwargs)
 
     @property

@@ -40,7 +40,7 @@ class CommunityViewsTest(TestCase):
         self.assertEqual(res.status_code, 201)
 
         res = self.client.post(reverse('accounts:profile', args=[self.users[1].username]), **self.header)
-        self.assertEqual(res.status_code, 204)
+        self.assertEqual(res.status_code, 200)
     
     def test_유저의_정보를_수정할수있다(self):
         data = json.dumps({

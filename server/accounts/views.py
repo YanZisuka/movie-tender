@@ -40,7 +40,7 @@ def profile(request, username: str):
                     'is_following': False,
                     'followers_count': user.followers.count(),
                     'followings_count': user.followings.count()
-                }, status=status.HTTP_204_NO_CONTENT)
+                })
             else:
                 user.followers.add(request.user)
                 cache.delete(key)

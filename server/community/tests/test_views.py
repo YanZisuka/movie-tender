@@ -59,7 +59,7 @@ class CommunityViewsTest(TestCase):
         self.assertEqual(res.status_code, 201)
 
         res = self.client.post(reverse('community:review', args=[self.reviews[0].id]), **self.header)
-        self.assertEqual(res.status_code, 204)
+        self.assertEqual(res.status_code, 200)
 
 
     def test_리뷰_수정을_할수있다(self):

@@ -1,5 +1,5 @@
-def reviews():
+def reviews(cursor):
     """
-    format: `reviews
+    format: `reviews:<cursor>
     """
-    return 'reviews'
+    return f'reviews:{cursor}'

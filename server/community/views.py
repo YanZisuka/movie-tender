@@ -13,14 +13,16 @@ from .serializers import *
 
 
 @api_view(['GET', 'POST'])
-def index(request):
+def index(request, cursor: int):
+
+    if cursor == 0: cursor = Review.objects.all()[ : 1][0].id
 
     def get_reviews():
-        key = redis_key_schema.reviews()
+        key = redis_key_schema.reviews(cursor)
         data = cache.get(key)
 
         if not data:
-            reviews = Review.objects.order_by('-created_at')
+            reviews = Review.objects.cursor_paginated(cursor)
             data = ReviewListSerializer(reviews, many=True).data
             cache.set(key, data, timeout=12 * 60 * 60)
         return Response(data)
@@ -53,7 +55,7 @@ def review(request, review_pk: int):
             return Response({
                     'is_like': False,
                     'like_users_count': review_obj.like_users.count()
-                }, status=status.HTTP_204_NO_CONTENT)
+                })
         else:
             review_obj.like_users.add(request.user)
             return Response({

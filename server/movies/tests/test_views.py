@@ -28,7 +28,8 @@ class MoviesViewsTest(TestCase):
         cls.header = {'HTTP_AUTHORIZATION': f'Token {token}'}
 
         cls.user = get_user_model().objects.get(username=credentials.username)
-        cls.movies = MovieFactory.create_batch(10)
+        cls.movies = [MovieFactory.build_batch(100)]
+        Movie.objects.bulk_create(cls.movies)
         cls.movie = MovieFactory.create(vote_average=0, vote_count=0)
         cls.keywords = [KeywordFactory.create(keyword='anime'), KeywordFactory.create(keyword='superhero')]
 

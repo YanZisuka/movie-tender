@@ -44,7 +44,7 @@ class Review(models.Model):
 
     objects = ReviewQuerySet.as_manager()
 
-    def flush_cache(self, prefix):
+    def flush_cache(self, prefix: str):
         for key in cache.iter_keys(prefix):
             cache.delete(key)
 
@@ -80,7 +80,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def flush_cache(self, prefix):
+    def flush_cache(self, prefix: str):
         for key in cache.iter_keys(prefix):
             cache.delete(key)
 

@@ -20,7 +20,7 @@ class MovieFactory(DjangoModelFactory):
     title = Faker('text', max_nb_chars=100)
     overview = Faker('sentence')
     tmdb_id = Faker('pyint', min_value=1)
-    poster_path = Faker('text', max_nb_chars=100)
+    poster_path = 'https://via.placeholder.com/800x1000.png?text=Image'
     video_path = Faker('text', max_nb_chars=100)
     adult = Faker('pybool')
     release_date = Faker('date')

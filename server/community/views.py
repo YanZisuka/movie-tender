@@ -15,7 +15,7 @@ from .serializers import *
 @api_view(['GET', 'POST'])
 def index(request, cursor: int):
 
-    if cursor == 0: cursor = Review.objects.all()[ : 1][0].id
+    if cursor == 0: cursor = Review.objects.all()[ : 1][0].id + 1
 
     def get_reviews():
         key = redis_key_schema.reviews(cursor)

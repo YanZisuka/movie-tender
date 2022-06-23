@@ -52,7 +52,7 @@ class ReviewTest(TestCase):
        "community_review"."created_at",
        "community_review"."updated_at"
   FROM "community_review"
- WHERE "community_review"."id" <= 100
+ WHERE "community_review"."id" < 100
  ORDER BY "community_review"."id" DESC
  LIMIT 5""")))
 

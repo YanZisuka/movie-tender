@@ -19,7 +19,7 @@ class ReviewQuerySet(models.QuerySet):
         return self.filter(id__in=index_only_scan)
 
     def cursor_paginated(self, cursor: int, page_size: int = 5):
-        return self.filter(id__lte=cursor)[ : page_size]
+        return self.filter(id__lt=cursor)[ : page_size]
 
 
 class Review(models.Model):

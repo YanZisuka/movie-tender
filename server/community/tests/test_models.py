@@ -14,7 +14,8 @@ class ReviewTest(TestCase):
         cls.movie = MovieFactory.create()
         cls.reviews = []
         for _ in range(100):
-            cls.reviews.append(ReviewFactory.create(movie=cls.movie, user=cls.user))
+            cls.reviews.append(ReviewFactory.build(movie=cls.movie, user=cls.user))
+        Review.objects.bulk_create(cls.reviews)
 
     def test_오프셋_페이징을_할수있다(self):
         self.assertEqual(list(Review.objects.paginated_v2(1)), list(Review.objects.raw("""SELECT "community_review"."id",
@@ -51,7 +52,7 @@ class ReviewTest(TestCase):
        "community_review"."created_at",
        "community_review"."updated_at"
   FROM "community_review"
- WHERE "community_review"."id" <= 100
+ WHERE "community_review"."id" < 100
  ORDER BY "community_review"."id" DESC
  LIMIT 5""")))
 

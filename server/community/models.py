@@ -19,7 +19,7 @@ class ReviewQuerySet(models.QuerySet):
         return self.filter(id__in=index_only_scan)
 
     def cursor_paginated(self, cursor: int, page_size: int = 5):
-        return self.filter(id__lte=cursor)[ : page_size]
+        return self.filter(id__lt=cursor)[ : page_size]
 
 
 class Review(models.Model):
@@ -44,7 +44,7 @@ class Review(models.Model):
 
     objects = ReviewQuerySet.as_manager()
 
-    def flush_cache(self, prefix):
+    def flush_cache(self, prefix: str):
         for key in cache.iter_keys(prefix):
             cache.delete(key)
 
@@ -80,7 +80,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def flush_cache(self, prefix):
+    def flush_cache(self, prefix: str):
         for key in cache.iter_keys(prefix):
             cache.delete(key)
 

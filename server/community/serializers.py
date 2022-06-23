@@ -8,13 +8,14 @@ from movies.models import Movie
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ('id', 'user', 'like_users', 'content', 'created_at', 'updated_at','comment_set', 'movie')
-        read_only_fields = ('id', 'user', 'like_users','comment_set', 'movie')
+        fields = ('id', 'user', 'movie', 'like_users', 'content', 'created_at', 'updated_at', 'is_modified', 'comment_set',)
+        read_only_fields = ('id', 'user', 'movie', 'like_users', 'is_modified', 'comment_set',)
 
     class CommentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Comment
-            fields = '__all__'
+            fields = ('id', 'user', 'review', 'content', 'created_at', 'is_modified',)
+            read_only_fields = ('is_modified',)
 
         class UserSerializer(serializers.ModelSerializer):
             class Meta:
@@ -41,8 +42,8 @@ class ReviewSerializer(serializers.ModelSerializer):
 class CreateReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ('id', 'user', 'like_users', 'content', 'created_at', 'updated_at','comment_set', 'movie')
-        read_only_fields = ('id', 'user', 'like_users','comment_set',)
+        fields = ('id', 'user', 'movie', 'like_users', 'content', 'created_at', 'updated_at', 'comment_set',)
+        read_only_fields = ('id', 'user', 'like_users', 'comment_set',)
 
 
 class ReviewListSerializer(serializers.ModelSerializer):
@@ -63,7 +64,8 @@ class ReviewListSerializer(serializers.ModelSerializer):
     class CommentSerializer(serializers.ModelSerializer):
         class Meta:
             model = Comment
-            fields = '__all__'
+            fields = ('id', 'user', 'review', 'content', 'created_at', 'is_modified',)
+            read_only_fields = ('is_modified',)
 
         class UserSerializer(serializers.ModelSerializer):
             class Meta:
@@ -80,8 +82,8 @@ class ReviewListSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('id', 'user', 'review', 'content', 'created_at', 'updated_at',)
-        read_only_fields = ('id', 'user', 'review',)
+        fields = ('id', 'user', 'review', 'content', 'created_at', 'updated_at', 'is_modified',)
+        read_only_fields = ('id', 'user', 'review', 'is_modified',)
 
     class UserSerializer(serializers.ModelSerializer):
         class Meta:

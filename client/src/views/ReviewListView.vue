@@ -8,7 +8,7 @@
         </div>
         <p class="mb-3">Latest Reviews</p>
       </div>
-      <hr class="mt-0 mb-3">
+      <hr class="mt-0 mb-4">
 
       <review-item
         v-for="review in reviews"

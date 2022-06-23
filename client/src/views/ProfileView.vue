@@ -34,7 +34,7 @@
       </div>
 
       <h3 class="mt-5 mb-3">감상한 영화</h3>
-      <hr class="mt-0 mb-3">
+      <hr class="mt-0 mb-4">
       <div class="profile-box">
         <ul class="d-flex flex-wrap justify-content-start">
           <li v-for="movie in profile.watch_movies" :key="movie.id">

@@ -79,6 +79,9 @@ $ git push -u origin [branch_name]
     -   사이트의 기능들을 소개하고, 다른 기능들로 연결합니다.
     
 -   `커뮤니티`
+    
+    <img src="README.assets/project_operation2.gif">
+    
     -   사용자가 **추천받고, 시청한 영화에 대해 리뷰를 작성할 수** 있습니다.
     -   각 리뷰에 **좋아요, 댓글을 작성** 가능합니다.
     

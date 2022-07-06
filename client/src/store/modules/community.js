@@ -20,11 +20,12 @@ export default {
   },
 
   actions: {
-    fetchReviews({ commit, getters }, cursor = 0){
+    fetchReviews({ commit, getters }, cursor = 0) {
       axios({
-        url : drf.community.reviews(cursor),
-        method : 'get',
-        headers : getters.authHeader,
+        url: drf.community.reviews(),
+        method: 'get',
+        headers: getters.authHeader,
+        params: { cursor }
       })
         .then(res => commit('SET_REVIEWS', res.data))
         .catch(err => console.error(err.response))
@@ -32,9 +33,9 @@ export default {
 
     fetchReview({ commit, getters }, reviewPk){
       axios({
-        url : drf.community.review(reviewPk),
-        method : 'get',
-        headers : getters.authHeader,
+        url: drf.community.review(reviewPk),
+        method: 'get',
+        headers: getters.authHeader,
       })
         .then(res => commit('SET_REVIEW', res.data))
         .catch(err => {
@@ -59,10 +60,10 @@ export default {
 
     updateReview({ commit, getters }, { reviewPk, movie, content }){
       axios({
-        url : drf.community.review(reviewPk),
-        method : 'put',
-        data : { movie, content },
-        headers : getters.authHeader,
+        url: drf.community.review(reviewPk),
+        method: 'put',
+        data: { movie, content },
+        headers: getters.authHeader,
       })
         .then(res => {
           commit('SET_REVIEW', res.data)

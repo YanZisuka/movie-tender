@@ -22,14 +22,14 @@ def index(request):
 
     def get_recommendations():
         if request.user.survey:
-            key = redis_key_schema.movie_list(request.user)
+            key = redis_key_schema.movies_for_user(request.user)
             data = cache.get(key)
 
             if not data:
-                movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in request.user.survey])), 10)
+                movies = list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in request.user.survey]))
                 data = MovieSerializer(movies, many=True).data
-                cache.set(key, data, timeout=5 * 60)
-            return Response(data)
+                cache.set(key, data, timeout=24 * 60 * 60)
+            return Response(random.sample(data, 10))
 
         else:
             return Response({'detail': 'This user has no survey.'}, 
@@ -43,6 +43,7 @@ def index(request):
         serializer = SurveySerializer(instance=request.user, data=validation)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            cache.delete(redis_key_schema.movies_for_user(request.user))
             return Response(serializer.data)
     
     if request.method == 'GET':
@@ -62,7 +63,7 @@ def movie(request, movie_pk: int):
         if not data:
             movie_obj = get_object_or_404(Movie, pk=movie_pk)
             data = MovieSerializer(movie_obj).data
-            cache.set(key, data, timeout=24 * 60 * 60)
+            cache.set(key, data, timeout=7 * 24 * 60 * 60)
         return Response(data)
 
     def set_rating():
@@ -130,7 +131,7 @@ def get_genre(request, genre_group: str):
 
 @api_view(['GET'])
 def get_movies_with_keywords(request, pick_num: int):
-    key = redis_key_schema.movie_list_with_keywords(request.user, pick_num)
+    key = redis_key_schema.movies()
     data = cache.get(key)
 
     if not data:
@@ -140,7 +141,7 @@ def get_movies_with_keywords(request, pick_num: int):
             'action', 'jazz', 'friendship', 'villain', 'elves',
             'dwarf', 'steampunk', 'time travel', 'based on novel or book',
         ]
-        movies = random.sample(list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in kwrds])), pick_num)
+        movies = list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in kwrds]))
         data = MovieListSerializer(movies, many=True).data
-        cache.set(key, data, timeout=5 * 60)
-    return Response(data)
+        cache.set(key, data, timeout=2 * 24 * 60 * 60)
+    return Response(random.sample(data, pick_num))

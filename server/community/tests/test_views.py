@@ -39,7 +39,7 @@ class CommunityViewsTest(TestCase):
 
 
     def test_리뷰들을_받아올수있다(self):
-        res = self.client.get(reverse('community:index', args=[0]), **self.headers[0])
+        res = self.client.get(reverse('community:index'), {'cursor': 0}, **self.headers[0])
 
         self.assertEqual(res.status_code, 200)
 
@@ -48,7 +48,7 @@ class CommunityViewsTest(TestCase):
             'movie': self.movie.id,
             'content': 'test',
         }
-        res = self.client.post(reverse('community:index', args=[0]), data=data, **self.headers[0])
+        res = self.client.post(reverse('community:index'), data=data, **self.headers[0])
 
         self.assertEqual(res.status_code, 201)
 

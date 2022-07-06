@@ -13,11 +13,9 @@ from .serializers import *
 
 
 @api_view(['GET', 'POST'])
-def index(request, cursor: int):
-
-    if cursor == 0: cursor = Review.objects.all()[ : 1][0].id + 1
-
-    def get_reviews():
+def index(request):
+    def get_reviews(cursor: int):
+        if cursor == 0: cursor = Review.objects.all()[ : 1][0].id + 1
         key = redis_key_schema.reviews(cursor)
         data = cache.get(key)
 
@@ -35,7 +33,8 @@ def index(request, cursor: int):
                             status=status.HTTP_201_CREATED)
     
     if request.method == 'GET':
-        return get_reviews()
+        cursor: int = int(request.GET.get('cursor'))
+        return get_reviews(cursor)
     elif request.method == 'POST':
         return create_review()
 

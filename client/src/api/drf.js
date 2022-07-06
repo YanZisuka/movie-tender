@@ -22,7 +22,7 @@ export default {
     moviesWithKeyword: pickNum => HOST + MOVIES + `keywords/${pickNum}/`
   },
   community: {
-    reviews: (cursor = 0) => HOST + COMMUNITY + `cursor/${cursor}/`,
+    reviews: () => HOST + COMMUNITY,
     review: reviewPk => HOST + COMMUNITY + `${reviewPk}/`,
     createComment: reviewPk => HOST + COMMUNITY + `${reviewPk}/` + COMMENTS,
     comment: (reviewPk, commentPk) =>

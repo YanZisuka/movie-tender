@@ -25,6 +25,9 @@ class ReviewQuerySet(models.QuerySet):
 class Review(models.Model):
     class Meta:
         ordering = ['-id']
+        indexes = [
+            models.Index(fields=['-id'], include=[], name='idx_review_iddesc')
+        ]
     """ == Schema Information
     user :`User`
     movie :`Movie`

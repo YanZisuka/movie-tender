@@ -3,9 +3,14 @@ from typing import List, Set
 from django.db import models
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.indexes import GinIndex
 
 
 class Movie(models.Model):
+    class Meta:
+        indexes = [
+            GinIndex(fields=['_keywords']),
+        ]
     """ == Schema Information
     title :`str`
     overview :`str`

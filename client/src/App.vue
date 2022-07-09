@@ -42,12 +42,46 @@ export default {
 
 
 <style>
+:root {
+  --mainBgColor: #6495ed;
+  --active: #ed4959;
+  --inactive: #ffb2b2;
+  --white: #fff;
+  --offwhite: #fbfbfb;
+  --gray: #c4c4c4;
+  --black: #000;
+  --dark: #171717;
+  --border: #ddd;
+  --warning: #db2828;
+
+  --adaptiveGrey50: #f9fafb;
+  --adaptiveGrey100: #f2f4f6;
+  --adaptiveGrey200: #e5e8eb;
+  --adaptiveGrey300: #d1d6db;
+  --adaptiveGrey400: #b0b8c1;
+  --adaptiveGrey500: #8b95a1;
+  --adaptiveGrey600: #6b7684;
+  --adaptiveGrey700: #4e5968;
+  --adaptiveGrey800: #333d4b;
+  --adaptiveGrey900: #191f28;
+  --adaptiveOpacity50: rgba(0, 23, 51, 0.02);
+  --adaptiveOpacity100: rgba(2, 32, 71, 0.05);
+  --adaptiveOpacity200: rgba(0, 27, 55, 0.1);
+  --adaptiveOpacity300: rgba(0, 29, 58, 0.18);
+  --adaptiveOpacity400: rgba(0, 29, 54, 0.31);
+  --adaptiveOpacity500: rgba(3, 24, 50, 0.46);
+  --adaptiveOpacity600: rgba(0, 19, 43, 0.58);
+  --adaptiveOpacity700: rgba(3, 18, 40, 0.7);
+  --adaptiveOpacity800: rgba(0, 12, 30, 0.8);
+  --adaptiveOpacity900: rgba(2, 9, 19, 0.91);
+}
+
 #app {
   font-family: 'IBM Plex Sans KR', sans-serif, Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #0b1b38;
+  color: var(--black);
   min-width: 100%;
   min-height: 100%;
   backdrop-filter: blur(40px);
@@ -55,9 +89,9 @@ export default {
 
 .btn-theme-lg {
   margin: 5px;
-  background-color: #ed4959;
+  background-color: var(--mainBgColor);
   border: 0;
-  color: #fff;
+  color: var(--white);
   font-size: 1rem;
   font-weight: 700;
   width: 10rem;
@@ -67,17 +101,17 @@ export default {
 }
 
 .btn-theme {
-  background-color: #0b1b38;
+  background-color: var(--mainBgColor);
   width: 50%;
   height: 2.5rem;
   border-radius: 8px;
   border: 0;
-  color: #fff;
+  color: var(--white);
   font-weight: 700;
 }
 
 .text-fff {
-  color: #fff;
+  color: var(--white);
 }
 
 .ellipsis {
@@ -86,5 +120,10 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+}
+
+input {
+  border: 2px solid var(--border);
+  border-radius: 8px;
 }
 </style>

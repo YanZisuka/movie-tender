@@ -49,6 +49,6 @@ export default {
   font-size: 4rem;
   font-weight: 700;
   line-height: 55px;
-  color: #333;
+  color: var(--black);
 }
 </style>

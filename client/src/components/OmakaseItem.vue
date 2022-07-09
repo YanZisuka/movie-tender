@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-link class="text-decoration-none" :to="{ name: 'movie', params: { moviePk: movie.id } }">
-      <div class="omakase-item d-flex flex-row align-items-center my-5">
+      <div class="omakase-item d-flex flex-row align-items-center mb-5">
         <div>
           <img :src="movie.poster_path" :alt="`${movie.title}'s poster`">
         </div>
@@ -37,8 +37,8 @@ export default {
 <style scoped>
 .omakase-item {
   background-color: #030303;
+  border: 2px solid #222;
   border-radius: 8px;
-  box-shadow: 5px 4px 4px rgba(0, 0, 0, 0.25);
   width: 100%;
 }
 
@@ -47,8 +47,8 @@ export default {
 }
 
 .omakase-item img {
-  width: 12rem;
-  border-radius: 8px 0 0 8px;
+  width: 13rem;
+  border-radius: 4px 0 0 4px;
 }
 
 .omakase-item h1 {

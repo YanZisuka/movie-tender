@@ -153,19 +153,15 @@ h3 {
 }
 
 .btn-profile {
-  background-color: #0b1b38;
-  color: #fff;
+  background-color: var(--mainBgColor);
+  color: var(--white);
   border: 0;
   border-radius: 8px;
   width: 7rem;
 }
 
-.btn-profile:hover {
-  background-color: #0b1b3880;
-}
-
 .profile-box {
-  background-color: #fff;
+  background-color: var(--white);
   border-radius: 8px;
   padding: 1rem;
 }

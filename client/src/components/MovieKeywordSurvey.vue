@@ -75,7 +75,7 @@ export default {
 
 .versus-text {
   position: absolute;
-  color: #fff;
+  color: var(--white);
   width: fit-content;
   top: 50%;
   left: 50%;

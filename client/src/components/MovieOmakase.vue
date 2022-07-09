@@ -1,11 +1,16 @@
 <template>
   <div class="omakase row flex-column justify-content-center align-items-center">
-    <p class="omakase-text mt-5">{{ profile.nickname }}님이 좋아하실 영화들이에요!</p>
-    <router-link :to="{ name: 'movieSurvey' }">
-      <button class="btn-theme-lg">다시하기</button>
-    </router-link>
 
-    <div class="col-6">
+    <div class="col-6 d-flex flex-column">
+      <div class="d-flex justify-content-between align-items-center">
+        <p class="omakase-text text-start m-0">{{ profile.nickname }}님이 좋아하실 영화들이에요!</p>
+        <router-link :to="{ name: 'movieSurvey' }">
+          <button class="btn-survey m-0">다시하기 ></button>
+        </router-link>
+      </div>
+
+      <hr class="mb-4">
+
       <omakase-item
         v-for="movie in movies"
         :key="movie.id"
@@ -46,15 +51,26 @@ export default {
 </script>
 
 <style scoped>
+hr {
+  color: var(--white);
+}
+
+.btn-survey {
+  background-color: transparent;
+  border: 0;
+  color: var(--mainBgColor);
+  font-weight: 700;
+}
+
 .omakase {
   margin: 3rem 5rem;
 }
 
 .omakase-text {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
   line-height: 77px;
-  color: #fff;
+  color: var(--white);
 }
 
 .omakase a {

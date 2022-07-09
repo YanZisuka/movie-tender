@@ -25,7 +25,7 @@ export default {
 <style>
   .account-error-list {
     width: 100%;
-    color: #db2828;
+    color: var(--warning);
     font-size: 1rem;
   }
 

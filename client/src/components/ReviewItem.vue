@@ -13,7 +13,7 @@
         </router-link>
         <span v-if="review.user.id === currentUser.pk && !isEditing" >
           <button v-if="false" @click="switchIsEditing" class="btn btn-sm"><i class="fa-solid fa-pen"></i></button>
-          <button @click="onDelete(review.id)" class="btn btn-sm"><i class="fa-solid fa-delete-left"></i></button>
+          <button @click="onDelete(review.id)" class="btn"><i class="fa-solid fa-xmark"></i></button>
         </span>
       </div>
 
@@ -128,7 +128,7 @@ export default {
 .review-item {
   background-color: var(--offwhite);
   border-radius: 8px;
-  border: 2px solid var(--black);
+  border: 2px solid var(--border);
   width: 100%;
 }
 

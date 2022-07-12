@@ -5,7 +5,7 @@
       <div class="d-flex justify-content-between align-items-center">
         <p class="omakase-text text-start m-0">{{ profile.nickname }}님이 좋아하실 영화들이에요!</p>
         <router-link :to="{ name: 'movieSurvey' }">
-          <button class="btn-survey m-0">다시하기 ></button>
+          <button class="btn-survey m-0">다시하기 ＞</button>
         </router-link>
       </div>
 

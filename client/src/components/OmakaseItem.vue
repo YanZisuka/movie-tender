@@ -7,7 +7,7 @@
         </div>
         <div class="text-start text-black ms-5">
           <h1 class="text-white">{{ movie.title }}</h1>
-          <h2 class="text-white"><i class="fa-solid fa-star"></i> {{ movie.vote_average }}</h2>
+          <h2 class="text-white mb-4"><i class="fa-solid fa-star"></i> {{ movie.vote_average }}</h2>
           <p class="lead text-white ellipsis pe-5">{{ overview }}</p>
         </div>
       </div>

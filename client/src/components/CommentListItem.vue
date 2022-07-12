@@ -15,7 +15,7 @@
     <div>
       <div v-if="currentUser.pk === comment.user.id && !isEditing">
         <button class="btn btn-sm" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button>
-        <button class="btn btn-sm" @click="onDelete"><i class="fa-solid fa-delete-left"></i></button>
+        <button class="btn btn-sm" @click="onDelete"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div v-if="currentUser.pk === comment.user.id && isEditing">

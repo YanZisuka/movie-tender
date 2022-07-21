@@ -20,8 +20,6 @@ from accounts.serializers import SurveySerializer
 
 
 class MovieListView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    
     def get(self, request):
         if request.user.survey:
             key = redis_key_schema.movies_for_user(request.user)
@@ -50,8 +48,6 @@ class MovieListView(APIView):
 
 
 class MovieView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
     def get(self, request, movie_pk: int):
         key = redis_key_schema.movie_detail(movie_pk)
         data = cache.get(key)

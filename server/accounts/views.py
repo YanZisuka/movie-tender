@@ -14,8 +14,6 @@ User = get_user_model()
 
 
 class UserView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
     def get(self, request, username: str):
         key = redis_key_schema.user_profile(username)
 

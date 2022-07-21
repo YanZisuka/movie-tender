@@ -9,6 +9,7 @@
         :to="{ name: 'movies' }"
         :class="isDark ? 'text-fff' : 'text-theme'"
         class="text-decoration-none mx-5"
+        v-if="isLoggedIn"
         >OMAKASE</router-link>
 
       <router-link

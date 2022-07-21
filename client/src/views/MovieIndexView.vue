@@ -79,6 +79,7 @@ export default {
 .main-text {
   font-size: 3.75rem;
   font-weight: 700;
+  letter-spacing: -0.125rem;
   line-height: 73px;
   color: var(--white);
 }
@@ -86,6 +87,7 @@ export default {
 .sub-text {
   font-size: 2rem;
   line-height: 39px;
+  letter-spacing: -0.125rem;
   color: var(--white);
 }
 </style>

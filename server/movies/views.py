@@ -1,8 +1,9 @@
 import random
 
-from rest_framework import status
+from rest_framework import status, authentication
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from django.core.cache import cache
 from . import redis_key_schema
@@ -17,10 +18,10 @@ from .serializers import *
 from accounts.serializers import SurveySerializer
 
 
-@api_view(['GET', 'PUT'])
-def index(request):
-
-    def get_recommendations():
+class MovieListView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    
+    def get(self, request):
         if request.user.survey:
             key = redis_key_schema.movies_for_user(request.user)
             data = cache.get(key)
@@ -35,7 +36,7 @@ def index(request):
             return Response({'detail': 'This user has no survey.'}, 
                             status=status.HTTP_400_BAD_REQUEST)
 
-    def set_survey():
+    def put(self, request):
         validation = {'survey': []}
         for kwrd in request.data['survey']:
             if Keyword.objects.filter(keyword=kwrd).exists(): validation['survey'].append(kwrd)
@@ -45,19 +46,13 @@ def index(request):
             serializer.save()
             cache.delete(redis_key_schema.movies_for_user(request.user))
             return Response(serializer.data)
-    
-    if request.method == 'GET':
-        return get_recommendations()
-    elif request.method == 'PUT':
-        return set_survey()
 
 
-@api_view(['GET', 'POST'])
-def movie(request, movie_pk: int):
+class MovieView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
 
-    key = redis_key_schema.movie_detail(movie_pk)
-    
-    def get_movie_detail():
+    def get(self, request, movie_pk: int):
+        key = redis_key_schema.movie_detail(movie_pk)
         data = cache.get(key)
 
         if not data:
@@ -66,7 +61,7 @@ def movie(request, movie_pk: int):
             cache.set(key, data, timeout=7 * 24 * 60 * 60)
         return Response(data)
 
-    def set_rating():
+    def post(self, request, movie_pk: int):
         movie_obj = get_object_or_404(Movie, pk=movie_pk)
 
         serializer = RatingSerializer(data=request.data)
@@ -92,11 +87,6 @@ def movie(request, movie_pk: int):
             movie_obj.save(update_fields=['vote_count', 'vote_average'])
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-    if request.method == 'GET':
-        return get_movie_detail()
-    elif request.method == 'POST':
-        return set_rating()
 
 
 @api_view(['GET'])

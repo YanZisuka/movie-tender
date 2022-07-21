@@ -15,7 +15,7 @@
     <div>
       <div v-if="currentUser.pk === comment.user.id && !isEditing">
         <button class="btn btn-sm" @click="switchIsEditing"><i class="fa-solid fa-pen"></i></button>
-        <button class="btn btn-sm" @click="onDelete"><i class="fa-solid fa-delete-left"></i></button>
+        <button class="btn btn-sm" @click="onDelete"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div v-if="currentUser.pk === comment.user.id && isEditing">
@@ -74,17 +74,17 @@ export default {
 <style scoped>
 .comment-list {
   list-style: none;
-  background-color: #f2f2f2;
   padding: 0.7rem 1rem 1rem 1rem;
+  background-color: var(--adaptiveGrey100);
   border-radius: 8px;
 }
 
 .comment-list a {
   text-decoration: none;
-  color: #000;
+  color: var(--black);
 }
 
 .comment-list a:hover {
-  color: #c4c4c4;
+  color: var(--adaptiveGrey800);
 }
 </style>

@@ -59,7 +59,7 @@
     <modal-detail :show="showAccountModal">
       <div slot="body" class="modal-body d-flex flex-column">
         <button
-          class="btn align-self-end text-fff mt-2 me-2"
+          class="btn align-self-end mt-2 me-2"
           @click="switchShowAccountModal()"
           ><i class="fa-solid fa-xmark"></i></button>
         <login-modal
@@ -120,11 +120,11 @@ nav {
 
 nav a {
   font-weight: 700;
-  color: #0b1b38;
+  color: var(--black);
 }
 
 nav a.router-link-exact-active {
-  color: #ed4959;
+  color: var(--mainBgColor);
 }
 
 .navbar-logo {
@@ -133,12 +133,12 @@ nav a.router-link-exact-active {
 }
 
 .navbar-btn {
-  background-color: #0b1b38;
+  background-color: var(--mainBgColor);
   width: 5rem;
   height: 28px;
   border-radius: 16px;
   border: 0;
-  color: #fff;
+  color: var(--white);
 }
 
 .profile {
@@ -152,16 +152,17 @@ nav a.router-link-exact-active {
 }
 
 .text-fff {
-  color: #fff;
+  color: var(--white);
 }
 
 .text-theme {
-  color: #0b1b38;
+  color: var(--black);
 }
 
 .modal-body {
   display: inline-block;
-  background: linear-gradient(to bottom right, #3d74ff, #ed4959);
+  background: var(--white);
+  border: 2px solid var(--black);
   border-radius: 16px;
 }
 

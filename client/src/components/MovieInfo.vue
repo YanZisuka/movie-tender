@@ -57,10 +57,12 @@
     </div>
     
     <!-- modal component -->
-    <modal-detail :show="showModal">
+    <modal-detail
+      :show="showModal"
+      >
       <div slot="body" class="modal-body d-flex flex-column">
         <button
-          class="btn align-self-end text-fff mt-2 me-2"
+          class="btn align-self-end mt-2 me-2"
           @click="showModal = !showModal"
           ><i class="fa-solid fa-xmark"></i></button>
         <review-form-modal
@@ -153,7 +155,7 @@ export default {
 
 <style scoped>
 .movie-info {
-  background-color: #171717;
+  background-color: var(--dark);
   border-radius: 1rem;
   padding: 2rem;
   width: 100%;
@@ -202,7 +204,9 @@ export default {
 
 .modal-body {
   display: inline-block;
-  background: linear-gradient(to bottom right, #3d74ff, #ed4959);
+  background: var(--white);
+  /* border: 2px solid var(--black); */
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   border-radius: 16px;
 }
 
@@ -230,7 +234,7 @@ export default {
 }
  
 .star-rating :checked ~ label {
-  -webkit-text-fill-color: #fff;
+  -webkit-text-fill-color: var(--white);
 }
  
 .star-rating label:hover,

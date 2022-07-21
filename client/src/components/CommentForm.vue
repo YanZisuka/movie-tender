@@ -33,16 +33,14 @@ export default {
 
 <style scoped>
 .comment-list-form {
-  background-color: #eee;
   width: 100%;
+  border: 2px solid var(--border);
   border-radius: 8px;
 }
 
 .comment-list-form input {
-  background-color: #eee;
   width: 100%;
   border: 0;
-  border-radius: 8px;
   padding: 0 1rem;
 }
 </style>

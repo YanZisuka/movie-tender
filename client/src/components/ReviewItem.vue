@@ -1,5 +1,5 @@
 <template>
-  <div class="review-item d-flex flex-row align-items-center mb-4">
+  <div class="review-item d-flex flex-row align-items-center mb-5">
 
     <div>
       <img :src="posterPath" :alt="`${review.movie.title}'s poster`">
@@ -13,7 +13,7 @@
         </router-link>
         <span v-if="review.user.id === currentUser.pk && !isEditing" >
           <button v-if="false" @click="switchIsEditing" class="btn btn-sm"><i class="fa-solid fa-pen"></i></button>
-          <button @click="onDelete(review.id)" class="btn btn-sm"><i class="fa-solid fa-delete-left"></i></button>
+          <button @click="onDelete(review.id)" class="btn"><i class="fa-solid fa-xmark"></i></button>
         </span>
       </div>
 
@@ -126,31 +126,34 @@ export default {
 
 <style scoped>
 .review-item {
-  background-color: #fbfbfb;
+  background-color: var(--offwhite);
   border-radius: 8px;
-  border: 1px solid #ddd;
+  border: 2px solid var(--border);
   width: 100%;
 }
 
 .review-item img {
   width: 13rem;
-  border-radius: 8px 0 0 8px;
+  border-radius: 4px 0 0 4px;
 }
 
 .review-item h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #0b1b38;
+  color: var(--black);
+}
+
+.review-item h1:hover {
+  color: var(--adaptiveGrey800);
 }
 
 .review-item h2 {
   font-size: 1rem;
-  font-weight: 700;
-  color: #c4c4c4;
+  color: var(--adaptiveGrey500);
 }
 
 .review-item h2:hover {
-  color: #171717;
+  color: var(--adaptiveGrey800);
 }
 
 .btn-like:hover {
@@ -158,40 +161,16 @@ export default {
 }
 
 .active {
-  color: #ed4959;
+  color: var(--active);
   transition: color 0.2s ease;
 }
 
 .inactive {
-  color: #ffb2b2;
+  color: var(--inactive);
   transition: color 0.2s ease;
 }
 
 .btn-comment:hover {
   cursor: pointer;
-}
-
-.modal-poster {
-  width: 30rem;
-  border-radius: 8px 0 0 8px;
-}
-
-.modal-body {
-  width: 99%;
-}
-
-.modal-title {
-  font-size: 3rem;
-  font-weight: 700;
-}
-
-.modal-author {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #c4c4c4;
-}
-
-.modal-author:hover {
-  color: #171717;
 }
 </style>

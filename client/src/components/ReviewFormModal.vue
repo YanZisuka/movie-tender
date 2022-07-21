@@ -1,10 +1,10 @@
 <template>
   <div class="form-body text-start pt-3 pb-5 px-5">
 
-    <h1 class="text-fff">리뷰쓰기</h1>
+    <h1 class="">리뷰쓰기</h1>
 
     <form @submit.prevent="createReview(payload)" class="d-flex flex-column">
-      <label for="content" class="text-fff">내용</label>
+      <label for="content" class="">내용</label>
       <textarea v-model="payload.content" id="content" cols="30" rows="10" required></textarea>
       <button class="btn-theme align-self-center mt-5">작성</button>
     </form>
@@ -51,7 +51,7 @@ export default {
 
 .form-body textarea {
   width: 100%;
-  border: 2px solid #ddd;
+  border: 2px solid var(--border);
   border-radius: 8px;
   padding: 0 1rem;
   margin: 0 0 2rem 0;

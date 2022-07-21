@@ -6,7 +6,7 @@
         <div class="mb-5">
           <search-bar></search-bar>
         </div>
-        <p class="mb-3">Latest Reviews</p>
+        <p class="mb-2">최신순</p>
       </div>
       <hr class="mt-0 mb-4">
 

@@ -80,12 +80,12 @@ export default {
   font-size: 3.75rem;
   font-weight: 700;
   line-height: 73px;
-  color: #fff;
+  color: var(--white);
 }
 
 .sub-text {
   font-size: 2rem;
   line-height: 39px;
-  color: #fff;
+  color: var(--white);
 }
 </style>

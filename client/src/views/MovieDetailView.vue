@@ -123,8 +123,8 @@ export default {
 }
 
 .btn-provider {
-  background-color: #000;
-  color: #fff;
+  background-color: var(--black);
+  color: var(--white);
   font-size: 1rem;
   font-weight: 700;
   width: 10rem;
@@ -134,7 +134,7 @@ export default {
 
 .btn-provider > img {
   width: 3rem;
-  border-radius: 16px;
+  border-radius: 8px;
 }
 
 .btn-provider > span {

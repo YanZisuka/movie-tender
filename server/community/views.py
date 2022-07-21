@@ -1,4 +1,6 @@
 from rest_framework import status, authentication
+from rest_framework.decorators import permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -13,8 +15,7 @@ from .serializers import *
 
 
 class ReviewListView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
+    @permission_classes([AllowAny])
     def get(self, request):
         cursor: int = int(request.GET.get('cursor'))
         if cursor == 0: cursor = Review.objects.all()[ : 1][0].id + 1
@@ -36,8 +37,6 @@ class ReviewListView(APIView):
 
 
 class ReviewView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
     def get(self, request, review_pk: int):
         review_obj = get_object_or_404(Review, pk=review_pk)
         serializer = ReviewSerializer(review_obj)
@@ -86,8 +85,6 @@ class ReviewView(APIView):
 
 
 class CommentView(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-
     def post(self, request, review_pk:int):
         review = get_object_or_404(Review, pk=review_pk)
 

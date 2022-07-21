@@ -96,8 +96,7 @@ export default {
   font-weight: 700;
   width: 10rem;
   height: 3.5rem;
-  border-radius: 8px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 0.5rem;
 }
 
 .btn-theme {

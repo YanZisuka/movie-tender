@@ -1,6 +1,6 @@
-from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework import status, authentication
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from django.core.cache import cache
 from . import redis_key_schema
@@ -10,15 +10,15 @@ from django.contrib.auth import get_user_model
 
 from .serializers import *
 
-
 User = get_user_model()
 
-@api_view(['GET', 'POST', 'PUT', 'DELETE'])
-def profile(request, username: str):
 
-    key = redis_key_schema.user_profile(username)
-    
-    def get_profile():
+class UserView(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+
+    def get(self, request, username: str):
+        key = redis_key_schema.user_profile(username)
+
         data = cache.get(key)
 
         if not data:
@@ -27,8 +27,10 @@ def profile(request, username: str):
             data['followers'] = user.followers.all().values('id')
             cache.set(key, data, timeout=12 * 60 * 60)
         return Response(data)
-    
-    def follow_user():
+
+    def post(self, request, username: str):
+        key = redis_key_schema.user_profile(username)
+
         user = get_object_or_404(User, username=username)
 
         if request.user != user:
@@ -53,7 +55,7 @@ def profile(request, username: str):
         else: return Response({'detail': 'UNAUTHORIZED.'}, 
                                 status=status.HTTP_401_UNAUTHORIZED)
 
-    def update_user():
+    def put(self, request, username: str):
         user = get_object_or_404(User, username=username)
 
         if request.user == user:
@@ -64,7 +66,7 @@ def profile(request, username: str):
         else: return Response({'detail': 'UNAUTHORIZED.'}, 
                                 status=status.HTTP_401_UNAUTHORIZED)
 
-    def delete_user():
+    def delete(self, request, username: str):
         user = get_object_or_404(User, username=username)
 
         if request.user == user:
@@ -77,12 +79,3 @@ def profile(request, username: str):
             return Response(res, status=status.HTTP_204_NO_CONTENT)
         else: return Response({'detail': 'UNAUTHORIZED.'}, 
                                 status=status.HTTP_401_UNAUTHORIZED)
-
-    if request.method == 'GET':
-        return get_profile()
-    elif request.method == 'POST':
-        return follow_user()
-    elif request.method == 'PUT':
-        return update_user()
-    elif request.method == 'DELETE':
-        return delete_user()

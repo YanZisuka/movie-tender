@@ -162,7 +162,8 @@ nav a.router-link-exact-active {
 .modal-body {
   display: inline-block;
   background: var(--white);
-  border: 2px solid var(--black);
+  /* border: 2px solid var(--black); */
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
   border-radius: 16px;
 }
 

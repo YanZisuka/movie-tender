@@ -9,6 +9,7 @@ from django.core.cache import cache
 from . import redis_key_schema
 
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 from django.db.models import Sum
 
 from django.contrib.auth import get_user_model
@@ -43,7 +44,7 @@ class MovieListView(APIView):
 
         serializer = SurveySerializer(instance=request.user, data=validation)
         if serializer.is_valid(raise_exception=True):
-            serializer.save()
+            serializer.save(update_fields=['survey'])
             cache.delete(redis_key_schema.movies_for_user(request.user))
             return Response(serializer.data)
 
@@ -61,6 +62,7 @@ class MovieView(APIView):
             cache.set(key, data, timeout=7 * 24 * 60 * 60)
         return Response(data)
 
+    @transaction.atomic()
     def post(self, request, movie_pk: int):
         movie_obj = get_object_or_404(Movie, pk=movie_pk)
 

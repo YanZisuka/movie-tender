@@ -59,7 +59,7 @@ export default {
     top: 0;
     bottom: 0;
     z-index: -1;
-    filter: brightness(20%);
+    filter: brightness(40%);
   }
 
 .logo {

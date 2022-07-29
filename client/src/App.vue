@@ -43,7 +43,7 @@ export default {
 
 <style>
 :root {
-  --mainBgColor: #6e2ad2;
+  --mainBgColor: #816bff;
   --active: #ed4959;
   --inactive: #ffb2b2;
   --white: #fff;

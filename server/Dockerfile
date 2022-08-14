@@ -1,13 +1,10 @@
 FROM python:3.9.13
 
-RUN apt-get update
-RUN apt-get install -y net-tools
-RUN apt-get install -y dnsutils
-RUN apt-get update
+ENV PYTHONUNBUFFERED=0
 
-ENV PYTHONUNBUFFERED 1
+RUN   apt-get update && apt-get -y install libpq-dev
 
-WORKDIR /home/server/
+WORKDIR /app
 
 COPY . .
 

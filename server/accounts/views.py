@@ -22,7 +22,7 @@ class UserView(APIView):
         if not data:
             user = get_object_or_404(User, username=username)
             data = UserSerializer(user).data
-            data['followers'] = user.followers.all().values('id')
+            data["followers"] = user.followers.all().values("id")
             cache.set(key, data, timeout=12 * 60 * 60)
         return Response(data)
 
@@ -36,22 +36,29 @@ class UserView(APIView):
                 user.followers.remove(request.user)
                 cache.delete(key)
                 cache.delete(redis_key_schema.user_profile(request.user.username))
-                return Response({
-                    'is_following': False,
-                    'followers_count': user.followers.count(),
-                    'followings_count': user.followings.count()
-                })
+                return Response(
+                    {
+                        "is_following": False,
+                        "followers_count": user.followers.count(),
+                        "followings_count": user.followings.count(),
+                    }
+                )
             else:
                 user.followers.add(request.user)
                 cache.delete(key)
                 cache.delete(redis_key_schema.user_profile(request.user.username))
-                return Response({
-                    'is_following': True,
-                    'followers_count': user.followers.count(),
-                    'followings_count': user.followings.count()
-                }, status=status.HTTP_201_CREATED)
-        else: return Response({'detail': 'UNAUTHORIZED.'}, 
-                                status=status.HTTP_401_UNAUTHORIZED)
+                return Response(
+                    {
+                        "is_following": True,
+                        "followers_count": user.followers.count(),
+                        "followings_count": user.followings.count(),
+                    },
+                    status=status.HTTP_201_CREATED,
+                )
+        else:
+            return Response(
+                {"detail": "UNAUTHORIZED."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
     def put(self, request, username: str):
         user = get_object_or_404(User, username=username)
@@ -61,19 +68,23 @@ class UserView(APIView):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'UNAUTHORIZED.'}, 
-                                status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(
+                {"detail": "UNAUTHORIZED."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
     def delete(self, request, username: str):
         user = get_object_or_404(User, username=username)
 
         if request.user == user:
             res = {
-                'id': user.id,
-                'username': user.username,
-                'detail': 'Successfully deleted.'
+                "id": user.id,
+                "username": user.username,
+                "detail": "Successfully deleted.",
             }
             user.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'UNAUTHORIZED.'}, 
-                                status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(
+                {"detail": "UNAUTHORIZED."}, status=status.HTTP_401_UNAUTHORIZED
+            )

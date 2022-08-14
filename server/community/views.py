@@ -17,8 +17,9 @@ from .serializers import *
 class ReviewListView(APIView):
     @permission_classes([AllowAny])
     def get(self, request):
-        cursor: int = int(request.GET.get('cursor'))
-        if cursor == 0: cursor = Review.objects.all()[ : 1][0].id + 1
+        cursor: int = int(request.GET.get("cursor"))
+        if cursor == 0:
+            cursor = Review.objects.all()[:1][0].id + 1
         key = redis_key_schema.reviews(cursor)
         data = cache.get(key)
 
@@ -32,8 +33,7 @@ class ReviewListView(APIView):
         serializer = CreateReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user)
-            return Response(serializer.data,
-                            status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ReviewView(APIView):
@@ -47,16 +47,15 @@ class ReviewView(APIView):
 
         if review_obj.like_users.filter(username=request.user.username).exists():
             review_obj.like_users.remove(request.user)
-            return Response({
-                    'is_like': False,
-                    'like_users_count': review_obj.like_users.count()
-                })
+            return Response(
+                {"is_like": False, "like_users_count": review_obj.like_users.count()}
+            )
         else:
             review_obj.like_users.add(request.user)
-            return Response({
-                    'is_like': True,
-                    'like_users_count': review_obj.like_users.count()
-                }, status=status.HTTP_201_CREATED)
+            return Response(
+                {"is_like": True, "like_users_count": review_obj.like_users.count()},
+                status=status.HTTP_201_CREATED,
+            )
 
     def put(self, request, review_pk: int):
         review_obj = get_object_or_404(Review, pk=review_pk)
@@ -66,35 +65,38 @@ class ReviewView(APIView):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'UNAUTHORIZED.'}, 
-                                status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(
+                {"detail": "UNAUTHORIZED."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
     def delete(self, request, review_pk: int):
         review_obj = get_object_or_404(Review, pk=review_pk)
 
         if request.user == review_obj.user:
             res = {
-                'id': review_obj.id,
-                'author': review_obj.user.username,
-                'detail': 'Successfully deleted.'
+                "id": review_obj.id,
+                "author": review_obj.user.username,
+                "detail": "Successfully deleted.",
             }
             review_obj.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'UNAUTHORIZED.'},
-                                status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(
+                {"detail": "UNAUTHORIZED."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
 
 class CommentView(APIView):
-    def post(self, request, review_pk:int):
+    def post(self, request, review_pk: int):
         review = get_object_or_404(Review, pk=review_pk)
 
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(user=request.user, review=review)
-            return Response(serializer.data,
-                            status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def put(self, request, review_pk:int, comment_pk: int):
+    def put(self, request, review_pk: int, comment_pk: int):
         review = get_object_or_404(Review, pk=review_pk)
         comment_obj = get_object_or_404(Comment, pk=comment_pk)
 
@@ -103,20 +105,24 @@ class CommentView(APIView):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
                 return Response(serializer.data)
-        else: return Response({'detail': 'UNAUTHORIZED.'}, 
-                                status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(
+                {"detail": "UNAUTHORIZED."}, status=status.HTTP_401_UNAUTHORIZED
+            )
 
-    def delete(self, request, review_pk:int, comment_pk: int):
+    def delete(self, request, review_pk: int, comment_pk: int):
         review = get_object_or_404(Review, pk=review_pk)
         comment_obj = get_object_or_404(Comment, pk=comment_pk)
 
         if request.user == comment_obj.user:
             res = {
-                'id': comment_obj.id,
-                'author': comment_obj.user.username,
-                'detail': 'Successfully deleted.'
+                "id": comment_obj.id,
+                "author": comment_obj.user.username,
+                "detail": "Successfully deleted.",
             }
             comment_obj.delete()
             return Response(res, status=status.HTTP_204_NO_CONTENT)
-        else: return Response({'detail': 'UNAUTHORIZED.'}, 
-                                status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return Response(
+                {"detail": "UNAUTHORIZED."}, status=status.HTTP_401_UNAUTHORIZED
+            )

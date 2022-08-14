@@ -26,23 +26,30 @@ class MovieListView(APIView):
             data = cache.get(key)
 
             if not data:
-                movies = list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in request.user.survey]))
+                movies = list(
+                    Movie.objects.filter(
+                        _keywords__overlap=[kwrd for kwrd in request.user.survey]
+                    )
+                )
                 data = MovieSerializer(movies, many=True).data
                 cache.set(key, data, timeout=24 * 60 * 60)
             return Response(random.sample(data, 10))
 
         else:
-            return Response({'detail': 'This user has no survey.'}, 
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"detail": "This user has no survey."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
     def put(self, request):
-        validation = {'survey': []}
-        for kwrd in request.data['survey']:
-            if Keyword.objects.filter(keyword=kwrd).exists(): validation['survey'].append(kwrd)
+        validation = {"survey": []}
+        for kwrd in request.data["survey"]:
+            if Keyword.objects.filter(keyword=kwrd).exists():
+                validation["survey"].append(kwrd)
 
         serializer = SurveySerializer(instance=request.user, data=validation)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(update_fields=['survey'])
+            serializer.save(update_fields=["survey"])
             cache.delete(redis_key_schema.movies_for_user(request.user))
             return Response(serializer.data)
 
@@ -65,29 +72,48 @@ class MovieView(APIView):
         serializer = RatingSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             if Rating.objects.filter(user=request.user, movie=movie_obj).exists():
-                
+
                 # 영화 평점 복구
-                numerator = (movie_obj.vote_average * movie_obj.vote_count) - Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(Sum('rating'))['rating__sum']
-                denominator = movie_obj.vote_count - Rating.objects.filter(user=request.user, movie=movie_obj).count()
-                
-                movie_obj.vote_average = (numerator / denominator) if denominator != 0 else 0
-                movie_obj.vote_count -= Rating.objects.filter(user=request.user, movie=movie_obj).count()
+                numerator = (
+                    movie_obj.vote_average * movie_obj.vote_count
+                ) - Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(
+                    Sum("rating")
+                )[
+                    "rating__sum"
+                ]
+                denominator = (
+                    movie_obj.vote_count
+                    - Rating.objects.filter(user=request.user, movie=movie_obj).count()
+                )
+
+                movie_obj.vote_average = (
+                    (numerator / denominator) if denominator != 0 else 0
+                )
+                movie_obj.vote_count -= Rating.objects.filter(
+                    user=request.user, movie=movie_obj
+                ).count()
 
                 Rating.objects.filter(user=request.user, movie=movie_obj).delete()
             serializer.save(user=request.user, movie=movie_obj)
 
             # 영화 평점 재계산
-            numerator = (movie_obj.vote_average * movie_obj.vote_count) + Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(Sum('rating'))['rating__sum']
+            numerator = (
+                movie_obj.vote_average * movie_obj.vote_count
+            ) + Rating.objects.filter(user=request.user, movie=movie_obj).aggregate(
+                Sum("rating")
+            )[
+                "rating__sum"
+            ]
             movie_obj.vote_count += 1
 
             new_rating = numerator / movie_obj.vote_count
             movie_obj.vote_average = round(new_rating, 1)
-            movie_obj.save(update_fields=['vote_count', 'vote_average'])
+            movie_obj.save(update_fields=["vote_count", "vote_average"])
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_rating(request, movie_pk: int, username: str):
     movie = get_object_or_404(Movie, pk=movie_pk)
     user = get_object_or_404(get_user_model(), username=username)
@@ -96,38 +122,50 @@ def get_rating(request, movie_pk: int, username: str):
         rating = get_object_or_404(Rating, movie=movie, user=user)
         serializer = RatingSerializer(rating)
         return Response(serializer.data)
-    else: return Response({
-        'user': user.id,
-        'movie': movie.id,
-        'rating': 0
-    })
+    else:
+        return Response({"user": user.id, "movie": movie.id, "rating": 0})
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_staff(request):
-    staffs = random.sample(list(Staff.objects.filter(role='Actor')), 2)
+    staffs = random.sample(list(Staff.objects.filter(role="Actor")), 2)
     serializer = StaffSerializer(staffs, many=True)
     return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_genre(request, genre_group: str):
     movie = random.choice(Movie.objects.filter(genre_group=genre_group))
     serializer = MovieListSerializer(movie)
     return Response(serializer.data)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_movies_with_keywords(request, pick_num: int):
     key = redis_key_schema.movies()
     data = cache.get(key)
 
     if not data:
         kwrds = [
-            'anime', 'superhero', 'military', 'musical', 'school',
-            'romance', 'army', 'space', 'future', 'mafia',
-            'action', 'jazz', 'friendship', 'villain', 'elves',
-            'dwarf', 'steampunk', 'time travel', 'based on novel or book',
+            "anime",
+            "superhero",
+            "military",
+            "musical",
+            "school",
+            "romance",
+            "army",
+            "space",
+            "future",
+            "mafia",
+            "action",
+            "jazz",
+            "friendship",
+            "villain",
+            "elves",
+            "dwarf",
+            "steampunk",
+            "time travel",
+            "based on novel or book",
         ]
         movies = list(Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in kwrds]))
         data = MovieListSerializer(movies, many=True).data

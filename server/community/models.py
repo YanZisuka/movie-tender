@@ -19,15 +19,14 @@ class ReviewQuerySet(models.QuerySet):
         return self.filter(id__in=index_only_scan)
 
     def cursor_paginated(self, cursor: int, page_size: int = 5):
-        return self.filter(id__lt=cursor)[ : page_size]
+        return self.filter(id__lt=cursor)[:page_size]
 
 
 class Review(models.Model):
     class Meta:
-        ordering = ['-id']
-        indexes = [
-            models.Index(fields=['-id'], include=[], name='idx_review_iddesc')
-        ]
+        ordering = ["-id"]
+        indexes = [models.Index(fields=["-id"], include=[], name="idx_review_iddesc")]
+
     """ == Schema Information
     user :`User`
     movie :`Movie`
@@ -39,7 +38,9 @@ class Review(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_reviews')
+    like_users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, related_name="like_reviews"
+    )
 
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -52,11 +53,11 @@ class Review(models.Model):
             cache.delete(key)
 
     def save(self, *args, **kwargs):
-        self.flush_cache('reviews:*')
+        self.flush_cache("reviews:*")
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        self.flush_cache('reviews:*')
+        self.flush_cache("reviews:*")
         super().delete(*args, **kwargs)
 
     @property
@@ -68,7 +69,7 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
-    """ == Schema Information
+    """== Schema Information
     user :`User`
     review :`Review`
     content :`str`
@@ -88,11 +89,11 @@ class Comment(models.Model):
             cache.delete(key)
 
     def save(self, *args, **kwargs):
-        self.flush_cache('reviews:*')
+        self.flush_cache("reviews:*")
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        self.flush_cache('reviews:*')
+        self.flush_cache("reviews:*")
         super().delete(*args, **kwargs)
 
     @property

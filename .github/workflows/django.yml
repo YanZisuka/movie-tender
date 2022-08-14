@@ -45,7 +45,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Create secrets
-        run: echo -e "${{ secrets.DOTENV }}" > server/.env
+        run: echo -e ${{ secrets.DOTENV }} > server/.env
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v2

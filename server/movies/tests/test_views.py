@@ -47,7 +47,7 @@ class MovieViewSetTestCase(TestCase):
         self.user.survey = ["anime", "superhero"] + [a for a in ascii_lowercase]
         self.user.save(update_fields=["survey"])
 
-        res = self.client.get(reverse("movies:index"), **self.header)
+        res = self.client.get(reverse("movies:movies"), **self.header)
         self.assertEqual(res.status_code, 200)
 
     def test_서베이를_설정할수있다(self):
@@ -119,4 +119,4 @@ class MovieViewSetTestCase(TestCase):
         )
 
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(len(res.data), 2)
+        self.assertEqual(len(res.json()), 2)

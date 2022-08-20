@@ -3,6 +3,8 @@ import aiohttp
 import pandas as pd
 import environ
 
+from django.db import transaction
+
 from .models import Movie, Keyword, Staff, Credit
 from .crawlers import MovieCrawler
 
@@ -36,6 +38,7 @@ class MovieFactory:
         def __init__(self):
             self.headers = {"User-Agent": "Mozilla/5.0"}
             self.params = {"api_key": TMDB_API_KEY, "language": LANGUAGE}
+            self._crawler = None
 
         @property
         def crawler(self):
@@ -46,7 +49,9 @@ class MovieFactory:
             loop = asyncio.get_event_loop()
             movie_details = loop.run_until_complete(self._fetch_movies(fetch_range))
             self._commit(movie_details)
+            StaffFactory().api.seed(self.movie_list)
 
+        @transaction.atomic()
         def _commit(self, movie_details):
             movies = []
             for movie in movie_details:
@@ -67,6 +72,8 @@ class MovieFactory:
                     continue
                 m.runtime = movie.get("runtime")
 
+                if not movie.get("video_path"):
+                    continue
                 m.video_path = movie.get("video_path")
 
                 m._genres = []
@@ -93,7 +100,10 @@ class MovieFactory:
                 if providers:
                     p = providers[0]
                     res = self.crawler.scrap(m.tmdb_id, p)
-                    m._providers = [p + "::" + res] + [p for p in providers[1:]]
+                    if res:
+                        m._providers = [p + "::" + res] + [p for p in providers[1:]]
+                    else:
+                        m._providers = providers
 
                 if Movie.objects.filter(tmdb_id=m.tmdb_id).exists():
                     continue
@@ -102,11 +112,11 @@ class MovieFactory:
 
         async def _fetch_movies(self, fetch_range: int):
             res = []
-            movie_list = await self._fetch_all_top_rated(fetch_range)
-            movie_details = await self._fetch_all_details(movie_list)
-            movie_videos = await self._fetch_all_videos(movie_list)
-            movie_kwrds = await self._fetch_all_kwrds(movie_list)
-            movie_providers = await self._fetch_all_providers(movie_list)
+            self.movie_list = await self._fetch_all_top_rated(fetch_range)
+            movie_details = await self._fetch_all_details(self.movie_list)
+            movie_videos = await self._fetch_all_videos(self.movie_list)
+            movie_kwrds = await self._fetch_all_kwrds(self.movie_list)
+            movie_providers = await self._fetch_all_providers(self.movie_list)
 
             for i, detail in enumerate(movie_details):
                 videos, kwrds, providers = (
@@ -300,6 +310,121 @@ class MovieFactory:
                 movie.save(update_fields=["video_path"])
 
 
+class StaffFactory:
+    def __init__(self):
+        self._csv = None
+        self._api = None
+
+    @property
+    def api(self):
+        self._api = self._api or self.Api()
+        return self._api
+
+    class Api:
+        def __init__(self):
+            self.headers = {"User-Agent": "Mozilla/5.0"}
+            self.params = {"api_key": TMDB_API_KEY, "language": LANGUAGE}
+
+        def seed(self, movie_list):
+            loop = asyncio.get_event_loop()
+            movie_credits = loop.run_until_complete(self._fetch_all_credits(movie_list))
+            self._commit(movie_credits)
+
+        @transaction.atomic()
+        def _commit(self, movie_credits):
+            staffs = []
+            credits = []
+            for credit in movie_credits:
+                movie_tmdb_id = credit.get("id")
+                if not Movie.objects.filter(tmdb_id=movie_tmdb_id).exists():
+                    continue
+
+                for i, cast in enumerate(credit.get("cast")):
+                    if i > 3:
+                        break
+
+                    s = Staff()
+                    if not cast.get("name"):
+                        continue
+                    s.name = cast.get("name")
+                    s.tmdb_id = cast.get("id")
+                    s.profile_path = (
+                        TMDB_IMG_BASE_URL + cast.get("profile_path")
+                        if cast.get("profile_path")
+                        else ""
+                    )
+                    s.role = (
+                        "Actor"
+                        if cast.get("known_for_department") == "Acting"
+                        else "Producer"
+                    )
+
+                    if Staff.objects.filter(tmdb_id=s.tmdb_id).exists():
+                        continue
+                    staffs.append(s)
+                    m = Movie.objects.filter(tmdb_id=movie_tmdb_id).first()
+                    if Credit.objects.filter(movie=m, staff=s).exists():
+                        continue
+                    c = Credit()
+                    c.movie = m
+                    c.staff = s
+                    c.character = cast.get("character")
+                    credits.append(c)
+            Staff.objects.bulk_create(staffs)
+            Credit.objects.bulk_create(credits)
+
+        async def _fetch_credits(self, session: aiohttp.ClientSession, movie_id: int):
+            async with session.get(
+                TMDB_API_BASE_URL + MOVIE + f"/{movie_id}" + "/credits",
+                headers=self.headers,
+                params=self.params,
+            ) as response:
+                return await response.json()
+
+        async def _fetch_all_credits(self, movie_list):
+            async with aiohttp.ClientSession() as session:
+                request_list = (
+                    self._fetch_credits(session, movie.get("id"))
+                    for movie in movie_list
+                )
+                return await asyncio.gather(*request_list)
+
+    @property
+    def csv(self):
+        self._csv = self._csv or self.Csv()
+        return self._csv
+
+    class Csv:
+        def __init__(self):
+            self.data = pd.read_csv("../database/staff.csv")
+
+        def seed(self):
+            for i in range(self.data.shape[0]):
+                row = self.data.iloc[i, :]
+                self._commit(row)
+
+        # protected
+        def _commit(self, row):
+            staff = Staff()
+            if row[1] == "Unknown":
+                return
+            staff.name = row[1]
+            staff.tmdb_id = row[2]
+            if row[3][-7:] == "Unknown":
+                return
+            staff.profile_path = row[3]
+            staff.role = row[5]
+
+            if not Movie.objects.filter(tmdb_id=row[6]).exists():
+                return
+            if not Staff.objects.filter(tmdb_id=staff.tmdb_id).exists():
+                staff.save()
+            movie = Movie.objects.get(tmdb_id=row[6])
+            staff = Staff.objects.get(tmdb_id=row[2])
+            if not Credit.objects.filter(movie=movie, staff=staff).exists():
+                Credit.objects.create(movie=movie, staff=staff, character=row[4])
+
+
 class KeywordFactory:
     def __init__(self):
         self._csv = None
@@ -344,57 +469,3 @@ class KeywordFactory:
             if Keyword.objects.filter(tmdb_id=keyword.tmdb_id).exists():
                 return
             keyword.save()
-
-
-class StaffFactory:
-    def __init__(self):
-        self._csv = None
-        self._api = None
-
-    @property
-    def api(self):
-        self._api = self._api or self.Api()
-        return self._api
-
-    class Api:
-        def __init__(self):
-            self.headers = {"User-Agent": "Mozilla/5.0"}
-            self.params = {"api_key": TMDB_API_KEY, "language": LANGUAGE}
-
-        def seed(self):
-            pass
-
-    @property
-    def csv(self):
-        self._csv = self._csv or self.Csv()
-        return self._csv
-
-    class Csv:
-        def __init__(self):
-            self.data = pd.read_csv("../database/staff.csv")
-
-        def seed(self):
-            for i in range(self.data.shape[0]):
-                row = self.data.iloc[i, :]
-                self._commit(row)
-
-        # protected
-        def _commit(self, row):
-            staff = Staff()
-            if row[1] == "Unknown":
-                return
-            staff.name = row[1]
-            staff.tmdb_id = row[2]
-            if row[3][-7:] == "Unknown":
-                return
-            staff.profile_path = row[3]
-            staff.role = row[5]
-
-            if not Movie.objects.filter(tmdb_id=row[6]).exists():
-                return
-            if not Staff.objects.filter(tmdb_id=staff.tmdb_id).exists():
-                staff.save()
-            movie = Movie.objects.get(tmdb_id=row[6])
-            staff = Staff.objects.get(tmdb_id=row[2])
-            if not Credit.objects.filter(movie=movie, staff=staff).exists:
-                Credit.objects.create(movie=movie, staff=staff, character=row[4])

@@ -59,7 +59,8 @@ class Movie(models.Model):
 
     class Meta:
         indexes = [
-            GinIndex(fields=["_keywords"]),
+            models.Index(fields=["tmdb_id"], name="idx_movie_tmdb_id"),
+            GinIndex(fields=["_keywords"], name="idx_keywords"),
         ]
 
     @property
@@ -174,6 +175,9 @@ class Staff(models.Model):
     profile_path = models.CharField(max_length=100)
     role = models.CharField(max_length=20)
 
+    class Meta:
+        indexes = [models.Index(fields=["tmdb_id"], name="idx_staff_tmdb_id")]
+
     def __str__(self):
         return f"Staff {self.pk}: {self.name}"
 
@@ -188,7 +192,7 @@ class Credit(models.Model):
     staff = models.ForeignKey(Staff, on_delete=models.CASCADE)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
-    character = models.CharField(max_length=100)
+    character = models.CharField(max_length=300)
 
     def __str__(self):
         return f"{self.staff}'s character is {self.character} in {self.movie}"

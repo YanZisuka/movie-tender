@@ -1,11 +1,12 @@
 import asyncio
 import aiohttp
-import requests
 import pandas as pd
 import environ
 
 from .models import Movie, Keyword, Staff, Credit
 from .crawlers import MovieCrawler
+
+VOTE_COUNT_LOWER_BOUND = 200
 
 # @Params
 env = environ.Env()
@@ -15,6 +16,7 @@ LANGUAGE = "ko-KR"
 
 # @URL
 TMDB_IMG_BASE_URL = "https://www.themoviedb.org/t/p/original"
+YOUTUBE_BASE_URL = "https://www.youtube.com/watch?v="
 TMDB_API_BASE_URL = "https://api.themoviedb.org/3"
 MOVIE = "/movie"
 TV = "/tv"
@@ -50,40 +52,48 @@ class MovieFactory:
             for movie in movie_details:
                 m = Movie()
                 m.title = movie.get("title")
+                if not movie.get("overview"):
+                    continue
                 m.overview = movie.get("overview")
                 m.tmdb_id = movie.get("id")
+                if not movie.get("poster_path"):
+                    continue
                 m.poster_path = TMDB_IMG_BASE_URL + movie.get("poster_path")
-                m.adult = movie.get("adult")
+                m.adult = movie.get("adult") if movie.get("adult") else False
                 if not movie.get("release_date"):
                     continue
                 m.release_date = movie.get("release_date")
+                if not movie.get("runtime"):
+                    continue
                 m.runtime = movie.get("runtime")
 
-                m.video_path = ""  #
+                m.video_path = movie.get("video_path")
 
                 m._genres = []
                 for genre in movie.get("genres"):
                     if genre.get("name") == "공포":
                         continue
-                    m._genres.append(genre)
+                    m._genres.append(genre.get("name"))
                 m.genre_group = ""  #
 
-                if movie.get("vote_count") < 200:
+                if movie.get("vote_count") < VOTE_COUNT_LOWER_BOUND:
                     continue
                 m.vote_count = movie.get("vote_count")
+                if not movie.get("vote_average"):
+                    continue
                 m.vote_average = movie.get("vote_average") * 0.5
                 if not movie.get("production_countries"):
                     continue
                 m.country = movie.get("production_countries")[0].get("name")
 
-                keywords = []  #
+                keywords = movie.get("keywords")
                 m._keywords = keywords
 
-                providers = []  #
+                providers = movie.get("providers")
                 if providers:
                     p = providers[0]
                     res = self.crawler.scrap(m.tmdb_id, p)
-                    m._providers = [p + "::" + res]
+                    m._providers = [p + "::" + res] + [p for p in providers[1:]]
 
                 if Movie.objects.filter(tmdb_id=m.tmdb_id).exists():
                     continue
@@ -91,18 +101,41 @@ class MovieFactory:
             Movie.objects.bulk_create(movies)
 
         async def _fetch_movies(self, fetch_range: int):
-            movie_list = await self._fetch_all_list(fetch_range)
-            return await self._fetch_all_detail(movie_list)
+            res = []
+            movie_list = await self._fetch_all_top_rated(fetch_range)
+            movie_details = await self._fetch_all_details(movie_list)
+            movie_videos = await self._fetch_all_videos(movie_list)
+            movie_kwrds = await self._fetch_all_kwrds(movie_list)
+            movie_providers = await self._fetch_all_providers(movie_list)
 
-        async def _fetch_detail(self, session: aiohttp.ClientSession, movie_id: int):
-            async with session.get(
-                TMDB_API_BASE_URL + MOVIE + f"/{movie_id}",
-                headers=self.headers,
-                params=self.params,
-            ) as response:
-                return await response.json()
+            for i, detail in enumerate(movie_details):
+                videos, kwrds, providers = (
+                    movie_videos[i],
+                    movie_kwrds[i],
+                    movie_providers[i],
+                )
+                detail["video_path"] = ""
+                if (
+                    videos
+                    and videos[0].get("site") == "YouTube"
+                    and videos[0].get("key")
+                ):
+                    detail["video_path"] = YOUTUBE_BASE_URL + videos[0].get("key")
 
-        async def _fetch_list(self, session: aiohttp.ClientSession, page: int = 1):
+                detail["keywords"] = []
+                if kwrds:
+                    for k in kwrds:
+                        detail["keywords"].append(k.get("name"))
+
+                detail["providers"] = []
+                if providers.get("KR") and providers.get("KR").get("flatrate"):
+                    for p in providers.get("KR").get("flatrate"):
+                        detail["providers"].append(p.get("provider_name"))
+
+                res.append(detail)
+            return res
+
+        async def _fetch_top_rated(self, session: aiohttp.ClientSession, page: int = 1):
             async with session.get(
                 TMDB_API_BASE_URL + MOVIE + "/top_rated",
                 headers=self.headers,
@@ -111,17 +144,45 @@ class MovieFactory:
                 res = await response.json()
                 return res.get("results")
 
-        async def _fetch_all_detail(self, movie_list):
-            async with aiohttp.ClientSession() as session:
-                request_list = (
-                    self._fetch_detail(session, movie.get("id")) for movie in movie_list
-                )
-                return await asyncio.gather(*request_list)
+        async def _fetch_details(self, session: aiohttp.ClientSession, movie_id: int):
+            async with session.get(
+                TMDB_API_BASE_URL + MOVIE + f"/{movie_id}",
+                headers=self.headers,
+                params=self.params,
+            ) as response:
+                return await response.json()
 
-        async def _fetch_all_list(self, fetch_range: int):
+        async def _fetch_videos(self, session: aiohttp.ClientSession, movie_id: int):
+            async with session.get(
+                TMDB_API_BASE_URL + MOVIE + f"/{movie_id}" + "/videos",
+                headers=self.headers,
+                params=self.params,
+            ) as response:
+                res = await response.json()
+                return res.get("results")
+
+        async def _fetch_kwrds(self, session: aiohttp.ClientSession, movie_id: int):
+            async with session.get(
+                TMDB_API_BASE_URL + MOVIE + f"/{movie_id}" + "/keywords",
+                headers=self.headers,
+                params=self.params,
+            ) as response:
+                res = await response.json()
+                return res.get("keywords")
+
+        async def _fetch_providers(self, session: aiohttp.ClientSession, movie_id: int):
+            async with session.get(
+                TMDB_API_BASE_URL + MOVIE + f"/{movie_id}" + "/watch/providers",
+                headers=self.headers,
+                params=self.params,
+            ) as response:
+                res = await response.json()
+                return res.get("results")
+
+        async def _fetch_all_top_rated(self, fetch_range: int):
             async with aiohttp.ClientSession() as session:
                 request_list = (
-                    self._fetch_list(session, page)
+                    self._fetch_top_rated(session, page)
                     for page in range(1, fetch_range + 1)
                 )
                 res = []
@@ -129,6 +190,36 @@ class MovieFactory:
                     for movie in page:
                         res.append(movie)
                 return res
+
+        async def _fetch_all_details(self, movie_list):
+            async with aiohttp.ClientSession() as session:
+                request_list = (
+                    self._fetch_details(session, movie.get("id"))
+                    for movie in movie_list
+                )
+                return await asyncio.gather(*request_list)
+
+        async def _fetch_all_videos(self, movie_list):
+            async with aiohttp.ClientSession() as session:
+                request_list = (
+                    self._fetch_videos(session, movie.get("id")) for movie in movie_list
+                )
+                return await asyncio.gather(*request_list)
+
+        async def _fetch_all_kwrds(self, movie_list):
+            async with aiohttp.ClientSession() as session:
+                request_list = (
+                    self._fetch_kwrds(session, movie.get("id")) for movie in movie_list
+                )
+                return await asyncio.gather(*request_list)
+
+        async def _fetch_all_providers(self, movie_list):
+            async with aiohttp.ClientSession() as session:
+                request_list = (
+                    self._fetch_providers(session, movie.get("id"))
+                    for movie in movie_list
+                )
+                return await asyncio.gather(*request_list)
 
     @property
     def csv(self):
@@ -212,6 +303,20 @@ class MovieFactory:
 class KeywordFactory:
     def __init__(self):
         self._csv = None
+        self._api = None
+
+    @property
+    def api(self):
+        self._api = self._api or self.Api()
+        return self._api
+
+    class Api:
+        def __init__(self):
+            self.headers = {"User-Agent": "Mozilla/5.0"}
+            self.params = {"api_key": TMDB_API_KEY, "language": LANGUAGE}
+
+        def seed(self):
+            pass
 
     @property
     def csv(self):
@@ -244,6 +349,20 @@ class KeywordFactory:
 class StaffFactory:
     def __init__(self):
         self._csv = None
+        self._api = None
+
+    @property
+    def api(self):
+        self._api = self._api or self.Api()
+        return self._api
+
+    class Api:
+        def __init__(self):
+            self.headers = {"User-Agent": "Mozilla/5.0"}
+            self.params = {"api_key": TMDB_API_KEY, "language": LANGUAGE}
+
+        def seed(self):
+            pass
 
     @property
     def csv(self):

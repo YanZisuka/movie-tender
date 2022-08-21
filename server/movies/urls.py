@@ -1,14 +1,28 @@
 from django.urls import path
-from . import views
+from movies import views
 
 
-app_name = 'movies'
+app_name = "movies"
 
 urlpatterns = [
-    path('', views.MovieListView.as_view(), name='index'),
-    path('<int:movie_pk>/', views.MovieView.as_view(), name='movie'),
-    path('<int:movie_pk>/accounts/<str:username>/', views.get_rating, name='get_rating'),
-    path('staffs/', views.get_staff, name='get_staff'),
-    path('genres/<str:genre_group>/', views.get_genre, name='get_genre'),
-    path('keywords/<int:pick_num>/', views.get_movies_with_keywords, name='get_movies_with_keywords'),
+    path(
+        "",
+        views.MovieViewSet.as_view({"get": "list", "put": "set_survey"}),
+        name="movies",
+    ),
+    path(
+        "<int:movie_pk>/",
+        views.MovieViewSet.as_view({"get": "retrieve", "post": "rate_movie"}),
+        name="movie",
+    ),
+    path(
+        "<int:movie_pk>/accounts/<str:username>/",
+        views.MovieViewSet.as_view({"get": "get_rating"}),
+        name="get_rating",
+    ),
+    path(
+        "keywords/<int:pick_num>/",
+        views.MovieViewSet.as_view({"get": "get_movies_with_keywords"}),
+        name="get_movies_with_keywords",
+    ),
 ]

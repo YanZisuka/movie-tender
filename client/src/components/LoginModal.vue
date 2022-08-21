@@ -7,14 +7,14 @@
       <h1 class="">로그인</h1>
 
       <form @submit.prevent="login(credentials); switchShowAccountModal();" class="d-flex flex-column">
-        <div class="my-4">
+        <div class="mt-4 mb-3">
           <div>
             <label for="username" class="">아이디</label>
           </div>
           <input v-model="credentials.username" type="text" id="username" placeholder="ID" required>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-3">
           <div>
             <label for="password" class="">비밀번호</label>
           </div>

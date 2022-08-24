@@ -33,9 +33,7 @@ services:
 
   django:
     container_name: django_service
-    build:
-      context: .
-      dockerfile: ./Dockerfile
+    image: $BACK_IMAGE_NAME
     environment:
       - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_USER=$POSTGRES_USER

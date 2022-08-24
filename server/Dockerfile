@@ -14,7 +14,7 @@ COPY . .
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-CMD ["gunicorn", "--bind", "0:8000", "server.wsgi:application"]
+# CMD ["gunicorn", "--bind", "0:8000", "server.wsgi:application"]
 EXPOSE 8000
 
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /

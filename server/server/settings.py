@@ -34,7 +34,11 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 DEBUG = os.getenv("DJANGO_DEBUG", "True")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "43.200.122.153",
+]
 
 
 # Application definition

@@ -78,3 +78,18 @@ jobs:
           docker build -t "${{ secrets.BACK_IMAGE_NAME }}" ./server/
           docker push "${{ secrets.BACK_IMAGE_NAME }}"
           docker logout
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Run scripts
+        run: |
+          mkdir -p ~/.ssh
+          eval $(ssh-agent -s)
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          chmod 600 "${{ secrets.SSH_KEY }}"
+          ssh-add "${{ secrets.SSH_KEY }}"
+          ssh ubuntu@"${{ secrets.DEPLOY_SERVER_IP }}" bash deploy.sh

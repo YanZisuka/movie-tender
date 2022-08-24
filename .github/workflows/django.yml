@@ -90,6 +90,7 @@ jobs:
           eval $(ssh-agent -s)
           echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
-          chmod 600 "${{ secrets.SSH_KEY }}"
-          ssh-add "${{ secrets.SSH_KEY }}"
+          echo "${{ secrets.SSH_KEY }}" > ./SSH_KEY
+          chmod 600 ./SSH_KEY
+          ssh-add ./SSH_KEY
           ssh ubuntu@"${{ secrets.DEPLOY_SERVER_IP }}" bash deploy.sh

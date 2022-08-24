@@ -74,7 +74,7 @@ jobs:
 
       - name: Dockerize
         run: |
-          echo ${{ secrets.DOCKER_HUB_PW }} | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
-          docker build -t ${{ secrets.BACK_IMAGE_NAME }} ./server/
-          docker push ${{ secrets.BACK_IMAGE_NAME }}
+          echo "${{ secrets.DOCKER_HUB_PW }}" | docker login -u "${{ secrets.DOCKER_HUB_USER }}" --password-stdin
+          docker build -t "${{ secrets.BACK_IMAGE_NAME }}" ./server/
+          docker push "${{ secrets.BACK_IMAGE_NAME }}"
           docker logout

@@ -73,7 +73,6 @@ jobs:
           codecov
 
       - name: Dockerize
-        needs: Run tests
         run: |
           echo ${{ secrets.DOCKER_HUB_PW }} | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
           docker build -t ${{ secrets.BACK_IMAGE_NAME }} ./server/

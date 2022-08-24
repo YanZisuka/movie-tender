@@ -1,13 +1,18 @@
 name: Django CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - add-ci/cd
+  pull_request:
+    branches:
+      - master
 
 jobs:
   # Run tests.
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     services:
       redis:
@@ -35,34 +40,42 @@ jobs:
           --health-retries 5
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Cache dependency
-      uses: actions/cache@v2
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+      - name: Cache dependency
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
-    - name: Create secrets
-      run: echo "${{ secrets.DOTENV }}" > server/.env
+      - name: Create secrets
+        run: echo "${{ secrets.DOTENV }}" > server/.env
 
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.9
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
 
-    - name: Install dependencies
-      run: |
-        cd server/
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install coverage codecov
+      - name: Install dependencies
+        run: |
+          cd server/
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install coverage codecov
 
-    - name: Run tests
-      run: |
-        cd server/
-        python manage.py migrate
-        coverage run ./manage.py test
-        codecov
+      - name: Run tests
+        run: |
+          cd server/
+          python manage.py migrate
+          coverage run ./manage.py test
+          codecov
+
+      - name: Dockerize
+        needs: Run tests
+        run: |
+          echo ${{ secrets.DOCKER_HUB_PW }} | docker login -u ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+          docker build -t ${{ secrets.BACK_IMAGE_NAME }} ./server/
+          docker push ${{ secrets.BACK_IMAGE_NAME }}
+          docker logout

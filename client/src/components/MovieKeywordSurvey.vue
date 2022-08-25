@@ -15,11 +15,11 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import MovieCard from '@/components/MovieCard.vue'
+import { mapGetters, mapActions } from "vuex";
+import MovieCard from "@/components/MovieCard.vue";
 
 export default {
-  name: 'MovieKeywordSurvey',
+  name: "MovieKeywordSurvey",
 
   components: {
     MovieCard,
@@ -30,44 +30,44 @@ export default {
       progressCount: 0,
       selectionResult: [],
       resultToSend: [],
-    }
+    };
   },
 
   computed: {
-    ...mapGetters(['profile', 'movieCards',]),
+    ...mapGetters(["profile", "movieCards"]),
     leftMovie() {
-      return this.movieCards[this.progressCount]
+      return this.movieCards[this.progressCount];
     },
     rightMovie() {
-      return this.movieCards[this.progressCount+1]
+      return this.movieCards[this.progressCount + 1];
     },
   },
 
   methods: {
-    ...mapActions(['setSurvey',]),
+    ...mapActions(["setSurvey"]),
     onClick(movie) {
-      this.selectionResult.push(movie)
+      this.selectionResult.push(movie);
       if (this.progressCount !== 8) {
-        this.progressCount += 2
+        this.progressCount += 2;
       } else {
-        this.selectionResult.forEach(movie => {
-          movie._keywords.forEach(kwrd => {
-            this.resultToSend.push(kwrd)
-          })
-        })
-        this.setSurvey(this.resultToSend)
+        this.selectionResult.forEach((movie) => {
+          movie._keywords.forEach((kwrd) => {
+            this.resultToSend.push(kwrd);
+          });
+        });
+        this.setSurvey(this.resultToSend);
 
-        this.progressCount = 0
-        this.selectionResult = []
-        this.resultToSend = []
-        this.$router.push({ name: 'movies' })
+        this.progressCount = 0;
+        this.selectionResult = [];
+        this.resultToSend = [];
+        this.$router.push({ name: "movies" });
       }
     },
   },
-}
+};
 </script>
 
-<style>
+<style scoped lang="scss">
 .selection-card:hover {
   cursor: pointer;
   background: #333;
@@ -75,9 +75,9 @@ export default {
 
 .versus-text {
   position: absolute;
-  color: var(--white);
+  color: $whiteColor;
   width: fit-content;
-  top: 50%;
+  top: calc(50% + 5vh);
   left: 50%;
   font-size: 4rem;
   font-weight: 700;

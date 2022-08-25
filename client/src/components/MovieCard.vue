@@ -1,24 +1,37 @@
 <template>
   <div class="d-flex flex-column align-items-center card-frame">
-    <img class="card-img" :src="movieCard.poster_path" :alt="`${movieCard.title}`">
-    <img class="card-shadow mt-5" :src="movieCard.poster_path" alt="card-shadow">
+    <img
+      class="card-img"
+      :src="movieCard.poster_path"
+      :alt="`${movieCard.title}`"
+    />
+    <img
+      class="card-shadow mt-5"
+      :src="movieCard.poster_path"
+      alt="card-shadow"
+    />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'MovieCard',
+  name: "MovieCard",
 
   props: {
     movieCard: Object,
   },
-}
+};
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .card-frame {
   background: linear-gradient(#141414 50%, #2d2d2d);
-  border-radius: 32px;
+  border-radius: 4px;
+
+  @include lg {
+    border-radius: 8px;
+  }
+
   width: 80vh;
   height: 80vh;
   overflow: hidden;

@@ -1,0 +1,62 @@
+$mainBadgeColor: #646cff;
+$darkBadgeColor: #535bf2;
+$activeColor: #ff61a2;
+$inactiveColor: #ffb2b2;
+$warningColor: #db2828;
+$contrastColor: #ffc759;
+$whiteColor: #fff;
+$offwhiteColor: #fbfbfb;
+$blackColor: #000;
+$darkColor: #171717;
+
+$adaptiveGrey50: #f9fafb;
+$adaptiveGrey100: #f2f4f6;
+$adaptiveGrey200: #e5e8eb;
+$adaptiveGrey300: #d1d6db;
+$adaptiveGrey400: #b0b8c1;
+$adaptiveGrey500: #8b95a1;
+$adaptiveGrey600: #6b7684;
+$adaptiveGrey700: #4e5968;
+$adaptiveGrey800: #333d4b;
+$adaptiveGrey900: #191f28;
+$adaptiveOpacity50: rgba(0, 23, 51, 0.02);
+$adaptiveOpacity100: rgba(2, 32, 71, 0.05);
+$adaptiveOpacity200: rgba(0, 27, 55, 0.1);
+$adaptiveOpacity300: rgba(0, 29, 58, 0.18);
+$adaptiveOpacity400: rgba(0, 29, 54, 0.31);
+$adaptiveOpacity500: rgba(3, 24, 50, 0.46);
+$adaptiveOpacity600: rgba(0, 19, 43, 0.58);
+$adaptiveOpacity700: rgba(3, 18, 40, 0.7);
+$adaptiveOpacity800: rgba(0, 12, 30, 0.8);
+$adaptiveOpacity900: rgba(2, 9, 19, 0.91);
+
+$sm: 576px;
+$md: 768px;
+$lg: 992px;
+$xl: 1200px;
+
+@mixin xs {
+  @media (min-width: $sm) {
+    @content;
+  }
+}
+@mixin sm {
+  @media (min-width: $md) {
+    @content;
+  }
+}
+@mixin md {
+  @media (min-width: $lg) {
+    @content;
+  }
+}
+@mixin lg {
+  @media (min-width: $xl) {
+    @content;
+  }
+}
+@mixin xl {
+  @media (min-width: ($xl + 1)) {
+    @content;
+  }
+}

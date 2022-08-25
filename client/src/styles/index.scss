@@ -1,0 +1,16 @@
+p,
+span {
+  letter-spacing: -0.02rem;
+  line-height: 150%;
+}
+input {
+  background-color: $adaptiveGrey100;
+  margin-top: 0.5rem;
+  border: 2px solid $adaptiveGrey100;
+  border-radius: 4px;
+  width: 100%;
+
+  &:focus {
+    outline: 2px solid $mainBadgeColor;
+  }
+}

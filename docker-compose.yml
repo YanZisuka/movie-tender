@@ -1,0 +1,102 @@
+version: "3"
+
+volumes:
+  postgres_db_vol: {}
+  redis_cache_vol: {}
+  django_static_vol: {}
+  vue_dist_vol: {}
+
+services:
+  nginx:
+    container_name: nginx
+    image: nginx
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d/
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+      - django_static_vol:/data/static/
+      - vue_dist_vol:/data/client/dist/
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    ports:
+      - "80:80"
+      - "443:443"
+    expose:
+      - 80
+      - 443
+    depends_on:
+      - django
+      - vue
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  
+  vue:
+    container_name: vue
+    image: $FRONT_IMAGE_NAME
+    volumes:
+      - vue_dist_vol:/home/client/dist/
+    working_dir: /home/client/
+    command: |
+      npm run build
+
+  postgres:
+    container_name: postgres
+    image: postgres
+    volumes:
+      - postgres_db_vol:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_INITDB_ARGS=--encoding=UTF-8
+    expose:
+      - 5432
+
+  redis:
+    container_name: redis
+    image: redis
+    volumes:
+      - redis_cache_vol:/data
+    healthcheck:
+      test: "redis-cli ping"
+      interval: 3s
+      timeout: 1s
+      retries: 5
+    expose:
+      - 6379
+
+  django:
+    container_name: django
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
+    image: $BACK_IMAGE_NAME
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - DJANGO_DEBUG=False
+      - DOCKERIZED=1
+    volumes:
+      - django_static_vol:/home/server/.static_root/
+    working_dir: /home/server/
+    command: >
+      bash -c "
+      chmod +x /wait-for-it.sh
+      && /wait-for-it.sh postgres:5432 -t 10
+      && python manage.py migrate
+      && echo yes | python manage.py collectstatic
+      && gunicorn --bind 0:8000 server.wsgi:application"
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - postgres
+  

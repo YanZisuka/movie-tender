@@ -25,6 +25,7 @@ services:
       - 443
     depends_on:
       - django
+      - vue
 
   certbot:
     container_name: certbot
@@ -33,6 +34,15 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  
+  vue:
+    container_name: vue
+    image: $FRONT_IMAGE_NAME
+    volumes:
+      - vue_dist_vol:/home/client/dist/
+    working_dir: /home/client/
+    command: |
+      npm run build
 
   postgres:
     container_name: postgres

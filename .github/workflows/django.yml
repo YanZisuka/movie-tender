@@ -1,9 +1,6 @@
 name: Django CI
 
 on:
-  push:
-    branches:
-      - add-ci/cd
   pull_request:
     branches:
       - master

@@ -10,8 +10,11 @@ services:
   nginx:
     container_name: nginx
     image: nginx
+    restart: always
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
       - django_static_vol:/data/static/
       - vue_dist_vol:/data/client/dist/
     ports:
@@ -19,9 +22,18 @@ services:
     depends_on:
       - django
 
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:v0.36.0
+    restart: always
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+
   postgres:
     container_name: postgres
     image: postgres
+    restart: always
     volumes:
       - postgres_db_vol:/var/lib/postgresql/data
     environment:
@@ -35,6 +47,7 @@ services:
   redis:
     container_name: redis
     image: redis
+    restart: always
     volumes:
       - redis_cache_vol:/data
     healthcheck:
@@ -51,6 +64,7 @@ services:
     #   context: .
     #   dockerfile: ./Dockerfile
     image: $BACK_IMAGE_NAME
+    restart: always
     environment:
       - POSTGRES_DB=$POSTGRES_DB
       - POSTGRES_USER=$POSTGRES_USER

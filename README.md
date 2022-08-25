@@ -89,7 +89,7 @@ $ git push -u origin [branch_name]
 
 <br><br>
 
-## :books: 기술 스택
+## :building_construction: 기술스택/아키텍처
 
 ![](./README.assets/techstack-architecture.png)
 

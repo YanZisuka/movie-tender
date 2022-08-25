@@ -1,5 +1,9 @@
 # :movie_camera: movietender
 
+<a target="_blank" href="https://movietender.link">
+  <img alt="Website%20(Click!) ON" src="https://img.shields.io/badge/Website%20(Click!)-ON-brightgreen?style=flat&logo=WebMoney&logoColor=white">
+</a>
+
 <a style="float: right;" href="https://codecov.io/gh/YanZisuka/movie-tender" target="_blank">
   <img src="https://codecov.io/gh/YanZisuka/movie-tender/branch/master/graph/badge.svg?token=DTAEWIZ28X"/>
 </a>

@@ -81,18 +81,9 @@ $ git push -u origin [branch_name]
 
 - `인덱스`
   
-  - 사이트의 기능들을 소개하고, 다른 기능들로 연결합니다.
-
-- `커뮤니티`
-  
-  <img src="README.assets/project_operation2.gif">
-  
-  - 사용자가 **추천받고, 시청한 영화에 대해 리뷰를 작성할 수** 있습니다.
-  - 각 리뷰에 **좋아요, 댓글을 작성** 가능합니다.
+  - 사이트를 소개하는 페이지입니다.
 
 - `영화 추천`
-  
-  <img src="README.assets/project_operation.gif">
   
   - 각 영화를 나타내는 **`keywords` 기반 추천을** 통해 사용자에게 최적의 영화를 추천합니다.
 
@@ -100,7 +91,7 @@ $ git push -u origin [branch_name]
 
 ## :books: 기술 스택
 
-![image-20220621102519753](README.assets/image-20220621102519753.png)
+![](./README.assets/techstack-architecture.png)
 
 <br><br>
 

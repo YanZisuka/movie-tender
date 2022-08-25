@@ -56,12 +56,12 @@ class MovieViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["put"])
     def set_survey(self, request):
-        validation = {"survey": []}
-        for kwrd in request.data["survey"]:
-            if Keyword.objects.filter(keyword=kwrd).exists():
-                validation["survey"].append(kwrd)
+        # validation = {"survey": []}
+        # for kwrd in request.data["survey"]:
+        #     if Keyword.objects.filter(keyword=kwrd).exists():
+        #         validation["survey"].append(kwrd)
 
-        serializer = SurveySerializer(instance=request.user, data=validation)
+        serializer = SurveySerializer(instance=request.user, data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(update_fields=["survey"])
             cache.delete(redis_key_schema.movies_for_user(request.user))

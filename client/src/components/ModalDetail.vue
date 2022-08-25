@@ -3,9 +3,7 @@
     <div v-if="show" class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-
           <slot name="body">default body</slot>
-
         </div>
       </div>
     </div>
@@ -16,8 +14,8 @@
 export default {
   props: {
     show: Boolean,
-  }
-}
+  },
+};
 </script>
 
 <style>
@@ -26,18 +24,14 @@ export default {
   z-index: 9998;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: table;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   transition: opacity 0.3s ease;
 }
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
 .modal-container {
   display: inline-block;
   transition: all 0.3s ease;
@@ -55,11 +49,9 @@ export default {
 .modal-enter {
   opacity: 0;
 }
-
 .modal-leave-active {
   opacity: 0;
 }
-
 .modal-enter .modal-container,
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);

@@ -235,9 +235,9 @@ nav {
 .menu {
   width: 10rem;
   background-color: $offwhiteColor;
-  position: fixed;
-  top: 60px;
-  right: 5rem;
+  position: absolute;
+  top: 33px;
+  right: 0;
   border-radius: 4px;
   color: $blackColor;
   display: flex;

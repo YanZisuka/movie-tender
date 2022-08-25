@@ -2,6 +2,7 @@ import asyncio
 import aiohttp
 import pandas as pd
 import environ
+import timeit
 
 from django.db import transaction
 
@@ -72,8 +73,6 @@ class MovieFactory:
                     continue
                 m.runtime = movie.get("runtime")
 
-                if not movie.get("video_path"):
-                    continue
                 m.video_path = movie.get("video_path")
 
                 m._genres = []
@@ -111,12 +110,17 @@ class MovieFactory:
             Movie.objects.bulk_create(movies)
 
         async def _fetch_movies(self, fetch_range: int):
+            start = timeit.default_timer()
+
             res = []
             self.movie_list = await self._fetch_all_top_rated(fetch_range)
             movie_details = await self._fetch_all_details(self.movie_list)
             movie_videos = await self._fetch_all_videos(self.movie_list)
             movie_kwrds = await self._fetch_all_kwrds(self.movie_list)
             movie_providers = await self._fetch_all_providers(self.movie_list)
+
+            duration = timeit.default_timer() - start
+            print(f"This aiohttp requests takes {duration} second(s)")
 
             for i, detail in enumerate(movie_details):
                 videos, kwrds, providers = (

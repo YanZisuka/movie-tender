@@ -87,7 +87,9 @@ export default {
           console.error(err);
           if (err.response.status === 400) {
             commit("SET_AUTH_ERROR", {
-              non_field_errors: ["올바른 회원정보를 입력해주세요!"],
+              non_field_errors: [
+                "비밀번호는 영문, 숫자를 포함한 8자 이상이어야 해요!",
+              ],
             });
             setTimeout(() => commit("SET_AUTH_ERROR", null), 4000);
           } else {

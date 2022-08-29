@@ -52,26 +52,6 @@
         </div>
       </div>
 
-      <!-- <router-link
-          :to="{
-            name: 'profile',
-            params: { username: currentUser.username },
-          }"
-          class="text-decoration-none"
-          role="button"
-        >
-          <p class="text-fff text-center m-0">Profile</p>
-        </router-link>
-        <hr class="text-white m-1" />
-        <router-link
-          :to="{ name: 'logout', params: { username: currentUser.username } }"
-          class="text-decoration-none"
-          role="button"
-        >
-          <p class="text-fff text-center m-0">Logout</p>
-        </router-link>
-      </div> -->
-
       <button v-else @click="switchShowAccountModal()" class="navbar-btn">
         로그인/회원가입
       </button>

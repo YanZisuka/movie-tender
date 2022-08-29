@@ -17,14 +17,12 @@
       <hr class="mt-5 mb-3 text-white" />
 
       <div class="row justify-content-between">
-        <div class="col-12">
+        <div class="col-6">
           <p class="info-title text-secondary">평균 평점</p>
           <p class="info-content text-white mb-4">
             <i class="fa-solid fa-star"></i> {{ voteAverage }}
           </p>
-        </div>
 
-        <div class="col-12 mb-4">
           <p class="info-title text-secondary">나의 평점</p>
           <div class="star-rating info-content d-flex justify-content-center">
             <input
@@ -80,7 +78,7 @@
           </div>
         </div>
 
-        <div class="col-12">
+        <div class="col-6 text-end">
           <p class="info-title text-secondary mb-2">출연진</p>
           <ul class="info-content text-white p-0 mb-4">
             <li v-for="actor in credits" :key="actor.id">{{ actor.name }}</li>
@@ -235,7 +233,7 @@ export default {
 
   li {
     font-size: 1rem;
-    line-height: 120%;
+    line-height: 150%;
   }
   input {
     display: flex;

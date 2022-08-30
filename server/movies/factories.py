@@ -3,6 +3,7 @@ import aiohttp
 import pandas as pd
 import environ
 import timeit
+from dateutil.parser import parse
 
 from django.db import transaction
 
@@ -54,7 +55,8 @@ class MovieFactory:
 
         @transaction.atomic()
         def _commit(self, movie_details):
-            movies = []
+            movies_to_create = []
+            movies_to_update = []
             for movie in movie_details:
                 m = Movie()
                 m.title = movie.get("title")
@@ -66,9 +68,12 @@ class MovieFactory:
                     continue
                 m.poster_path = TMDB_IMG_BASE_URL + movie.get("poster_path")
                 m.adult = movie.get("adult") if movie.get("adult") else False
-                if not movie.get("release_date"):
+                if (
+                    not movie.get("release_date")
+                    or int(movie.get("release_date")[:4]) < 1993
+                ):
                     continue
-                m.release_date = movie.get("release_date")
+                m.release_date = parse(movie.get("release_date"))
                 if not movie.get("runtime"):
                     continue
                 m.runtime = movie.get("runtime")
@@ -105,9 +110,14 @@ class MovieFactory:
                         m._providers = providers
 
                 if Movie.objects.filter(tmdb_id=m.tmdb_id).exists():
+                    movies_to_update.append(m)
                     continue
-                movies.append(m)
-            Movie.objects.bulk_create(movies)
+                movies_to_create.append(m)
+            Movie.objects.bulk_create(movies_to_create)
+            Movie.objects.bulk_update(
+                movies_to_update,
+                fields=["poster_path", "_genres", "_keywords"],
+            )
 
         async def _fetch_movies(self, fetch_range: int):
             start = timeit.default_timer()

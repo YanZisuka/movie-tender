@@ -35,7 +35,7 @@ class Movie(models.Model):
     poster_path = models.CharField(max_length=100)
     video_path = models.CharField(max_length=100)
     adult = models.BooleanField()
-    release_date = models.CharField(max_length=30)
+    release_date = models.DateField()
     runtime = models.IntegerField()
     _genres = ArrayField(
         models.CharField(max_length=20), blank=True, default=list, db_column="genres"

@@ -6,8 +6,6 @@ on:
       - master
 
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   build:
     runs-on: ubuntu-20.04
 
@@ -17,18 +15,18 @@ jobs:
       # - name: Cache dependency
       #   uses: actions/cache@v2
       #   with:
-      #     path: ~/.cache/pip
-      #     key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+      #     path: ~/.cache/npm
+      #     key: ${{ runner.os }}-npm-${{ hashFiles('**/package.json') }}
       #     restore-keys: |
-      #       ${{ runner.os }}-pip-
+      #       ${{ runner.os }}-npm-
 
       # - name: Create secrets
-      #   run: echo "${{ secrets.DOTENV }}" > client/.env
+      #   run: echo "${{ secrets.FRONT_DOTENV }}" > client/.env
 
-      # - name: Set up Python 3.9
-      #   uses: actions/setup-python@v2
+      # - name: Set up Node.js 16.16
+      #   uses: actions/setup-node@v2
       #   with:
-      #     python-version: 3.9
+      #     node-version: 16.16
 
       # - name: Install dependencies
       #   run: |
@@ -38,6 +36,7 @@ jobs:
       # - name: Run tests
       #   run: |
       #     cd client/
+      #     npm run test
 
       - name: Dockerize
         run: |
@@ -45,19 +44,3 @@ jobs:
           docker build -t "${{ secrets.FRONT_IMAGE_NAME }}" ./client/
           docker push "${{ secrets.FRONT_IMAGE_NAME }}"
           docker logout
-
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-20.04
-
-  #   steps:
-  #     - name: Run scripts
-  #       run: |
-  #         mkdir -p ~/.ssh
-  #         eval $(ssh-agent -s)
-  #         echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
-  #         chmod 644 ~/.ssh/known_hosts
-  #         echo "${{ secrets.SSH_KEY }}" > ~/.ssh/SSH_KEY.key
-  #         chmod 600 ~/.ssh/SSH_KEY.key
-  #         ssh-add ~/.ssh/SSH_KEY.key
-  #         ssh ubuntu@"${{ secrets.DEPLOY_SERVER_IP }}" sudo bash deploy.sh

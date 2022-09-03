@@ -83,10 +83,11 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - DJANGO_DEBUG=False
+      - DJANGO_DEBUG=0
       - DOCKERIZED=1
     volumes:
       - django_static_vol:/home/server/.static_root/
+      - ./movies/crawlers.py:/home/server/movies/crawlers.py
     working_dir: /home/server/
     command: >
       bash -c "
@@ -110,14 +111,14 @@ services:
       - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
-      - DJANGO_DEBUG=False
+      - DJANGO_DEBUG=0
       - DOCKERIZED=1
     volumes:
       - celery_vol:/home/server/
+      - ./movies/crawlers.py:/home/server/movies/crawlers.py
     working_dir: /home/server/
     command: >
-      bash -c "gnome-terminal -- celery -A server worker --loglevel=info
-      && gnome-terminal -- celery -A server beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+      bash -c "celery -A server worker --beat --scheduler django --loglevel=info"
     depends_on:
       - django
       

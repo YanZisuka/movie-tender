@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   # Run tests.
@@ -51,11 +54,13 @@ jobs:
         run: echo "${{ secrets.DOTENV }}" > server/.env
 
       - name: Set up Python 3.9
+        if: github.event_name == 'pull_request'
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
 
       - name: Install dependencies
+        if: github.event_name == 'pull_request'
         run: |
           cd server/
           python -m pip install --upgrade pip
@@ -63,6 +68,7 @@ jobs:
           pip install coverage codecov
 
       - name: Run tests
+        if: github.event_name == 'pull_request'
         run: |
           cd server/
           python manage.py migrate
@@ -70,6 +76,7 @@ jobs:
           codecov
 
       - name: Dockerize
+        if: github.event_name == 'push'
         run: |
           echo "${{ secrets.DOCKER_HUB_PW }}" | docker login -u "${{ secrets.DOCKER_HUB_USER }}" --password-stdin
           docker build -t "${{ secrets.BACK_IMAGE_NAME }}" ./server/
@@ -78,6 +85,7 @@ jobs:
 
   deploy:
     needs: build
+    if: github.event_name == 'push'
     runs-on: ubuntu-20.04
 
     steps:

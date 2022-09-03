@@ -5,8 +5,6 @@ import environ
 import timeit
 from dateutil.parser import parse
 
-from django.db import transaction
-
 from .models import Movie, Keyword, Staff, Credit
 from .crawlers import MovieCrawler
 
@@ -53,7 +51,6 @@ class MovieFactory:
             self._commit(movie_details)
             StaffFactory().api.seed(self.movie_list)
 
-        @transaction.atomic()
         def _commit(self, movie_details):
             movies_to_create = []
             movies_to_update = []
@@ -110,6 +107,7 @@ class MovieFactory:
                         m._providers = providers
 
                 if Movie.objects.filter(tmdb_id=m.tmdb_id).exists():
+                    m.pk = Movie.objects.get(tmdb_id=m.tmdb_id).pk
                     movies_to_update.append(m)
                     continue
                 movies_to_create.append(m)
@@ -265,7 +263,6 @@ class MovieFactory:
                 row = self.data.iloc[i, :]
                 self._commit(row)
 
-        # protected
         def _commit(self, row):
             movie = Movie()
             movie.title = row[1]
@@ -344,7 +341,6 @@ class StaffFactory:
             movie_credits = loop.run_until_complete(self._fetch_all_credits(movie_list))
             self._commit(movie_credits)
 
-        @transaction.atomic()
         def _commit(self, movie_credits):
             staffs = []
             credits = []
@@ -417,7 +413,6 @@ class StaffFactory:
                 row = self.data.iloc[i, :]
                 self._commit(row)
 
-        # protected
         def _commit(self, row):
             staff = Staff()
             if row[1] == "Unknown":
@@ -471,7 +466,6 @@ class KeywordFactory:
                 row = self.data.iloc[i, :]
                 self._commit(row)
 
-        # protected
         def _commit(self, row):
             keyword = Keyword()
             keyword.keyword = row[1]

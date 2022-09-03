@@ -116,8 +116,8 @@ services:
       - celery_vol:/home/server/
     working_dir: /home/server/
     command: >
-      bash -c "celery -A tasks worker --loglevel=info
-      && celery -A tasks beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+      bash -c "gnome-terminal -- celery -A server worker --loglevel=info
+      && gnome-terminal -- celery -A server beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
     depends_on:
       - django
       

@@ -4,6 +4,7 @@ volumes:
   postgres_db_vol: {}
   redis_cache_vol: {}
   django_static_vol: {}
+  celery_vol: {}
   vue_dist_vol: {}
 
 services:
@@ -100,3 +101,23 @@ services:
       - redis
       - postgres
   
+  celery:
+    container_name: celery
+    image: $BACK_IMAGE_NAME
+    environment:
+      - POSTGRES_DB=$POSTGRES_DB
+      - POSTGRES_USER=$POSTGRES_USER
+      - POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - DJANGO_DEBUG=False
+      - DOCKERIZED=1
+    volumes:
+      - celery_vol:/home/server/
+    working_dir: /home/server/
+    command: >
+      bash -c "celery -A tasks worker --loglevel=info
+      && celery -A tasks beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    depends_on:
+      - django
+      

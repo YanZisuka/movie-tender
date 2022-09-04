@@ -32,7 +32,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = os.getenv("DJANGO_DEBUG", "True")
+DEBUG = bool(int(os.getenv("DJANGO_DEBUG", "1")))
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "accounts",
     "movies",
     "community",
+    "celery",
+    "django_celery_results",
+    "django_celery_beat",
     "django_extensions",
     "rest_framework",
     "rest_framework.authtoken",
@@ -123,6 +126,21 @@ else:
             },
         }
     }
+
+
+# Celery
+
+if os.getenv("DOCKERIZED"):
+    CELERY_BROKER_URL = "redis://redis:6379/0"
+    CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+else:
+    CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+    CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
+
+CELERY_TIMEZONE = "Asia/Seoul"
+CELERY_ENABLE_UTC = False
+CELERY_TASK_SERIALIZER = "json"
+CELERY_ACCEPT_CONTENT = ["json"]
 
 
 # Database

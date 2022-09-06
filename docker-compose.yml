@@ -4,7 +4,6 @@ volumes:
   postgres_db_vol: {}
   redis_cache_vol: {}
   django_static_vol: {}
-  celery_vol: {}
   vue_dist_vol: {}
 
 services:
@@ -114,7 +113,6 @@ services:
       - DJANGO_DEBUG=0
       - DOCKERIZED=1
     volumes:
-      - celery_vol:/home/server/
       - ./movies/crawlers.py:/home/server/movies/crawlers.py
     working_dir: /home/server/
     command: >

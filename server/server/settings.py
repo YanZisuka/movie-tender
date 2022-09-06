@@ -32,7 +32,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = bool(int(os.getenv("DJANGO_DEBUG", "1")))
+# DEBUG = bool(int(os.getenv("DJANGO_DEBUG", "1")))
 
 ALLOWED_HOSTS = [
     "localhost",

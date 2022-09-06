@@ -158,5 +158,5 @@ class MovieViewSet(viewsets.ViewSet):
                 Movie.objects.filter(_keywords__overlap=[kwrd for kwrd in kwrds])
             )
             data = MovieListSerializer(movies, many=True).data
-            cache.set(key, data, timeout=2 * 24 * 60 * 60)
+            cache.set(key, data, timeout=24 * 60 * 60)
         return Response(random.sample(data, pick_num))
